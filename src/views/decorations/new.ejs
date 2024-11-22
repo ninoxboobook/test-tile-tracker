@@ -1,0 +1,82 @@
+<%- contentFor('body') %>
+
+<div class="py-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="page-header" class="flex justify-between items-center">
+      <h1 class="text-2xl font-semibold text-gray-900">New Decoration</h1>
+    </div>
+
+    <div class="mt-8">
+      <form action="/decorations" method="POST" class="space-y-8 divide-y divide-gray-200">
+        <div class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <div class="mt-1">
+              <input type="text" name="name" id="name" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <div class="mt-1">
+              <textarea name="description" id="description" rows="3" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+            <div class="mt-1">
+              <input type="text" name="type" id="type" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+            <div class="mt-1">
+              <select name="category" id="category" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm">
+                <option value="studio">Studio</option>
+                <option value="commercial">Commercial</option>
+                <option value="formula">Formula</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="manufacturer" class="block text-sm font-medium text-gray-700">Manufacturer</label>
+            <div class="mt-1">
+              <input type="text" name="manufacturer" id="manufacturer" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label for="glazyUrl" class="block text-sm font-medium text-gray-700">Glazy URL</label>
+            <div class="mt-1">
+              <input type="url" name="glazyUrl" id="glazyUrl" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label for="firingTemperature" class="block text-sm font-medium text-gray-700">Firing Temperature</label>
+            <div class="mt-1">
+              <input type="text" name="firingTemperature" id="firingTemperature" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label for="recipe" class="block text-sm font-medium text-gray-700">Recipe</label>
+            <div class="mt-1">
+              <textarea name="recipe" id="recipe" rows="4" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm" placeholder="Enter recipe details"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-5">
+          <div class="flex justify-end">
+            <a href="/decorations" class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-clay-500 focus:ring-offset-2">Cancel</a>
+            <button type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-clay-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-clay-700 focus:outline-none focus:ring-2 focus:ring-clay-500 focus:ring-offset-2">Create Decoration</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
