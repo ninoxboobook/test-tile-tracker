@@ -15,10 +15,10 @@ export default async function ClayBodiesPage() {
 
   const clayBodies = await prisma.clayBodies.findMany({
     where: {
-      userId: session.user.id
+      user_id: session.user.id
     },
     orderBy: {
-      createdAt: 'desc'
+      created_at: 'desc'
     }
   })
 

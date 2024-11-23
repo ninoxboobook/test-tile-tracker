@@ -38,14 +38,18 @@ export function ClayBodiesTable({ clayBodies }: ClayBodiesTableProps) {
                     Name
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Manufacturer
+                  </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Type
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Cone Range
+                    Cone
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Manufacturer
+                    Colour (Oxidation/Reduction)
                   </th>
+
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span className="sr-only">Actions</span>
                   </th>
@@ -60,13 +64,16 @@ export function ClayBodiesTable({ clayBodies }: ClayBodiesTableProps) {
                       </Link>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {clay.manufacturer || '—'}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {clay.type}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {clay.coneRange || '—'}
+                      {clay.cone || '—'}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {clay.manufacturer || '—'}
+                      {clay.colour_oxidation || '—'}/{clay.colour_reduction || '—'}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                       <Link href={`/clay-bodies/${clay.id}/edit`} className="text-clay-600 hover:text-clay-900">

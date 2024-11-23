@@ -7,11 +7,19 @@ import { useRouter } from 'next/navigation'
 
 interface ClayBodyFormProps {
   initialData?: ClayBodyFormData
-  onSubmit: (data: ClayBodyFormData) => Promise<void>
+  action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }
 
-export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' }: ClayBodyFormProps) {
+export function ClayBodyForm({
+  initialData,
+  action,
+  submitButtonText = 'Create Clay Body',
+}: {
+  initialData?: ClayBodyFormData
+  action: (formData: FormData) => Promise<void>
+  submitButtonText?: string
+}) {
   const router = useRouter()
   const {
     register,
@@ -25,12 +33,22 @@ export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' 
 
   const type = watch('type')
 
+  const onSubmit = async (data: ClayBodyFormData) => {
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        formData.append(key, value.toString())
+      }
+    })
+    await action(formData)
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 divide-y divide-gray-200">
       <div className="space-y-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Name
+            Name <span className="text-red-500">*</span>
           </label>
           <div className="mt-1">
             <input
@@ -46,7 +64,7 @@ export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' 
 
         <div>
           <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-            Type
+            Type <span className="text-red-500">*</span>
           </label>
           <div className="mt-1">
             <select
@@ -57,7 +75,7 @@ export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' 
               <option value="Raku">Raku</option>
               <option value="Earthenware">Earthenware</option>
               <option value="Stoneware">Stoneware</option>
-              <option value="Bone China">Bone China</option>
+              <option value="Bone_China">Bone China</option>
               <option value="Porcelain">Porcelain</option>
               <option value="Wild">Wild</option>
             </select>
@@ -84,7 +102,7 @@ export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' 
 
         <div>
           <label htmlFor="cone" className="block text-sm font-medium text-gray-700">
-            Cone
+            Cone <span className="text-red-500">*</span>
           </label>
           <div className="mt-1">
             <input
@@ -99,39 +117,39 @@ export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' 
         </div>
 
         <div>
-          <label htmlFor="firingTemperature" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="firing_temperature" className="block text-sm font-medium text-gray-700">
             Firing Temperature (°C)
           </label>
           <div className="mt-1">
             <input
-              type="number"
-              {...register('firingTemperature', { valueAsNumber: true })}
+              type="text"
+              {...register('firing_temperature')}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="colourOxidation" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="colour_oxidation" className="block text-sm font-medium text-gray-700">
             Colour (Oxidation)
           </label>
           <div className="mt-1">
             <input
               type="text"
-              {...register('colourOxidation')}
+              {...register('colour_oxidation')}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="colourReduction" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="colour_reduction" className="block text-sm font-medium text-gray-700">
             Colour (Reduction)
           </label>
           <div className="mt-1">
             <input
               type="text"
-              {...register('colourReduction')}
+              {...register('colour_reduction')}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
             />
           </div>
@@ -189,11 +207,16 @@ export function ClayBodyForm({ initialData, onSubmit, submitButtonText = 'Save' 
             Texture
           </label>
           <div className="mt-1">
-            <input
-              type="text"
+            <select
               {...register('texture')}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
-            />
+            >
+              <option value="">Select texture</option>
+              <option value="smooth">Smooth</option>
+              <option value="fine grog">Fine grog</option>
+              <option value="medium grog">Medium grog</option>
+              <option value="coarse grog">Coarse grog</option>
+            </select>
           </div>
         </div>
 

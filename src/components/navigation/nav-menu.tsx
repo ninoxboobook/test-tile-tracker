@@ -72,7 +72,7 @@ export function NavMenu() {
                           <span className="sr-only">Open user menu</span>
                           <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
                             <span className="text-white font-medium">
-                              {session.user?.name?.[0] || session.user?.email?.[0] || '?'}
+                              {session.user?.username?.[0] || session.user?.email?.[0] || '?'}
                             </span>
                           </div>
                         </Menu.Button>
@@ -147,12 +147,12 @@ export function NavMenu() {
                 <div className="flex items-center px-4">
                   <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
                     <span className="text-white font-medium">
-                      {session.user?.name?.[0] || session.user?.email?.[0] || '?'}
+                      {session.user?.username?.[0] || session.user?.email?.[0] || '?'}
                     </span>
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-gray-800">
-                      {session.user?.name || session.user?.email}
+                      {session.user?.username || session.user?.email}
                     </div>
                   </div>
                 </div>

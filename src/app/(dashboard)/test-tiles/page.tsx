@@ -1,28 +1,28 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/db'
+import { redirect } from 'next/navigation'
 import { AddTestTileButton } from '@/components/test-tiles/add-test-tile-button'
 import { TestTileGrid } from '@/components/test-tiles/test-tile-grid'
 
 export default async function TestTilesPage() {
   const session = await getServerSession(authOptions)
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect('/login')
   }
 
-  const testTiles = await prisma.testTile.findMany({
+  const testTiles = await prisma.testTiles.findMany({
     where: {
-      userId: session.user.id
+      user_id: session.user.id
     },
     include: {
-      testSeries: true,
-      clayBody: true,
-      decorations: true
+      test_series: true,
+      clay_body: true,
+      decoration: true
     },
     orderBy: {
-      createdAt: 'desc'
+      created_at: 'desc'
     }
   })
 

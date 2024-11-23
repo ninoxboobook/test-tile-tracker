@@ -14,10 +14,10 @@ export default async function TestSeriesPage() {
 
   const testSeries = await prisma.testSeries.findMany({
     where: {
-      userId: session.user.id
+      user_id: session.user.id
     },
     orderBy: {
-      createdAt: 'desc'
+      created_at: 'desc'
     }
   })
 

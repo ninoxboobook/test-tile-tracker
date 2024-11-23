@@ -1,18 +1,26 @@
-import { NextAuthOptions } from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "./prisma"
-import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcrypt"
+import { NextAuthOptions } from 'next-auth'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { prisma } from './prisma'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { compare } from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  pages: {
+    signIn: '/login',
+    error: '/login', // Redirect to login page on error
+  },
   providers: [
     CredentialsProvider({
       id: 'credentials',
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        email: { label: 'Email', type: 'email', placeholder: 'hello@example.com' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
         try {
@@ -28,7 +36,7 @@ export const authOptions: NextAuthOptions = {
 
           const user = await prisma.users.findUnique({
             where: {
-              email: credentials.email
+              email: credentials.email,
             },
             select: {
               id: true,
@@ -45,14 +53,11 @@ export const authOptions: NextAuthOptions = {
             return null
           }
 
-          const isCorrectPassword = await bcrypt.compare(
-            credentials.password,
-            user.password
-          )
+          const isPasswordValid = await compare(credentials.password, user.password)
 
-          console.log('Password check:', isCorrectPassword ? 'passed' : 'failed')
+          console.log('Password check:', isPasswordValid ? 'passed' : 'failed')
 
-          if (!isCorrectPassword) {
+          if (!isPasswordValid) {
             console.log('Password incorrect')
             return null
           }
@@ -63,7 +68,7 @@ export const authOptions: NextAuthOptions = {
           return {
             id: user.id,
             email: user.email,
-            name: user.username
+            username: user.username
           }
         } catch (error) {
           console.error('Auth error:', error)
@@ -75,28 +80,23 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id
-        token.email = user.email
-        token.name = user.name
+        return {
+          ...token,
+          id: user.id,
+          email: user.email,
+          username: user.username
+        }
       }
       return token
     },
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id
-        session.user.email = token.email
-        session.user.name = token.name
+      if (token && session.user) {
+        session.user.id = token.id as string
+        session.user.email = token.email as string
+        session.user.username = token.username as string
       }
       return session
     }
-  },
-  pages: {
-    signIn: '/login',
-    error: '/login', // Redirect to login page on error
-  },
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: true

@@ -8,16 +8,16 @@ import Link from 'next/link'
 export default async function DecorationsPage() {
   const session = await getServerSession(authOptions)
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect('/login')
   }
 
-  const decorations = await prisma.decoration.findMany({
+  const decorations = await prisma.decorations.findMany({
     where: {
-      userId: session.user.id
+      user_id: session.user.id
     },
     orderBy: {
-      createdAt: 'desc'
+      created_at: 'desc'
     }
   })
 

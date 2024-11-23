@@ -1,30 +1,30 @@
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('password123', 10)
-  
   try {
+    const hashedPassword = await bcrypt.hash('password123', 10)
+
     const user = await prisma.users.upsert({
       where: {
         email: 'test@example.com',
       },
-      update: {
-        password: hashedPassword,
-      },
+      update: {},
       create: {
         email: 'test@example.com',
         username: 'testuser',
         password: hashedPassword,
-        name: 'Test User',
+        createdAt: new Date(),
       },
     })
-    
-    console.log('Test user created/updated:', user)
+
+    console.log('Created test user:', user)
   } catch (error) {
     console.error('Error creating test user:', error)
+  } finally {
+    await prisma.$disconnect()
   }
 }
 
@@ -32,7 +32,4 @@ main()
   .catch((e) => {
     console.error(e)
     process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
   })

@@ -7,14 +7,17 @@ export const clayBodySchema = z.object({
   }),
   manufacturer: z.string().optional(),
   cone: z.string().min(1, 'Cone is required'),
-  firingTemperature: z.number().optional(),
-  colourOxidation: z.string().optional(),
-  colourReduction: z.string().optional(),
+  firing_temperature: z.string().optional(),
   shrinkage: z.number().optional(),
   absorption: z.number().optional(),
-  plasticity: z.enum(['very low', 'low', 'medium', 'high', 'very high']).optional(),
-  texture: z.string().optional(),
+  plasticity: z.enum(['Very Low', 'Low', 'Medium', 'High', 'Very High']).optional(),
+  texture: z.enum(['Smooth', 'Fine grog', 'Medium grog', 'Coarse grog']).optional(),
   notes: z.string().optional(),
+  cone_range: z.string().optional(),
+  description: z.string().optional(),
+  composition: z.any().optional(),
+  colour_oxidation: z.string().optional(),
+  colour_reduction: z.string().optional(),
 })
 
 export type ClayBodyFormData = z.infer<typeof clayBodySchema>
