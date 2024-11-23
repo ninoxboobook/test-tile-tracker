@@ -1,27 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/views/**/*.ejs",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       colors: {
-        'clay': {
-          50: '#faf6f3',
-          100: '#f2e8e1',
-          200: '#e5d1c4',
-          300: '#d7b4a3',
-          400: '#c79882',
-          500: '#b87c61',
-          600: '#a86547',
-          700: '#8c523b',
-          800: '#714335',
-          900: '#5c382e'
-        }
-      }
-    }
+        clay: {
+          50: '#f8f6f4',
+          100: '#e8e6e4',
+          200: '#d5cfc9',
+          300: '#bbb1a7',
+          400: '#a18f81',
+          500: '#8b7565',
+          600: '#745e4f',
+          700: '#604c41',
+          800: '#524139',
+          900: '#483a33',
+          950: '#2a211d',
+        },
+      },
+    },
   },
   plugins: [
-    require('@tailwindcss/forms')
-  ]
+    require('@tailwindcss/forms'),
+  ],
 }

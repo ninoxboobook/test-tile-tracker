@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id          String        @id @default(uuid()) @db.Uuid
+  email       String        @unique @db.VarChar(255)
+  username    String        @unique @db.VarChar(255)
+  password    String        @db.VarChar(255)
+  lastAutoId  String?       @default("0A") @db.VarChar(255)
+  createdAt   DateTime      @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+  ClayBodies  ClayBodies[]
+  Decorations Decorations[]
+  TestSeries  TestSeries[]
+  TestTiles   TestTiles[]
+}
+
+model TestSeries {
+  id          String                 @id @default(uuid()) @db.Uuid
+  name        String                 @db.VarChar(255)
+  description String?
+  userId      String                 @db.Uuid
+  createdAt   DateTime               @db.Timestamptz(6)
+  updatedAt   DateTime               @updatedAt @db.Timestamptz(6)
+  variables   Json?
+  goal        String?
+  status      enum_TestSeries_status @default(planned)
+  conclusions String?
+  user        Users                  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TestTiles   TestTiles[]
+}
+
+model ClayBodies {
+  id                String               @id @default(uuid()) @db.Uuid
+  name              String               @db.VarChar(255)
+  type              enum_ClayBodies_type @default(studio)
+  description       String?
+  coneRange         String?              @db.VarChar(255)
+  userId            String               @db.Uuid
+  createdAt         DateTime             @db.Timestamptz(6)
+  updatedAt         DateTime             @updatedAt @db.Timestamptz(6)
+  manufacturer      String?              @db.VarChar(255)
+  composition       Json?
+  firingTemperature String?              @db.VarChar(255)
+  cone              String?              @db.VarChar(255)
+  color             String?              @db.VarChar(255)
+  shrinkage         Float?
+  absorption        Float?
+  plasticity        String?              @db.VarChar(255)
+  texture           String?              @db.VarChar(255)
+  Users             Users                @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TestTiles         TestTiles[]
+
+  @@unique([userId, name], map: "clay_bodies_user_id_name")
+  @@index([userId, type], map: "clay_bodies_user_id_type")
+}
+
+model Decorations {
+  id                String                    @id @default(uuid()) @db.Uuid
+  name              String                    @db.VarChar(255)
+  description       String?
+  type              String?                   @db.VarChar(255)
+  userId            String                    @db.Uuid
+  createdAt         DateTime                  @db.Timestamptz(6)
+  updatedAt         DateTime                  @updatedAt @db.Timestamptz(6)
+  category          enum_Decorations_category @default(studio)
+  recipe            Json?
+  glazyUrl          String?                   @db.VarChar(255)
+  firingTemperature String?                   @db.VarChar(255)
+  manufacturer      String?                   @db.VarChar(255)
+  cone              String?                   @db.VarChar(255)
+  applicationMethod String?                   @db.VarChar(255)
+  color             String?                   @db.VarChar(255)
+  surface           String?                   @db.VarChar(255)
+  transparency      String?                   @db.VarChar(255)
+  Users             Users                     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TestTiles         TestTiles[]
+
+  @@unique([userId, name], map: "decorations_user_id_name")
+  @@index([userId, type], map: "decorations_user_id_type")
+}
+
+model TestTiles {
+  id                String       @id @default(uuid()) @db.Uuid
+  name              String       @db.VarChar(255)
+  userId            String       @db.Uuid
+  testSeriesId      String?      @db.Uuid
+  clayBodyId        String?      @db.Uuid
+  decorationId      String?      @db.Uuid
+  description       String?
+  firingTemperature String?      @db.VarChar(255)
+  cone              String?      @db.VarChar(255)
+  firingSchedule    Json?
+  imageUrl          String?      @db.VarChar(255)
+  notes             String?
+  results           Json?
+  createdAt         DateTime     @db.Timestamptz(6)
+  updatedAt         DateTime     @updatedAt @db.Timestamptz(6)
+  ClayBodies        ClayBodies?  @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Decorations       Decorations? @relation(fields: [decorationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TestSeries        TestSeries?  @relation(fields: [testSeriesId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Users             Users        @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model session {
+  sid    String   @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@ignore
+}
+
+model user_sessions {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "idx_user_sessions_expire")
+}
+
+enum enum_TestSeries_status {
+  planned
+  in_progress @map("in-progress")
+  completed
+  archived
+}
+
+enum enum_ClayBodies_type {
+  commercial
+  studio
+  reclaim
+}
+
+enum enum_Decorations_category {
+  commercial
+  studio
+  formula
+}
+
+enum enum_Decorations_type {
+  glaze
+  slip
+  underglaze
+  oxide
+  engobe
+}
