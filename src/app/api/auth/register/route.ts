@@ -33,8 +33,8 @@ export async function POST(req: Request) {
         email,
         password: hashedPassword,
         username,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        created_at: new Date(),
+        updated_at: new Date(),
       },
     })
 
