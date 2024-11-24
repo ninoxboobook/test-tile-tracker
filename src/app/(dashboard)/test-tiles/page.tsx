@@ -2,7 +2,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
-import { AddTestTileButton } from '@/components/test-tiles/add-test-tile-button'
+import Link from 'next/link'
+import { PageLayout } from '@/components/ui/layout/page-layout'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import { TestTileGrid } from '@/components/test-tiles/test-tile-grid'
 
 export default async function TestTilesPage() {
@@ -14,30 +16,29 @@ export default async function TestTilesPage() {
 
   const testTiles = await prisma.testTiles.findMany({
     where: {
-      user_id: session.user.id
+      user_id: session.user.id,
     },
     include: {
       test_series: true,
       clay_body: true,
-      decoration: true
+      decoration: true,
     },
     orderBy: {
-      created_at: 'desc'
-    }
+      created_at: 'desc',
+    },
   })
 
   return (
-    <div className="py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Test Tiles</h1>
-          <AddTestTileButton />
-        </div>
-
-        <div className="mt-8">
-          <TestTileGrid testTiles={testTiles} />
-        </div>
-      </div>
-    </div>
+    <PageLayout 
+      title="Test Tiles"
+      description="Document and track your ceramic test tiles"
+      action={
+        <Link href="/test-tiles/new">
+          <ActionButton>Add New Test Tile</ActionButton>
+        </Link>
+      }
+    >
+      <TestTileGrid testTiles={testTiles} />
+    </PageLayout>
   )
 }

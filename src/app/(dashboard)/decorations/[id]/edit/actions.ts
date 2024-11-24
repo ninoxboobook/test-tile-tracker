@@ -5,33 +5,45 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { decorationSchema } from '@/lib/schemas/decoration'
+import { revalidatePath } from 'next/cache'
+import { enum_Decorations_atmosphere, Prisma } from '@prisma/client'
 
 export async function updateDecoration(formData: FormData) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
-    throw new Error('Not authenticated')
+    redirect('/login')
   }
 
   const id = formData.get('id') as string
-  if (!id) {
-    throw new Error('No ID provided')
+  const rawData = Object.fromEntries(formData.entries())
+  const validatedData = decorationSchema.parse(rawData)
+
+  const updateData: Prisma.DecorationsUpdateInput = {
+    name: validatedData.name,
+    type: validatedData.type,
+    description: validatedData.description || null,
+    color: validatedData.color || null,
+    color_reaction: validatedData.color_reaction || null,
+    cone: validatedData.cone || null,
+    firing_atmosphere: validatedData.firing_atmosphere as enum_Decorations_atmosphere || null,
+    firing_temperature: validatedData.firing_temperature || null,
+    food_safe: validatedData.food_safe || null,
+    ingredients: validatedData.ingredients ? JSON.parse(validatedData.ingredients) : null,
+    manufacturer: validatedData.manufacturer || null,
+    surface: validatedData.surface || null,
+    transparency: validatedData.transparency || null,
   }
 
-  const data = Object.fromEntries(formData.entries())
-  delete data.id
-  const validatedData = decorationSchema.parse(data)
-
-  const decoration = await prisma.decorations.update({
+  await prisma.decorations.update({
     where: {
       id,
       user_id: session.user.id,
     },
-    data: {
-      ...validatedData,
-      updated_at: new Date(),
-    },
+    data: updateData,
   })
 
-  redirect(`/decorations/${decoration.id}`)
+  revalidatePath('/decorations')
+  revalidatePath(`/decorations/${id}`)
+  redirect(`/decorations/${id}`)
 } 

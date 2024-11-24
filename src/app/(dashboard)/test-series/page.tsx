@@ -3,12 +3,14 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { TestSeriesTable } from '@/components/test-series/test-series-table'
+import { PageLayout } from '@/components/ui/layout/page-layout'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import Link from 'next/link'
 
 export default async function TestSeriesPage() {
   const session = await getServerSession(authOptions)
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect('/login')
   }
 
@@ -22,22 +24,16 @@ export default async function TestSeriesPage() {
   })
 
   return (
-    <div className="py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Test Series</h1>
-          <Link
-            href="/test-series/new"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-clay-600 hover:bg-clay-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-clay-500"
-          >
-            Add New Test Series
-          </Link>
-        </div>
-
-        <div className="mt-8">
-          <TestSeriesTable testSeries={testSeries} />
-        </div>
-      </div>
-    </div>
+    <PageLayout 
+      title="Test Series"
+      description="Organize your test tiles into series"
+      action={
+        <Link href="/test-series/new">
+          <ActionButton>Add New Test Series</ActionButton>
+        </Link>
+      }
+    >
+      <TestSeriesTable testSeries={testSeries} />
+    </PageLayout>
   )
 }

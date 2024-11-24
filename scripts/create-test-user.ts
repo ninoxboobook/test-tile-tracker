@@ -16,7 +16,7 @@ async function main() {
         email: 'test@example.com',
         username: 'testuser',
         password: hashedPassword,
-        createdAt: new Date(),
+        created_at: new Date(),
       },
     })
 
