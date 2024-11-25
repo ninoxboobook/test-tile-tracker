@@ -21,7 +21,6 @@ export async function createCollection(formData: FormData) {
   const createData: Prisma.CollectionCreateInput = {
     name: validatedData.name,
     description: validatedData.description || null,
-    createdAt: new Date(),
     user: {
       connect: {
         id: session.user.id

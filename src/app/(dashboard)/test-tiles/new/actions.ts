@@ -20,7 +20,9 @@ export async function createTestTile(formData: FormData) {
 
   const createData: Prisma.TestTileCreateInput = {
     name: validatedData.name,
-    createdAt: new Date(),
+    stamp: validatedData.stamp || null,
+    notes: validatedData.notes || null,
+    imageUrl: validatedData.imageUrl || null,
     user: {
       connect: {
         id: session.user.id
@@ -31,15 +33,11 @@ export async function createTestTile(formData: FormData) {
         id: validatedData.clayBodyId
       }
     },
-    decorations: validatedData.decorationIds ? {
-      connect: {
-        id: validatedData.decorationIds[0]
-      }
+    decorations: validatedData.decorationIds?.length ? {
+      connect: validatedData.decorationIds.map(id => ({ id }))
     } : undefined,
-    collections: validatedData.collectionIds ? {
-      connect: {
-        id: validatedData.collectionIds[0]
-      }
+    collections: validatedData.collectionIds?.length ? {
+      connect: validatedData.collectionIds.map(id => ({ id }))
     } : undefined
   }
 

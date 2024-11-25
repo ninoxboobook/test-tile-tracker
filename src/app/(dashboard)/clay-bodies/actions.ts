@@ -5,25 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
-
-const clayBodySchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  type: z.string().min(1, 'Type is required'),
-  coneRange: z.string().optional(),
-  manufacturer: z.string().optional(),
-  description: z.string().optional(),
-  firingTemperature: z.string().optional(),
-  cone: z.string().optional(),
-  color: z.string().optional(),
-  shrinkage: z.number().optional(),
-  absorption: z.number().optional(),
-  plasticity: z.string().optional(),
-  texture: z.string().optional(),
-  composition: z.any().optional(),
-})
-
-export type ClayBodyFormData = z.infer<typeof clayBodySchema>
+import { clayBodySchema, type ClayBodyFormData } from '@/lib/schemas/clay-body'
 
 async function validateSession() {
   const session = await getServerSession(authOptions)
@@ -37,15 +19,14 @@ export async function getClayBody(id: string) {
   const session = await validateSession()
 
   const clayBody = await prisma.clayBody.findUnique({
-    where: { id },
+    where: { 
+      id,
+      userId: session.user.id 
+    },
   })
 
   if (!clayBody) {
     throw new Error('Clay body not found')
-  }
-
-  if (clayBody.userId !== session.user.id) {
-    throw new Error('Unauthorized')
   }
 
   return clayBody
@@ -54,15 +35,33 @@ export async function getClayBody(id: string) {
 export async function createClayBody(data: ClayBodyFormData) {
   const session = await validateSession()
 
-  const validatedData = clayBodySchema.parse(data)
+  // Convert string numbers to actual numbers before validation
+  const processedData = {
+    ...data,
+    shrinkage: data.shrinkage ?? null,
+    absorption: data.absorption ?? null,
+    meshSize: data.meshSize ?? null,
+  }
+
+  const validatedData = clayBodySchema.parse(processedData)
 
   const clayBody = await prisma.clayBody.create({
     data: {
-      ...validatedData,
-      userId: session.user.id,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      name: validatedData.name,
       type: validatedData.type,
+      manufacturer: validatedData.manufacturer,
+      cone: validatedData.cone,
+      firingTemperature: validatedData.firingTemperature,
+      plasticity: validatedData.plasticity,
+      texture: validatedData.texture,
+      colourOxidation: validatedData.colourOxidation,
+      colourReduction: validatedData.colourReduction,
+      shrinkage: validatedData.shrinkage,
+      absorption: validatedData.absorption,
+      meshSize: validatedData.meshSize,
+      imageUrl: validatedData.imageUrl,
+      notes: validatedData.notes,
+      userId: session.user.id,
     },
   })
 
@@ -73,26 +72,36 @@ export async function createClayBody(data: ClayBodyFormData) {
 export async function updateClayBody(id: string, data: ClayBodyFormData) {
   const session = await validateSession()
 
-  const validatedData = clayBodySchema.parse(data)
-
-  const clayBody = await prisma.clayBody.findUnique({
-    where: { id },
-  })
-
-  if (!clayBody) {
-    throw new Error('Clay body not found')
+  // Convert string numbers to actual numbers before validation
+  const processedData = {
+    ...data,
+    shrinkage: data.shrinkage ?? null,
+    absorption: data.absorption ?? null,
+    meshSize: data.meshSize ?? null,
   }
 
-  if (clayBody.userId !== session.user.id) {
-    throw new Error('Unauthorized')
-  }
+  const validatedData = clayBodySchema.parse(processedData)
 
   await prisma.clayBody.update({
-    where: { id },
+    where: { 
+      id,
+      userId: session.user.id 
+    },
     data: {
-      ...validatedData,
-      updatedAt: new Date(),
+      name: validatedData.name,
       type: validatedData.type,
+      manufacturer: validatedData.manufacturer,
+      cone: validatedData.cone,
+      firingTemperature: validatedData.firingTemperature,
+      plasticity: validatedData.plasticity,
+      texture: validatedData.texture,
+      colourOxidation: validatedData.colourOxidation,
+      colourReduction: validatedData.colourReduction,
+      shrinkage: validatedData.shrinkage,
+      absorption: validatedData.absorption,
+      meshSize: validatedData.meshSize,
+      imageUrl: validatedData.imageUrl,
+      notes: validatedData.notes,
     },
   })
 
@@ -104,20 +113,11 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
 export async function deleteClayBody(id: string) {
   const session = await validateSession()
 
-  const clayBody = await prisma.clayBody.findUnique({
-    where: { id },
-  })
-
-  if (!clayBody) {
-    throw new Error('Clay body not found')
-  }
-
-  if (clayBody.userId !== session.user.id) {
-    throw new Error('Unauthorized')
-  }
-
   await prisma.clayBody.delete({
-    where: { id },
+    where: { 
+      id,
+      userId: session.user.id 
+    },
   })
 
   revalidatePath('/clay-bodies')

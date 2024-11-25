@@ -7,11 +7,6 @@ import { redirect } from 'next/navigation'
 import { clayBodySchema } from '@/lib/schemas/clay-body'
 import { revalidatePath } from 'next/cache'
 
-// Helper function to convert form type to database type
-function convertClayBodyType(type: string): 'Raku' | 'Earthenware' | 'Stoneware' | 'Porcelain' | 'Wild' | 'Bone_China' {
-  return type === 'Bone China' ? 'Bone_China' : type as any
-}
-
 export async function updateClayBody(formData: FormData) {
   const session = await getServerSession(authOptions)
 
@@ -21,7 +16,16 @@ export async function updateClayBody(formData: FormData) {
 
   const id = formData.get('id') as string
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = clayBodySchema.parse(rawData)
+  
+  // Convert string numbers to actual numbers before validation
+  const processedData = {
+    ...rawData,
+    shrinkage: rawData.shrinkage ? parseFloat(rawData.shrinkage as string) : undefined,
+    absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : undefined,
+    meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : undefined,
+  }
+
+  const validatedData = clayBodySchema.parse(processedData)
 
   await prisma.clayBody.update({
     where: {
@@ -30,16 +34,18 @@ export async function updateClayBody(formData: FormData) {
     },
     data: {
       name: validatedData.name,
-      type: convertClayBodyType(validatedData.type),
-      cone: validatedData.cone,
+      type: validatedData.type,
       manufacturer: validatedData.manufacturer,
-      firingTemperature: validatedData.firing_temperature,
+      cone: validatedData.cone,
+      firingTemperature: validatedData.firingTemperature,
       plasticity: validatedData.plasticity,
       texture: validatedData.texture,
-      colourOxidation: validatedData.colour_oxidation,
-      colourReduction: validatedData.colour_reduction,
-      shrinkage: validatedData.shrinkage ? parseFloat(validatedData.shrinkage) : null,
-      absorption: validatedData.absorption ? parseFloat(validatedData.absorption) : null,
+      colourOxidation: validatedData.colourOxidation,
+      colourReduction: validatedData.colourReduction,
+      shrinkage: validatedData.shrinkage,
+      absorption: validatedData.absorption,
+      meshSize: validatedData.meshSize,
+      imageUrl: validatedData.imageUrl,
       notes: validatedData.notes,
     },
   })
