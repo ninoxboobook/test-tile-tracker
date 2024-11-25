@@ -14,7 +14,7 @@ const features = [
   {
     name: 'Systematic Organization',
     description:
-      'Keep your test tiles organized with custom IDs, series grouping, and comprehensive metadata tracking.',
+      'Keep your test tiles organized with custom IDs, collections, and comprehensive metadata tracking.',
     icon: ViewColumnsIcon,
   },
   {
@@ -101,10 +101,10 @@ export default async function HomePage() {
                     View Test Tiles
                   </Link>
                   <Link
-                    href="/test-series/new"
+                    href="/collections/new"
                     className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-clay-600 shadow-sm ring-1 ring-inset ring-clay-600 hover:bg-gray-50"
                   >
-                    Start New Series
+                    Create New Collection
                   </Link>
                 </>
               ) : (

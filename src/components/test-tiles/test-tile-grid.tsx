@@ -1,11 +1,11 @@
 import Link from 'next/link'
-import { type TestTiles, type TestSeries, type ClayBodies, type Decorations } from '@prisma/client'
+import { type TestTile, type Collection, type ClayBody, type Decoration } from '@prisma/client'
 import { EmptyState } from '@/components/ui/empty-state'
 
-export type TestTileWithRelations = TestTiles & {
-  test_series: TestSeries | null
-  clay_body: ClayBodies
-  decoration: Decorations | null
+export type TestTileWithRelations = TestTile & {
+  collection: Collection | null
+  clay_body: ClayBody
+  decoration: Decoration | null
 }
 
 interface TestTileGridProps {
@@ -63,18 +63,13 @@ export function TestTileGrid({ testTiles }: TestTileGridProps) {
                   </div>
                 )}
                 
-                {tile.test_series && (
+                {tile.collection && (
                   <div>
-                    <dt className="inline font-medium">Series: </dt>
-                    <dd className="inline">{tile.test_series.name}</dd>
+                    <dt className="inline font-medium">Collection: </dt>
+                    <dd className="inline">{tile.collection.name}</dd>
                   </div>
                 )}
                 
-                {tile.description && (
-                  <div className="mt-2 line-clamp-2">
-                    {tile.description}
-                  </div>
-                )}
               </dl>
             </div>
           </div>

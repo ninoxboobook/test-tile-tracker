@@ -8,7 +8,7 @@ import { collectionSchema } from '@/lib/schemas/collection'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
-export async function createTestSeries(formData: FormData) {
+export async function createCollection(formData: FormData) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {

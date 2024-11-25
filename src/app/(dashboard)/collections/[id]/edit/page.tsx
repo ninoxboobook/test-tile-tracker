@@ -2,10 +2,10 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect, notFound } from 'next/navigation'
-import { TestSeriesForm } from '@/components/collections/test-series-form'
+import { CollectionForm } from '@/components/collections/collection-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
-import { updateTestSeries } from './actions'
-import type { TestSeriesFormData } from '@/lib/schemas/test-series'
+import { updateCollection } from './actions'
+import type { CollectionFormData } from '@/lib/schemas/collection'
 
 // Helper function to convert JSON to string
 function jsonToString(value: any): string | undefined {
@@ -13,7 +13,7 @@ function jsonToString(value: any): string | undefined {
   return typeof value === 'string' ? value : JSON.stringify(value)
 }
 
-export default async function EditTestSeriesPage({
+export default async function EditCollectionPage({
   params,
 }: {
   params: { id: string }
@@ -24,36 +24,32 @@ export default async function EditTestSeriesPage({
     redirect('/login')
   }
 
-  const testSeries = await prisma.testSeries.findFirst({
+  const collection = await prisma.collection.findFirst({
     where: {
       id: params.id,
-      user_id: session.user.id,
+      userId: session.user.id,
     },
   })
 
-  if (!testSeries) {
+  if (!collection) {
     return notFound()
   }
 
-  const formData: TestSeriesFormData = {
-    name: testSeries.name,
-    description: testSeries.description || undefined,
-    variables: jsonToString(testSeries.variables),
-    goal: testSeries.goal || undefined,
-    status: testSeries.status,
-    conclusions: testSeries.conclusions || undefined,
+  const formData: CollectionFormData = {
+    name: collection.name,
+    description: collection.description || undefined,
   }
 
   return (
     <FormLayout 
-      title="Edit Test Series"
-      description={`Editing ${testSeries.name}`}
-      backHref={`/test-series/${params.id}`}
+      title="Edit Collection"
+      description={`Editing ${collection.name}`}
+      backHref={`/collections/${params.id}`}
     >
-      <TestSeriesForm 
-        action={updateTestSeries}
+      <CollectionForm 
+        action={updateCollection}
         initialData={formData}
-        submitButtonText="Update Test Series"
+        submitButtonText="Update Collection"
       />
     </FormLayout>
   )

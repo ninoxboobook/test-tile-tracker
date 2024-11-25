@@ -1,15 +1,13 @@
-import { HTMLInputTypeAttribute } from 'react'
+'use client'
+
 import { UseFormRegister, FieldError } from 'react-hook-form'
 
-interface FormFieldProps {
-  label: string;
-  name: string;
-  register: UseFormRegister<any>;
-  error?: FieldError;
-  required?: boolean;
-  type?: HTMLInputTypeAttribute;
-  placeholder?: string;
-  className?: string;
+interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label: string
+  name: string
+  register: UseFormRegister<any>
+  error?: FieldError
+  required?: boolean
 }
 
 export function FormField({
@@ -19,25 +17,31 @@ export function FormField({
   error,
   required,
   type = 'text',
-  placeholder,
-  className,
+  ...props
 }: FormFieldProps) {
   return (
-    <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
-        {label} {required && <span className="text-red-500">*</span>}
+    <div className="space-y-1">
+      <label
+        htmlFor={name}
+        className="block text-sm font-medium text-gray-700"
+      >
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
-      <div className="mt-1">
-        <input
-          type={type}
-          {...register(name)}
-          placeholder={placeholder}
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
-        />
-        {error && (
-          <p className="mt-1 text-sm text-red-600">{error.message}</p>
-        )}
-      </div>
+
+      <input
+        type={type}
+        id={name}
+        {...register(name)}
+        {...props}
+        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
+      />
+
+      {error && (
+        <p className="mt-1 text-sm text-red-600">
+          {error.message}
+        </p>
+      )}
     </div>
   )
 } 

@@ -13,7 +13,7 @@ export function CollectionTable({ collection }: CollectionTableProps) {
     return (
       <EmptyState
         title="No collections"
-        description="Get started by creating a new test series."
+        description="Get started by creating a new collection."
         action={
           <Link
             href="/collections/new"
@@ -37,9 +37,6 @@ export function CollectionTable({ collection }: CollectionTableProps) {
                   Name
                 </th>
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Status
-                </th>
-                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Created
                 </th>
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -57,17 +54,14 @@ export function CollectionTable({ collection }: CollectionTableProps) {
                     {collection.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {collection.status}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {new Date(collection.created_at).toLocaleDateString()}
+                    {new Date(collection.createdAt).toLocaleDateString()}
                   </td>
                   <td className="px-3 py-4 text-sm text-gray-500">
                     {collection.description}
                   </td>
                   <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <Link
-                      href={`/test-series/${collection.id}/edit`}
+                      href={`/collections/${collection.id}/edit`}
                       className="text-clay-600 hover:text-clay-900"
                     >
                       Edit

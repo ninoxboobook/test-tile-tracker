@@ -1,11 +1,11 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { TestSeriesForm } from '@/components/collections/test-series-form'
+import { CollectionForm } from '@/components/collections/collection-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
-import { createTestSeries } from './actions'
+import { createCollection } from './actions'
 
-export default async function NewTestSeriesPage() {
+export default async function NewCollectionPage() {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
@@ -14,11 +14,11 @@ export default async function NewTestSeriesPage() {
 
   return (
     <FormLayout 
-      title="New Test Series"
-      description="Create a new series of related test tiles"
-      backHref="/test-series"
+      title="New Collection"
+      description="Create a new collection of tiles"
+      backHref="/collections"
     >
-      <TestSeriesForm action={createTestSeries} />
+      <CollectionForm action={createCollection} />
     </FormLayout>
   )
 }

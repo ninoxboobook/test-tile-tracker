@@ -28,17 +28,17 @@ export async function createTestTile(formData: FormData) {
     },
     clayBody: {
       connect: {
-        id: validatedData.clay_body_id
+        id: validatedData.clayBodyId
       }
     },
-    decorations: validatedData.decoration_id ? {
+    decorations: validatedData.decorationIds ? {
       connect: {
-        id: validatedData.decoration_id
+        id: validatedData.decorationIds[0]
       }
     } : undefined,
-    collections: validatedData.test_series_id ? {
+    collections: validatedData.collectionIds ? {
       connect: {
-        id: validatedData.test_series_id
+        id: validatedData.collectionIds[0]
       }
     } : undefined
   }

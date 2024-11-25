@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  const [testTileCount, testSeriesCount, clayBodiesCount, decorationsCount] = await Promise.all([
+  const [testTileCount, collectionCount, clayBodiesCount, decorationsCount] = await Promise.all([
     prisma.testTile.count({
       where: { userId: session.user.id }
     }),
@@ -40,10 +40,10 @@ export default async function DashboardPage() {
           description="View all test tiles"
         />
         <DashboardCard
-          title="Test Series"
-          count={testSeriesCount}
-          href="/test-series"
-          description="View all test series"
+          title="Collections"
+          count={collectionCount}
+          href="/collections"
+          description="View all collections"
         />
         <DashboardCard
           title="Clay Bodies"

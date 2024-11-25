@@ -34,8 +34,8 @@ export default async function EditTestTilePage({
     return notFound()
   }
 
-  // Get all available clay bodies, decorations, and test series for the form
-  const [clayBodies, decorations, testSeries] = await Promise.all([
+  // Get all available clay bodies, decorations, and collections for the form
+  const [clayBodies, decorations, collections] = await Promise.all([
     prisma.clayBody.findMany({
       where: { userId: session.user.id },
       select: { id: true, name: true },
@@ -53,9 +53,9 @@ export default async function EditTestTilePage({
   // Transform the Prisma data into form data format
   const formData: TestTileFormData = {
     name: testTile.name,
-    clay_body_id: testTile.clayBodyId,
-    decoration_id: testTile.decorations.length > 0 ? testTile.decorations[0].id : undefined,
-    test_series_id: testTile.collections.length > 0 ? testTile.collections[0].id : undefined,
+    clayBodyId: testTile.clayBodyId,
+    decorationIds: testTile.decorations.map(decoration => decoration.id),
+    collectionIds: testTile.collections.map(collection => collection.id),
   }
 
   return (
@@ -70,7 +70,7 @@ export default async function EditTestTilePage({
         submitButtonText="Update Test Tile"
         clayBodies={clayBodies}
         decorations={decorations}
-        testSeries={testSeries}
+        collections={collections}
       />
     </FormLayout>
   )

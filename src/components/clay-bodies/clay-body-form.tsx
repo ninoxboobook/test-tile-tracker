@@ -3,40 +3,17 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { clayBodySchema, type ClayBodyFormData } from '@/lib/schemas/clay-body'
-import { ActionButton } from '@/components/ui/buttons/action-button'
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 
 interface ClayBodyFormProps {
   initialData?: ClayBodyFormData
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }
-
-const CLAY_TYPE_OPTIONS = [
-  { value: 'Stoneware', label: 'Stoneware' },
-  { value: 'Porcelain', label: 'Porcelain' },
-  { value: 'Earthenware', label: 'Earthenware' },
-  { value: 'Bone China', label: 'Bone China' },
-  { value: 'Other', label: 'Other' },
-]
-
-const PLASTICITY_OPTIONS = [
-  { value: 'Very Plastic', label: 'Very Plastic' },
-  { value: 'Plastic', label: 'Plastic' },
-  { value: 'Medium', label: 'Medium' },
-  { value: 'Slightly Plastic', label: 'Slightly Plastic' },
-  { value: 'Non-Plastic', label: 'Non-Plastic' },
-]
-
-const TEXTURE_OPTIONS = [
-  { value: 'Smooth', label: 'Smooth' },
-  { value: 'Fine Grog', label: 'Fine Grog' },
-  { value: 'Medium Grog', label: 'Medium Grog' },
-  { value: 'Coarse Grog', label: 'Coarse Grog' },
-]
 
 export function ClayBodyForm({
   initialData,
@@ -65,67 +42,16 @@ export function ClayBodyForm({
         label="Type"
         name="type"
         register={register}
-        options={CLAY_TYPE_OPTIONS}
+        options={[
+          { value: 'Stoneware', label: 'Stoneware' },
+          { value: 'Porcelain', label: 'Porcelain' },
+          { value: 'Earthenware', label: 'Earthenware' },
+          { value: 'Bone China', label: 'Bone China' },
+          { value: 'Wild Clay', label: 'Wild Clay' },
+          { value: 'Other', label: 'Other' }
+        ]}
         error={errors.type}
         required
-      />
-
-      <FormTextarea
-        label="Description"
-        name="description"
-        register={register}
-        error={errors.description}
-      />
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Cone"
-          name="cone"
-          register={register}
-          error={errors.cone}
-          required
-        />
-
-        <FormField
-          label="Firing Temperature (°C)"
-          name="firing_temperature"
-          register={register}
-          error={errors.firing_temperature}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Shrinkage (%)"
-          name="shrinkage"
-          type="number"
-          register={register}
-          error={errors.shrinkage}
-        />
-
-        <FormField
-          label="Absorption (%)"
-          name="absorption"
-          type="number"
-          register={register}
-          error={errors.absorption}
-        />
-      </div>
-
-      <FormSelect
-        label="Plasticity"
-        name="plasticity"
-        register={register}
-        options={PLASTICITY_OPTIONS}
-        error={errors.plasticity}
-      />
-
-      <FormSelect
-        label="Texture"
-        name="texture"
-        register={register}
-        options={TEXTURE_OPTIONS}
-        error={errors.texture}
       />
 
       <FormField
@@ -137,25 +63,107 @@ export function ClayBodyForm({
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <FormField
-          label="Colour (Oxidation)"
-          name="colour_oxidation"
+          label="Cone"
+          name="cone"
           register={register}
-          error={errors.colour_oxidation}
+          error={errors.cone}
+        />
+
+        <FormField
+          label="Firing Temperature"
+          name="firingTemperature"
+          register={register}
+          error={errors.firingTemperature}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <FormSelect
+          label="Texture"
+          name="texture"
+          register={register}
+          options={[
+            { value: 'Smooth', label: 'Smooth' },
+            { value: 'Fine Grog', label: 'Fine Grog' },
+            { value: 'Medium Grog', label: 'Medium Grog' },
+            { value: 'Coarse Grog', label: 'Coarse Grog' }
+          ]}
+          error={errors.texture}
+        />
+
+        <FormSelect
+          label="Plasticity"
+          name="plasticity"
+          register={register}
+          options={[
+            { value: 'Very Plastic', label: 'Very Plastic' },
+            { value: 'Plastic', label: 'Plastic' },
+            { value: 'Medium', label: 'Medium' },
+            { value: 'Slightly Plastic', label: 'Slightly Plastic' },
+            { value: 'Non-Plastic', label: 'Non-Plastic' }
+          ]}
+          error={errors.plasticity}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <FormField
+          label="Colour (Oxidation)"
+          name="colourOxidation"
+          register={register}
+          error={errors.colourOxidation}
         />
 
         <FormField
           label="Colour (Reduction)"
-          name="colour_reduction"
+          name="colourReduction"
           register={register}
-          error={errors.colour_reduction}
+          error={errors.colourReduction}
         />
       </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <FormField
+          label="Shrinkage (%)"
+          name="shrinkage"
+          type="number"
+          step="0.1"
+          register={register}
+          error={errors.shrinkage}
+        />
+
+        <FormField
+          label="Absorption (%)"
+          name="absorption"
+          type="number"
+          step="0.1"
+          register={register}
+          error={errors.absorption}
+        />
+      </div>
+
+      <FormField
+        label="Mesh Size"
+        name="meshSize"
+        type="number"
+        register={register}
+        error={errors.meshSize}
+      />
+
+      <FormField
+        label="Image URL"
+        name="imageUrl"
+        register={register}
+        error={errors.imageUrl}
+        placeholder="https://example.com/image.jpg"
+      />
 
       <FormTextarea
         label="Notes"
         name="notes"
         register={register}
         error={errors.notes}
+        placeholder="Add any additional notes about this clay body..."
       />
 
       <ActionButton type="submit" isLoading={isSubmitting}>

@@ -13,8 +13,8 @@ export default async function NewTestTilePage() {
     redirect('/login')
   }
 
-  // Get all available clay bodies, decorations, and test series for the form
-  const [clayBodies, decorations, testSeries] = await Promise.all([
+  // Get all available clay bodies, decorations, and collections for the form
+  const [clayBodies, decorations, collections] = await Promise.all([
     prisma.clayBody.findMany({
       where: { userId: session.user.id },
       select: { id: true, name: true },
@@ -39,7 +39,7 @@ export default async function NewTestTilePage() {
         action={createTestTile}
         clayBodies={clayBodies}
         decorations={decorations}
-        testSeries={testSeries}
+        collections={collections}
       />
     </FormLayout>
   )
