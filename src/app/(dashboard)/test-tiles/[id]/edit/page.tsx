@@ -18,15 +18,15 @@ export default async function EditTestTilePage({
     redirect('/login')
   }
 
-  const testTile = await prisma.testTiles.findFirst({
+  const testTile = await prisma.testTile.findFirst({
     where: {
       id: params.id,
-      user_id: session.user.id,
+      userId: session.user.id,
     },
     include: {
-      clay_body: true,
-      decoration: true,
-      test_series: true,
+      clayBody: true,
+      decorations: true,
+      collections: true,
     },
   })
 
@@ -36,27 +36,26 @@ export default async function EditTestTilePage({
 
   // Get all available clay bodies, decorations, and test series for the form
   const [clayBodies, decorations, testSeries] = await Promise.all([
-    prisma.clayBodies.findMany({
-      where: { user_id: session.user.id },
+    prisma.clayBody.findMany({
+      where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
-    prisma.decorations.findMany({
-      where: { user_id: session.user.id },
+    prisma.decoration.findMany({
+      where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
-    prisma.testSeries.findMany({
-      where: { user_id: session.user.id },
+    prisma.collection.findMany({
+      where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
   ])
-
+  
   // Transform the Prisma data into form data format
   const formData: TestTileFormData = {
     name: testTile.name,
-    description: testTile.description || undefined,
-    clay_body_id: testTile.clay_body_id,
-    decoration_id: testTile.decoration_id || undefined,
-    test_series_id: testTile.test_series_id || undefined,
+    clay_body_id: testTile.clayBodyId,
+    decoration_id: testTile.decorations.length > 0 ? testTile.decorations[0].id : undefined,
+    test_series_id: testTile.collections.length > 0 ? testTile.collections[0].id : undefined,
   }
 
   return (

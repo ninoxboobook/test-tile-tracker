@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { TestSeriesForm } from '@/components/test-series/test-series-form'
+import { TestSeriesForm } from '@/components/collections/test-series-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { createTestSeries } from './actions'
 

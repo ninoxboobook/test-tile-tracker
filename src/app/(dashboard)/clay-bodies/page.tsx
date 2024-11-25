@@ -14,12 +14,12 @@ export default async function ClayBodiesPage() {
     redirect('/login')
   }
 
-  const clayBodies = await prisma.clayBodies.findMany({
+  const clayBodies = await prisma.clayBody.findMany({
     where: {
-      user_id: session.user.id
+      userId: session.user.id
     },
     orderBy: {
-      created_at: 'desc'
+      createdAt: 'desc'
     }
   })
 

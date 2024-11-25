@@ -14,17 +14,17 @@ export default async function TestTilesPage() {
     redirect('/login')
   }
 
-  const testTiles = await prisma.testTiles.findMany({
+  const testTiles = await prisma.testTile.findMany({
     where: {
-      user_id: session.user.id,
+      userId: session.user.id,
     },
     include: {
-      test_series: true,
-      clay_body: true,
-      decoration: true,
+      collections: true,
+      clayBody: true,
+      decorations: true,
     },
     orderBy: {
-      created_at: 'desc',
+      createdAt: 'desc',
     },
   })
 

@@ -13,17 +13,17 @@ export default async function DashboardPage() {
   }
 
   const [testTileCount, testSeriesCount, clayBodiesCount, decorationsCount] = await Promise.all([
-    prisma.testTiles.count({
-      where: { user_id: session.user.id }
+    prisma.testTile.count({
+      where: { userId: session.user.id }
     }),
-    prisma.testSeries.count({
-      where: { user_id: session.user.id }
+    prisma.collection.count({
+      where: { userId: session.user.id }
     }),
-    prisma.clayBodies.count({
-      where: { user_id: session.user.id }
+    prisma.clayBody.count({
+      where: { userId: session.user.id }
     }),
-    prisma.decorations.count({
-      where: { user_id: session.user.id }
+    prisma.decoration.count({
+      where: { userId: session.user.id }
     })
   ])
 

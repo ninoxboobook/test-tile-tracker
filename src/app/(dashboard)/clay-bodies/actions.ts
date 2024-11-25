@@ -6,7 +6,6 @@ import { prisma } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { type enum_ClayBodies_type } from '@prisma/client'
 
 const clayBodySchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -37,7 +36,7 @@ async function validateSession() {
 export async function getClayBody(id: string) {
   const session = await validateSession()
 
-  const clayBody = await prisma.clayBodies.findUnique({
+  const clayBody = await prisma.clayBody.findUnique({
     where: { id },
   })
 
@@ -45,7 +44,7 @@ export async function getClayBody(id: string) {
     throw new Error('Clay body not found')
   }
 
-  if (clayBody.user_id !== session.user.id) {
+  if (clayBody.userId !== session.user.id) {
     throw new Error('Unauthorized')
   }
 
@@ -57,13 +56,13 @@ export async function createClayBody(data: ClayBodyFormData) {
 
   const validatedData = clayBodySchema.parse(data)
 
-  const clayBody = await prisma.clayBodies.create({
+  const clayBody = await prisma.clayBody.create({
     data: {
       ...validatedData,
-      user_id: session.user.id,
-      created_at: new Date(),
-      updated_at: new Date(),
-      type: validatedData.type as enum_ClayBodies_type,
+      userId: session.user.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      type: validatedData.type,
     },
   })
 
@@ -76,7 +75,7 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
 
   const validatedData = clayBodySchema.parse(data)
 
-  const clayBody = await prisma.clayBodies.findUnique({
+  const clayBody = await prisma.clayBody.findUnique({
     where: { id },
   })
 
@@ -84,16 +83,16 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
     throw new Error('Clay body not found')
   }
 
-  if (clayBody.user_id !== session.user.id) {
+  if (clayBody.userId !== session.user.id) {
     throw new Error('Unauthorized')
   }
 
-  await prisma.clayBodies.update({
+  await prisma.clayBody.update({
     where: { id },
     data: {
       ...validatedData,
-      updated_at: new Date(),
-      type: validatedData.type as enum_ClayBodies_type,
+      updatedAt: new Date(),
+      type: validatedData.type,
     },
   })
 
@@ -105,7 +104,7 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
 export async function deleteClayBody(id: string) {
   const session = await validateSession()
 
-  const clayBody = await prisma.clayBodies.findUnique({
+  const clayBody = await prisma.clayBody.findUnique({
     where: { id },
   })
 
@@ -113,11 +112,11 @@ export async function deleteClayBody(id: string) {
     throw new Error('Clay body not found')
   }
 
-  if (clayBody.user_id !== session.user.id) {
+  if (clayBody.userId !== session.user.id) {
     throw new Error('Unauthorized')
   }
 
-  await prisma.clayBodies.delete({
+  await prisma.clayBody.delete({
     where: { id },
   })
 

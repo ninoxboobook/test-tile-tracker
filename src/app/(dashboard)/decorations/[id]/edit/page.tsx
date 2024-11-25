@@ -24,10 +24,10 @@ export default async function EditDecorationPage({
     redirect('/login')
   }
 
-  const decoration = await prisma.decorations.findFirst({
+  const decoration = await prisma.decoration.findFirst({
     where: {
       id: params.id,
-      user_id: session.user.id,
+      userId: session.user.id,
     },
   })
 
@@ -43,14 +43,7 @@ export default async function EditDecorationPage({
   const formData: DecorationFormData = {
     name: decoration.name,
     type: convertDecorationType(decoration.type),
-    description: decoration.description || undefined,
-    color: decoration.color || undefined,
-    color_reaction: decoration.color_reaction || undefined,
     cone: decoration.cone || undefined,
-    firing_atmosphere: decoration.firing_atmosphere || undefined,
-    firing_temperature: decoration.firing_temperature || undefined,
-    food_safe: decoration.food_safe || undefined,
-    ingredients: jsonToString(decoration.ingredients),
     manufacturer: decoration.manufacturer || undefined,
     surface: decoration.surface || undefined,
     transparency: decoration.transparency || undefined,

@@ -6,7 +6,7 @@ import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { decorationSchema } from '@/lib/schemas/decoration'
 import { revalidatePath } from 'next/cache'
-import { enum_Decorations_atmosphere, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 export async function updateDecoration(formData: FormData) {
   const session = await getServerSession(authOptions)
@@ -19,26 +19,19 @@ export async function updateDecoration(formData: FormData) {
   const rawData = Object.fromEntries(formData.entries())
   const validatedData = decorationSchema.parse(rawData)
 
-  const updateData: Prisma.DecorationsUpdateInput = {
+  const updateData: Prisma.DecorationUpdateInput = {
     name: validatedData.name,
     type: validatedData.type,
-    description: validatedData.description || null,
-    color: validatedData.color || null,
-    color_reaction: validatedData.color_reaction || null,
     cone: validatedData.cone || null,
-    firing_atmosphere: validatedData.firing_atmosphere as enum_Decorations_atmosphere || null,
-    firing_temperature: validatedData.firing_temperature || null,
-    food_safe: validatedData.food_safe || null,
-    ingredients: validatedData.ingredients ? JSON.parse(validatedData.ingredients) : null,
     manufacturer: validatedData.manufacturer || null,
     surface: validatedData.surface || null,
     transparency: validatedData.transparency || null,
   }
 
-  await prisma.decorations.update({
+  await prisma.decoration.update({
     where: {
       id,
-      user_id: session.user.id,
+      userId: session.user.id,
     },
     data: updateData,
   })

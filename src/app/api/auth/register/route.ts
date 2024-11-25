@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const { email, password, username } = registerSchema.parse(body)
 
     // Check if user already exists
-    const existingUser = await prisma.users.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email },
     })
 
@@ -28,13 +28,13 @@ export async function POST(req: Request) {
 
     const hashedPassword = await hash(password, 10)
 
-    const user = await prisma.users.create({
+    const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         username,
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     })
 

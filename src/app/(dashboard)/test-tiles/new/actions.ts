@@ -18,33 +18,32 @@ export async function createTestTile(formData: FormData) {
   const rawData = Object.fromEntries(formData.entries())
   const validatedData = testTileSchema.parse(rawData)
 
-  const createData: Prisma.TestTilesCreateInput = {
+  const createData: Prisma.TestTileCreateInput = {
     name: validatedData.name,
-    description: validatedData.description || null,
-    created_at: new Date(),
+    createdAt: new Date(),
     user: {
       connect: {
         id: session.user.id
       }
     },
-    clay_body: {
+    clayBody: {
       connect: {
         id: validatedData.clay_body_id
       }
     },
-    decoration: validatedData.decoration_id ? {
+    decorations: validatedData.decoration_id ? {
       connect: {
         id: validatedData.decoration_id
       }
     } : undefined,
-    test_series: validatedData.test_series_id ? {
+    collections: validatedData.test_series_id ? {
       connect: {
         id: validatedData.test_series_id
       }
     } : undefined
   }
 
-  const testTile = await prisma.testTiles.create({
+  const testTile = await prisma.testTile.create({
     data: createData
   })
 

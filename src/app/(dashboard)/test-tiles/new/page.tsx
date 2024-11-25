@@ -15,16 +15,16 @@ export default async function NewTestTilePage() {
 
   // Get all available clay bodies, decorations, and test series for the form
   const [clayBodies, decorations, testSeries] = await Promise.all([
-    prisma.clayBodies.findMany({
-      where: { user_id: session.user.id },
+    prisma.clayBody.findMany({
+      where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
-    prisma.decorations.findMany({
-      where: { user_id: session.user.id },
+    prisma.decoration.findMany({
+      where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
-    prisma.testSeries.findMany({
-      where: { user_id: session.user.id },
+    prisma.collection.findMany({
+      where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
   ])

@@ -5,7 +5,6 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { type enum_ClayBodies_type } from '@prisma/client'
 
 const clayBodySchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -38,15 +37,15 @@ export async function createClayBody(formData: FormData) {
   // Extract numeric fields
   const { shrinkage, absorption, ...rest } = validatedData
 
-  const clayBody = await prisma.clayBodies.create({
+  const clayBody = await prisma.clayBody.create({
     data: {
       ...rest,
       shrinkage: shrinkage || null,
       absorption: absorption || null,
-      user_id: session.user.id,
-      created_at: new Date(),
-      updated_at: new Date(),
-      type: validatedData.type as enum_ClayBodies_type,
+      userId: session.user.id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      type: validatedData.type,
     },
   })
 

@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { enum_TestSeries_status } from '@prisma/client'
 
-export const testSeriesSchema = z.object({
+export const collectionSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
   variables: z.string().optional(), // JSON stored as string in form
@@ -10,4 +10,4 @@ export const testSeriesSchema = z.object({
   conclusions: z.string().optional(),
 })
 
-export type TestSeriesFormData = z.infer<typeof testSeriesSchema> 
+export type CollectionFormData = z.infer<typeof collectionSchema> 

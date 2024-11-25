@@ -53,10 +53,10 @@ export default async function EditClayBodyPage({
     redirect('/login')
   }
 
-  const clayBody = await prisma.clayBodies.findFirst({
+  const clayBody = await prisma.clayBody.findFirst({
     where: {
       id: params.id,
-      user_id: session.user.id,
+      userId: session.user.id,
     },
   })
 
@@ -66,17 +66,14 @@ export default async function EditClayBodyPage({
 
   const formData: ClayBodyFormData = {
     name: clayBody.name,
-    type: clayBody.type === 'Bone_China' ? 'Bone China' : clayBody.type,
+    type: clayBody.type,
     cone: clayBody.cone || '',
-    description: clayBody.description || undefined,
-    cone_range: clayBody.cone_range || undefined,
     manufacturer: clayBody.manufacturer || undefined,
-    firing_temperature: clayBody.firing_temperature || undefined,
+    firing_temperature: clayBody.firingTemperature || undefined,
     plasticity: convertNullableToEnum(clayBody.plasticity, PLASTICITY_VALUES),
     texture: convertNullableToEnum(clayBody.texture, TEXTURE_VALUES),
-    composition: jsonToString(clayBody.composition),
-    colour_oxidation: clayBody.colour_oxidation || undefined,
-    colour_reduction: clayBody.colour_reduction || undefined,
+    colour_oxidation: clayBody.colourOxidation || undefined,
+    colour_reduction: clayBody.colourReduction || undefined,
     shrinkage: numberToString(clayBody.shrinkage),
     absorption: numberToString(clayBody.absorption),
     notes: clayBody.notes || undefined,

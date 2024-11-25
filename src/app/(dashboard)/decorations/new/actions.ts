@@ -16,12 +16,13 @@ export async function createDecoration(formData: FormData) {
   const data = Object.fromEntries(formData.entries())
   const validatedData = decorationSchema.parse(data)
 
-  const decoration = await prisma.decorations.create({
+  const decoration = await prisma.decoration.create({
     data: {
       ...validatedData,
-      user_id: session.user.id,
-      created_at: new Date(),
-      updated_at: new Date(),
+      userId: session.user.id,
+      category: validatedData.type,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   })
 

@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation'
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
   { name: 'Test Tiles', href: '/test-tiles' },
-  { name: 'Test Series', href: '/test-series' },
+  { name: 'Collections', href: '/collections' },
   { name: 'Clay Bodies', href: '/clay-bodies' },
   { name: 'Decorations', href: '/decorations' },
 ]

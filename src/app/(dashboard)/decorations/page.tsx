@@ -14,12 +14,12 @@ export default async function DecorationsPage() {
     redirect('/login')
   }
 
-  const decorations = await prisma.decorations.findMany({
+  const decorations = await prisma.decoration.findMany({
     where: {
-      user_id: session.user.id
+      userId: session.user.id
     },
     orderBy: {
-      created_at: 'desc'
+      createdAt: 'desc'
     }
   })
 

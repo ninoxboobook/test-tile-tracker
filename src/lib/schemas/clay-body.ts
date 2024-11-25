@@ -26,17 +26,12 @@ export const CLAY_BODY_TYPES = [
 
 export const clayBodySchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  type: z.enum(CLAY_BODY_TYPES, {
-    required_error: 'Please select a type',
-  }),
+  type: z.string(),
   cone: z.string(),
-  description: z.string().optional(),
-  cone_range: z.string().optional(),
   manufacturer: z.string().optional(),
   firing_temperature: z.string().optional(),
   plasticity: z.enum(PLASTICITY_VALUES).optional(),
   texture: z.enum(TEXTURE_VALUES).optional(),
-  composition: z.string().optional(),
   colour_oxidation: z.string().optional(),
   colour_reduction: z.string().optional(),
   shrinkage: z.string().optional(),

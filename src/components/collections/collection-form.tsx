@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { testSeriesSchema, type TestSeriesFormData } from '@/lib/schemas/test-series'
+import { collectionSchema, type CollectionFormData } from '@/lib/schemas/collection'
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
@@ -15,8 +15,8 @@ const STATUS_OPTIONS = Object.values(enum_TestSeries_status).map(status => ({
   label: status.charAt(0).toUpperCase() + status.slice(1)
 }))
 
-interface TestSeriesFormProps {
-  initialData?: TestSeriesFormData
+interface CollectionFormProps {
+  initialData?: CollectionFormData
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }
@@ -25,12 +25,12 @@ export function TestSeriesForm({
   initialData,
   action,
   submitButtonText = 'Create Test Series'
-}: TestSeriesFormProps) {
+}: CollectionFormProps) {
   const {
     register,
     formState: { errors, isSubmitting }
-  } = useForm<TestSeriesFormData>({
-    resolver: zodResolver(testSeriesSchema),
+  } = useForm<CollectionFormData>({
+    resolver: zodResolver(collectionSchema),
     defaultValues: initialData
   })
 

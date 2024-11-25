@@ -15,10 +15,10 @@ export default async function ClayBodyPage({
     return notFound()
   }
 
-  const clayBody = await prisma.clayBodies.findFirst({
+  const clayBody = await prisma.clayBody.findFirst({
     where: {
       id: params.id,
-      user_id: session.user.id,
+      userId: session.user.id,
     },
   })
 
@@ -56,24 +56,24 @@ export default async function ClayBodyPage({
           <dd className="mt-1 text-sm text-gray-900">{clayBody.cone}</dd>
         </div>
 
-        {clayBody.firing_temperature && (
+        {clayBody.firingTemperature && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Firing Temperature (°C)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.firing_temperature}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.firingTemperature}</dd>
           </div>
         )}
 
-        {clayBody.colour_oxidation && (
+        {clayBody.colourOxidation && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Colour (Oxidation)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.colour_oxidation}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.colourOxidation}</dd>
           </div>
         )}
 
-        {clayBody.colour_reduction && (
+        {clayBody.colourReduction && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Colour (Reduction)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.colour_reduction}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.colourReduction}</dd>
           </div>
         )}
 
@@ -105,21 +105,6 @@ export default async function ClayBodyPage({
           </div>
         )}
 
-        {clayBody.description && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Description</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.description}</dd>
-          </div>
-        )}
-
-        {clayBody.composition && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Composition</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              <pre className="whitespace-pre-wrap">{JSON.stringify(clayBody.composition, null, 2)}</pre>
-            </dd>
-          </div>
-        )}
       </dl>
     </div>
   )
