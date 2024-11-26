@@ -7,12 +7,6 @@ import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateCollection } from './actions'
 import type { CollectionFormData } from '@/lib/schemas/collection'
 
-// Helper function to convert JSON to string
-function jsonToString(value: any): string | undefined {
-  if (!value) return undefined
-  return typeof value === 'string' ? value : JSON.stringify(value)
-}
-
 export default async function EditCollectionPage({
   params,
 }: {
@@ -24,7 +18,7 @@ export default async function EditCollectionPage({
     redirect('/login')
   }
 
-  const collection = await prisma.collection.findFirst({
+  const collection = await prisma.collection.findUnique({
     where: {
       id: params.id,
       userId: session.user.id,
@@ -37,7 +31,7 @@ export default async function EditCollectionPage({
 
   const formData: CollectionFormData = {
     name: collection.name,
-    description: collection.description || undefined,
+    description: collection.description || null,
   }
 
   return (

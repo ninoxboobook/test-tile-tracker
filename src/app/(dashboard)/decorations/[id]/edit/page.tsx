@@ -7,12 +7,6 @@ import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateDecoration } from './actions'
 import type { DecorationFormData } from '@/lib/schemas/decoration'
 
-// Helper function to convert JSON to string
-function jsonToString(value: any): string | undefined {
-  if (!value) return undefined
-  return typeof value === 'string' ? value : JSON.stringify(value)
-}
-
 export default async function EditDecorationPage({
   params,
 }: {
@@ -24,7 +18,7 @@ export default async function EditDecorationPage({
     redirect('/login')
   }
 
-  const decoration = await prisma.decoration.findFirst({
+  const decoration = await prisma.decoration.findUnique({
     where: {
       id: params.id,
       userId: session.user.id,
@@ -35,18 +29,20 @@ export default async function EditDecorationPage({
     return notFound()
   }
 
-  // Helper function to convert database type to form type
-  function convertDecorationType(type: string): DecorationFormData['type'] {
-    return type as DecorationFormData['type']
-  }
-
   const formData: DecorationFormData = {
     name: decoration.name,
-    type: convertDecorationType(decoration.type),
-    cone: decoration.cone || undefined,
-    manufacturer: decoration.manufacturer || undefined,
-    surface: decoration.surface || undefined,
-    transparency: decoration.transparency || undefined,
+    category: decoration.category,
+    type: decoration.type,
+    manufacturer: decoration.manufacturer || null,
+    cone: decoration.cone || null,
+    atmosphere: decoration.atmosphere || null,
+    colour: decoration.colour || null,
+    surface: decoration.surface || null,
+    transparency: decoration.transparency || null,
+    glazyUrl: decoration.glazyUrl || null,
+    imageUrl: decoration.imageUrl || null,
+    recipe: decoration.recipe || null,
+    notes: decoration.notes || null,
   }
 
   return (

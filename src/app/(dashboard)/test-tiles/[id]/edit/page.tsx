@@ -18,7 +18,7 @@ export default async function EditTestTilePage({
     redirect('/login')
   }
 
-  const testTile = await prisma.testTile.findFirst({
+  const testTile = await prisma.testTile.findUnique({
     where: {
       id: params.id,
       userId: session.user.id,
@@ -34,7 +34,6 @@ export default async function EditTestTilePage({
     return notFound()
   }
 
-  // Get all available clay bodies, decorations, and collections for the form
   const [clayBodies, decorations, collections] = await Promise.all([
     prisma.clayBody.findMany({
       where: { userId: session.user.id },
@@ -49,10 +48,12 @@ export default async function EditTestTilePage({
       select: { id: true, name: true },
     }),
   ])
-  
-  // Transform the Prisma data into form data format
+
   const formData: TestTileFormData = {
     name: testTile.name,
+    stamp: testTile.stamp || null,
+    notes: testTile.notes || null,
+    imageUrl: testTile.imageUrl || null,
     clayBodyId: testTile.clayBodyId,
     decorationIds: testTile.decorations.map(decoration => decoration.id),
     collectionIds: testTile.collections.map(collection => collection.id),
