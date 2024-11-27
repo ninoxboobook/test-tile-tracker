@@ -3,41 +3,45 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { compare } from 'bcryptjs'
+import { loginSchema } from './validations/auth'
+
+// 15 minutes
+const REFRESH_TOKEN_EXPIRY = 15 * 60
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: REFRESH_TOKEN_EXPIRY,
+    updateAge: 0, // Always update the token
+  },
+  jwt: {
+    maxAge: REFRESH_TOKEN_EXPIRY,
   },
   pages: {
     signIn: '/login',
-    error: '/login', // Redirect to login page on error
+    error: '/login',
   },
   providers: [
     CredentialsProvider({
       id: 'credentials',
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'hello@example.com' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
-          console.log('Login attempt:', {
-            email: credentials?.email,
-            timestamp: new Date().toISOString()
-          })
-
-          if (!credentials?.email || !credentials?.password) {
-            console.log('Missing credentials')
+          const result = loginSchema.safeParse(credentials)
+          
+          if (!result.success) {
             return null
           }
 
+          const { email, password } = result.data
+          
           const user = await prisma.user.findUnique({
-            where: {
-              email: credentials.email,
-            },
+            where: { email },
             select: {
               id: true,
               email: true,
@@ -46,47 +50,43 @@ export const authOptions: NextAuthOptions = {
             }
           })
 
-          console.log('User found:', user ? 'yes' : 'no')
-
-          if (!user || !user?.password) {
-            console.log('User not found or no password')
+          if (!user?.password) {
             return null
           }
 
-          const isPasswordValid = await compare(credentials.password, user.password)
-
-          console.log('Password check:', isPasswordValid ? 'passed' : 'failed')
+          const isPasswordValid = await compare(password, user.password)
 
           if (!isPasswordValid) {
-            console.log('Password incorrect')
             return null
           }
 
-          console.log('Login successful for user:', user.email)
-          
-          // Return the user object that will be saved in the JWT
           return {
             id: user.id,
             email: user.email,
             username: user.username
           }
         } catch (error) {
-          console.error('Auth error:', error)
+          if (error instanceof Error) {
+            throw error
+          }
           return null
         }
       }
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
-        return {
-          ...token,
-          id: user.id,
-          email: user.email,
-          username: user.username
-        }
+        token.id = user.id
+        token.email = user.email
+        token.username = user.username
       }
+
+      // Force token refresh when session is updated
+      if (trigger === 'update') {
+        token.iat = Math.floor(Date.now() / 1000)
+      }
+
       return token
     },
     async session({ session, token }) {
@@ -98,6 +98,15 @@ export const authOptions: NextAuthOptions = {
       return session
     }
   },
+  events: {
+    async signOut({ token }) {
+      // Invalidate the token on sign out
+      if (token && typeof token.jti === 'string') {
+        await prisma.session.delete({
+          where: { sid: token.jti }
+        })
+      }
+    }
+  },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true
 }
