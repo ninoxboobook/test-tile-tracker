@@ -16,7 +16,15 @@ export async function createTestTile(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = testTileSchema.parse(rawData)
+
+  // Convert comma-separated strings to arrays for multi-select fields
+  const processedData = {
+    ...rawData,
+    decorationIds: rawData.decorationIds ? String(rawData.decorationIds).split(',') : undefined,
+    collectionIds: rawData.collectionIds ? String(rawData.collectionIds).split(',') : undefined,
+  }
+
+  const validatedData = testTileSchema.parse(processedData)
 
   const createData: Prisma.TestTileCreateInput = {
     name: validatedData.name,
