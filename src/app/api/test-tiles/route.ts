@@ -1,6 +1,7 @@
 import { createApiHandler } from '@/lib/api/baseHandler';
 import { prisma } from '@/lib/prisma';
 import { testTileSchema } from '@/types';
+import { NextResponse } from 'next/server';
 
 export const GET = createApiHandler(async (req, { session }) => {
   const testTiles = await prisma.testTile.findMany({

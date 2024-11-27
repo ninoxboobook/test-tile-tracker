@@ -7,107 +7,105 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
   id          String        @id @default(uuid()) @db.Uuid
   email       String        @unique @db.VarChar(255)
   username    String        @unique @db.VarChar(255)
   password    String        @db.VarChar(255)
+  firstName   String?       @db.VarChar(255)
+  lastName    String?       @db.VarChar(255)
+  imageUrl    String?       @db.VarChar(255)
   lastAutoId  String?       @default("0A") @db.VarChar(255)
-  created_at   DateTime      @db.Timestamptz(6)
-  updated_at   DateTime      @updatedAt @db.Timestamptz(6)
-  clay_bodies  ClayBodies[]
-  decorations  Decorations[]
-  test_series  TestSeries[]
-  test_tiles   TestTiles[]
+  createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+  clayBodies  ClayBody[]
+  decorations  Decoration[]
+  testTiles   TestTile[]
+  collections  Collection[]
 
   @@map("users")
 }
 
-model TestSeries {
+model Collection {
   id          String                 @id @default(uuid()) @db.Uuid
   name        String                 @db.VarChar(255)
   description String?
-  user_id      String                 @db.Uuid
-  created_at   DateTime               @db.Timestamptz(6)
-  updated_at   DateTime               @updatedAt @db.Timestamptz(6)
-  variables   Json?
-  goal        String?
-  status      enum_TestSeries_status @default(planned)
-  conclusions String?
-  user        Users                  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  test_tiles   TestTiles[]
+  userId      String                 @db.Uuid
+  createdAt   DateTime               @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime               @updatedAt @db.Timestamptz(6)
+  user        User                 @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testTiles   TestTile[]
 
-  @@map("test_series")
+  @@map("collections")
 }
 
-model ClayBodies {
+model ClayBody {
   id                String               @id @default(uuid()) @db.Uuid
   name              String               @db.VarChar(255)
-  type              enum_ClayBodies_type @default(Stoneware)
-  description       String?
-  cone_range         String?              @db.VarChar(255)
-  user_id            String               @db.Uuid
-  created_at         DateTime             @db.Timestamptz(6)
-  updated_at         DateTime             @updatedAt @db.Timestamptz(6)
+  type              String               @db.VarChar(255)
   manufacturer      String?              @db.VarChar(255)
-  composition       Json?
-  firing_temperature String?              @db.VarChar(255)
   cone              String?              @db.VarChar(255)
-  plasticity        String?              @db.VarChar(255)
+  firingTemperature String?              @db.VarChar(255)
   texture           String?              @db.VarChar(255)
-  colour_oxidation  String?              @db.VarChar(255)
-  colour_reduction  String?              @db.VarChar(255)
+  plasticity        String?              @db.VarChar(255)
+  colourOxidation  String?              @db.VarChar(255)
+  colourReduction  String?              @db.VarChar(255)
   shrinkage         Float?               @db.Real
   absorption        Float?               @db.Real
+  meshSize          Int?                 @db.Integer
+  imageUrl          String?              @db.VarChar(255)
   notes             String?              @db.Text
-  user              Users                @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  test_tiles         TestTiles[]
+  userId            String               @db.Uuid
+  createdAt         DateTime             @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime             @updatedAt @db.Timestamptz(6)
+  user              User                @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testTiles        TestTile[]
 
   @@map("clay_bodies")
-  @@unique([user_id, name], map: "clay_bodies_user_id_name")
-  @@index([user_id, type], map: "clay_bodies_user_id_type")
+  @@unique([userId, name], map: "clay_bodies_user_id_name")
+  @@index([userId, type], map: "clay_bodies_user_id_type")
 }
 
-model Decorations {
+model Decoration {
   id                String                    @id @default(uuid()) @db.Uuid
   name              String                    @db.VarChar(255)
+  category          String                    @db.VarChar(255)
   type              String                    @db.VarChar(255)
-  description       String?
-  user_id            String                    @db.Uuid
-  created_at         DateTime                  @db.Timestamptz(6)
-  updated_at         DateTime                  @updatedAt @db.Timestamptz(6)
-  color             String?                   @db.VarChar(255)
-  color_reaction     String?                   @db.VarChar(255)
-  cone              String?                   @db.VarChar(255)
-  firing_atmosphere  enum_Decorations_atmosphere?
-  firing_temperature String?                   @db.VarChar(255)
-  food_safe          Boolean?
-  ingredients       Json?
   manufacturer      String?                   @db.VarChar(255)
+  cone              String?                   @db.VarChar(255)
+  atmosphere        String?                   @db.VarChar(255)
+  colour            String?                   @db.VarChar(255)
   surface           String?                   @db.VarChar(255)
   transparency      String?                   @db.VarChar(255)
-  user              Users                     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  test_tiles         TestTiles[]
+  glazyUrl          String?                   @db.VarChar(255)
+  imageUrl          String?                   @db.VarChar(255)
+  recipe            String?                   @db.Text
+  notes             String?                   @db.Text
+  userId            String                    @db.Uuid
+  createdAt         DateTime                  @default(now()) @db.Timestamptz(6)
+  updatedAt         DateTime                  @updatedAt @db.Timestamptz(6)
+  user              User                     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testTiles         TestTile[]
 
   @@map("decorations")
-  @@unique([user_id, name], map: "decorations_user_id_name")
-  @@index([user_id, type], map: "decorations_user_id_type")
+  @@unique([userId, name], map: "decorations_user_id_name")
+  @@index([userId, type], map: "decorations_user_id_type")
 }
 
-model TestTiles {
-  id           String      @id @default(uuid()) @db.Uuid
-  name         String      @db.VarChar(255)
-  description  String?
-  user_id       String      @db.Uuid
-  clay_body_id   String      @db.Uuid
-  decoration_id String?     @db.Uuid
-  test_series_id String?     @db.Uuid
-  created_at    DateTime    @db.Timestamptz(6)
-  updated_at    DateTime    @updatedAt @db.Timestamptz(6)
-  clay_body     ClayBodies  @relation(fields: [clay_body_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  decoration   Decorations? @relation(fields: [decoration_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  test_series   TestSeries? @relation(fields: [test_series_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user         Users       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model TestTile {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String        @db.VarChar(255)
+  stamp        String?       @db.VarChar(255)
+  notes        String?       @db.Text
+  imageUrl     String?       @db.VarChar(255)
+  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime      @updatedAt @db.Timestamptz(6)
+  userId       String        @db.Uuid
+  clayBodyId   String        @db.Uuid
+  decorations  Decoration[]
+  collections  Collection[]
+  clayBody     ClayBody      @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("test_tiles")
 }
@@ -122,46 +120,11 @@ model Session {
 
 model UserSession {
   id        String   @id(map: "user_sessions_pkey") @default(uuid()) @db.Uuid
-  user_id    String   @db.Uuid
+  userId    String   @db.Uuid
   token     String   @unique
-  expires_at DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("user_sessions")
-}
-
-enum enum_TestSeries_status {
-  planned
-  in_progress @map("in-progress")
-  completed
-  archived
-}
-
-enum enum_ClayBodies_type {
-  Raku
-  Earthenware
-  Stoneware
-  Bone_China @map("Bone China")
-  Porcelain
-  Wild
-}
-
-enum enum_Decorations_atmosphere {
-  oxidation
-  reduction
-}
-
-enum enum_Decorations_category {
-  commercial
-  studio
-  formula
-}
-
-enum enum_Decorations_type {
-  glaze
-  slip
-  underglaze
-  oxide
-  engobe
 }

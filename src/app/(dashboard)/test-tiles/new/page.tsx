@@ -1,10 +1,46 @@
-import { TestTileForm } from '@/components/forms/test-tile-form';
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+import { redirect } from 'next/navigation'
+import { TestTileForm } from '@/components/test-tiles/test-tile-form'
+import { FormLayout } from '@/components/ui/layout/form-layout'
+import { createTestTile } from './actions'
 
-export default function NewTestTilePage() {
+export default async function NewTestTilePage() {
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user?.id) {
+    redirect('/login')
+  }
+
+  // Get all available clay bodies, decorations, and collections for the form
+  const [clayBodies, decorations, collections] = await Promise.all([
+    prisma.clayBody.findMany({
+      where: { userId: session.user.id },
+      select: { id: true, name: true },
+    }),
+    prisma.decoration.findMany({
+      where: { userId: session.user.id },
+      select: { id: true, name: true },
+    }),
+    prisma.collection.findMany({
+      where: { userId: session.user.id },
+      select: { id: true, name: true },
+    }),
+  ])
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Create New Test Tile</h1>
-      <TestTileForm />
-    </div>
-  );
+    <FormLayout 
+      title="New Test Tile"
+      description="Document a new test tile"
+      backHref="/test-tiles"
+    >
+      <TestTileForm 
+        action={createTestTile}
+        clayBodies={clayBodies}
+        decorations={decorations}
+        collections={collections}
+      />
+    </FormLayout>
+  )
 }

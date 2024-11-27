@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default async function ClayBodyPage({
   params,
@@ -15,10 +16,13 @@ export default async function ClayBodyPage({
     return notFound()
   }
 
-  const clayBody = await prisma.clayBodies.findFirst({
+  const clayBody = await prisma.clayBody.findUnique({
     where: {
       id: params.id,
-      user_id: session.user.id,
+      userId: session.user.id,
+    },
+    include: {
+      testTiles: true,
     },
   })
 
@@ -38,6 +42,17 @@ export default async function ClayBodyPage({
         </Link>
       </div>
 
+      {clayBody.imageUrl && (
+        <div className="relative h-64 w-full overflow-hidden rounded-lg">
+          <Image
+            src={clayBody.imageUrl}
+            alt={clayBody.name}
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
+
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
           <dt className="text-sm font-medium text-gray-500">Type</dt>
@@ -51,43 +66,52 @@ export default async function ClayBodyPage({
           </div>
         )}
 
-        <div className="sm:col-span-1">
-          <dt className="text-sm font-medium text-gray-500">Cone</dt>
-          <dd className="mt-1 text-sm text-gray-900">{clayBody.cone}</dd>
-        </div>
+        {clayBody.cone && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Cone</dt>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.cone}</dd>
+          </div>
+        )}
 
-        {clayBody.firing_temperature && (
+        {clayBody.firingTemperature && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Firing Temperature (°C)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.firing_temperature}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.firingTemperature}</dd>
           </div>
         )}
 
-        {clayBody.colour_oxidation && (
+        {clayBody.colourOxidation && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Colour (Oxidation)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.colour_oxidation}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.colourOxidation}</dd>
           </div>
         )}
 
-        {clayBody.colour_reduction && (
+        {clayBody.colourReduction && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Colour (Reduction)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.colour_reduction}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.colourReduction}</dd>
           </div>
         )}
 
         {clayBody.shrinkage !== null && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Shrinkage (%)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.shrinkage}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.shrinkage.toFixed(1)}</dd>
           </div>
         )}
 
         {clayBody.absorption !== null && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Absorption (%)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.absorption}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.absorption.toFixed(1)}</dd>
+          </div>
+        )}
+
+        {clayBody.meshSize !== null && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Mesh Size</dt>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.meshSize}</dd>
           </div>
         )}
 
@@ -105,22 +129,20 @@ export default async function ClayBodyPage({
           </div>
         )}
 
-        {clayBody.description && (
+        {clayBody.notes && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Description</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.description}</dd>
-          </div>
-        )}
-
-        {clayBody.composition && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Composition</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              <pre className="whitespace-pre-wrap">{JSON.stringify(clayBody.composition, null, 2)}</pre>
-            </dd>
+            <dt className="text-sm font-medium text-gray-500">Notes</dt>
+            <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{clayBody.notes}</dd>
           </div>
         )}
       </dl>
+
+      {clayBody.testTiles.length > 0 && (
+        <div className="mt-8">
+          <h4 className="text-lg font-medium text-gray-900 mb-4">Test Tiles</h4>
+          {/* Add your test tiles list component here */}
+        </div>
+      )}
     </div>
   )
 }

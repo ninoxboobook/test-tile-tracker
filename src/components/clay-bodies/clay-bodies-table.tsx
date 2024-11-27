@@ -3,26 +3,27 @@
 import React from 'react'
 import Link from 'next/link'
 import { ClayBodies } from '@prisma/client'
+import { EmptyState } from '@/components/ui/empty-state'
 
 interface ClayBodiesTableProps {
   clayBodies: ClayBodies[]
 }
 
 export function ClayBodiesTable({ clayBodies }: ClayBodiesTableProps) {
-  if (!clayBodies.length) {
+  if (clayBodies.length === 0) {
     return (
-      <div className="text-center py-12">
-        <h3 className="mt-2 text-sm font-medium text-gray-900">No clay bodies</h3>
-        <p className="mt-1 text-sm text-gray-500">Get started by creating a new clay body.</p>
-        <div className="mt-6">
+      <EmptyState
+        title="No clay bodies"
+        description="Get started by creating a new clay body."
+        action={
           <Link
             href="/clay-bodies/new"
             className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-clay-600 hover:bg-clay-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-clay-500"
           >
             Add New Clay Body
           </Link>
-        </div>
-      </div>
+        }
+      />
     )
   }
 
