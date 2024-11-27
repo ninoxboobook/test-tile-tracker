@@ -23,6 +23,11 @@ export async function middleware(request: NextRequest) {
 
   // Protect API routes
   if (request.nextUrl.pathname.startsWith('/api')) {
+    // Allow public access to registration endpoint
+    if (request.nextUrl.pathname === '/api/auth/register') {
+      return NextResponse.next()
+    }
+
     if (!token) {
       return new NextResponse(
         JSON.stringify({ message: 'Authentication required' }),
