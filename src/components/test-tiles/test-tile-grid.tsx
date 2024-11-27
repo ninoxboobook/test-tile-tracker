@@ -3,9 +3,9 @@ import { type TestTile, type Collection, type ClayBody, type Decoration } from '
 import { EmptyState } from '@/components/ui/empty-state'
 
 export type TestTileWithRelations = TestTile & {
-  collection: Collection | null
-  clay_body: ClayBody
-  decoration: Decoration | null
+  collections: Collection[]
+  clayBody: ClayBody
+  decorations: Decoration[]
 }
 
 interface TestTileGridProps {
@@ -41,7 +41,15 @@ export function TestTileGrid({ testTiles }: TestTileGridProps) {
           <div className="flex gap-4">
             <div className="flex-shrink-0">
               <div className="h-32 w-32 bg-gray-200 rounded flex items-center justify-center">
-                <span className="text-gray-400 text-sm">Test Tile</span>
+                {tile.imageUrl ? (
+                  <img
+                    src={tile.imageUrl}
+                    alt={tile.name}
+                    className="h-32 w-32 object-cover rounded"
+                  />
+                ) : (
+                  <span className="text-gray-400 text-sm">Test Tile</span>
+                )}
               </div>
             </div>
             
@@ -50,26 +58,29 @@ export function TestTileGrid({ testTiles }: TestTileGridProps) {
                 {tile.name}
               </h3>
               
-              <dl className="mt-2 text-sm text-gray-500">
+              <dl className="mt-2 text-sm text-gray-500 space-y-1">
                 <div>
                   <dt className="inline font-medium">Clay Body: </dt>
-                  <dd className="inline">{tile.clay_body.name}</dd>
+                  <dd className="inline">{tile.clayBody.name}</dd>
                 </div>
                 
-                {tile.decoration && (
+                {tile.decorations.length > 0 && (
                   <div>
-                    <dt className="inline font-medium">Decoration: </dt>
-                    <dd className="inline">{tile.decoration.name}</dd>
+                    <dt className="inline font-medium">Decorations: </dt>
+                    <dd className="inline">
+                      {tile.decorations.map(d => d.name).join(', ')}
+                    </dd>
                   </div>
                 )}
                 
-                {tile.collection && (
+                {tile.collections.length > 0 && (
                   <div>
-                    <dt className="inline font-medium">Collection: </dt>
-                    <dd className="inline">{tile.collection.name}</dd>
+                    <dt className="inline font-medium">Collections: </dt>
+                    <dd className="inline">
+                      {tile.collections.map(c => c.name).join(', ')}
+                    </dd>
                   </div>
                 )}
-                
               </dl>
             </div>
           </div>

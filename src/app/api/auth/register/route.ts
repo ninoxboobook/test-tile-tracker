@@ -1,49 +1,59 @@
 import { NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/db'
-import { z } from 'zod'
-
-const registerSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-  username: z.string().min(1),
-})
+import { registerSchema } from '@/lib/validations/auth'
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { email, password, username } = registerSchema.parse(body)
+    const result = registerSchema.safeParse(body)
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    })
-
-    if (existingUser) {
+    if (!result.success) {
       return NextResponse.json(
-        { message: 'User already exists' },
+        { message: 'Invalid input', errors: result.error.flatten().fieldErrors },
         { status: 400 }
       )
     }
 
-    const hashedPassword = await hash(password, 10)
+    const { email, password, username } = result.data
+
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { username }
+        ]
+      },
+    })
+
+    if (existingUser) {
+      const field = existingUser.email === email ? 'email' : 'username'
+      return NextResponse.json(
+        { message: `This ${field} is already registered` },
+        { status: 400 }
+      )
+    }
+
+    const hashedPassword = await hash(password, 12)
 
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         username,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+      }
     })
 
     return NextResponse.json(
-      { message: 'User created successfully', user: { id: user.id, email: user.email, username: user.username } },
+      { message: 'Registration successful', user },
       { status: 201 }
     )
   } catch (error) {
-    console.error('Registration error:', error)
     return NextResponse.json(
       { message: 'An error occurred during registration' },
       { status: 500 }
