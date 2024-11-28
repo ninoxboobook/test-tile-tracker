@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, FieldError, Merge } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import { testTileSchema, type TestTileFormData } from '@/lib/schemas/test-tile'
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
@@ -13,7 +14,6 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { Modal } from '@/components/ui/modal'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { DecorationForm } from '@/components/decorations/decoration-form'
-import { FieldError } from 'react-hook-form'
 
 interface TestTileFormProps {
   initialData?: TestTileFormData
@@ -32,16 +32,18 @@ export function TestTileForm({
   decorations: initialDecorations,
   collections
 }: TestTileFormProps) {
+  const router = useRouter()
   const [isClayBodyModalOpen, setIsClayBodyModalOpen] = useState(false)
   const [isDecorationModalOpen, setIsDecorationModalOpen] = useState(false)
   const [clayBodies, setClayBodies] = useState(initialClayBodies)
   const [decorations, setDecorations] = useState(initialDecorations)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const {
     register,
     setValue,
     watch,
     control,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm<TestTileFormData>({
     resolver: zodResolver(testTileSchema),
     defaultValues: initialData
@@ -89,18 +91,19 @@ export function TestTileForm({
 
   return (
     <>
-      <Form onSubmit={(formData) => {
-        // Log form data before submission
-        const decorationIds = formData.getAll('decorationIds')
-        const collectionIds = formData.getAll('collectionIds')
-        const clayBodyId = formData.get('clayBodyId')
-        console.log('Form submission data:', {
-          clayBodyId,
-          decorationIds,
-          collectionIds,
-          allEntries: Object.fromEntries(formData.entries())
-        })
-        return action(formData)
+      <Form onSubmit={async (formData) => {
+        try {
+          setIsSubmitting(true)
+          await action(formData)
+        } catch (error) {
+          // If it's a redirect error, we don't need to handle it
+          if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+            return
+          }
+          console.error('Form submission error:', error)
+        } finally {
+          setIsSubmitting(false)
+        }
       }}>
         <div className="space-y-6">
           {initialData?.id && (
@@ -147,37 +150,34 @@ export function TestTileForm({
 
           <div className="space-y-2">
             <FormMultiSelect
-              label="Decorations"
               name="decorationIds"
-              register={register}
-              error={errors.decorationIds as FieldError}
+              label="Decorations"
+              control={control}
               options={decorations.map(decoration => ({
                 value: decoration.id,
                 label: decoration.name
               }))}
-              value={watch('decorationIds')}
+              error={errors.decorationIds as FieldError | Merge<FieldError, (FieldError | undefined)[]>}
             />
             <div className="flex justify-end">
               <ActionButton
                 type="button"
-                variant="secondary"
                 onClick={() => setIsDecorationModalOpen(true)}
               >
-                Add New Decoration
+                Add Decoration
               </ActionButton>
             </div>
           </div>
 
           <FormMultiSelect
-            label="Collections"
             name="collectionIds"
-            register={register}
-            error={errors.collectionIds as FieldError}
+            label="Collections"
+            control={control}
             options={collections.map(collection => ({
               value: collection.id,
               label: collection.name
             }))}
-            value={watch('collectionIds')}
+            error={errors.collectionIds as FieldError | Merge<FieldError, (FieldError | undefined)[]>}
           />
 
           <FormField

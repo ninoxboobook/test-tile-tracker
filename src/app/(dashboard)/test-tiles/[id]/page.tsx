@@ -5,12 +5,13 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default async function TestTilePage({
-  params: { id },
-}: {
-  params: { id: string }
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function TestTilePage({ params }: PageProps) {
   const session = await getServerSession(authOptions)
+  const { id } = await params
 
   if (!session?.user?.id) {
     return notFound()
