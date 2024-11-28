@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { TestTileGrid } from '@/components/test-tiles/test-tile-grid'
+import { TestTilesTable } from '@/components/test-tiles/test-tiles-table'
 
 export default async function TestTilesPage() {
   const session = await getServerSession(authOptions)
@@ -38,7 +38,7 @@ export default async function TestTilesPage() {
         </Link>
       }
     >
-      <TestTileGrid testTiles={testTiles} />
+      <TestTilesTable testTiles={testTiles} />
     </PageLayout>
   )
 }

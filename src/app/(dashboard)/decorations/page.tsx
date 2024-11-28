@@ -26,7 +26,7 @@ export default async function DecorationsPage() {
   return (
     <PageLayout 
       title="Decorations"
-      description="Manage your glazes and surface decorations"
+      description="Manage your glazes, slips, and other decorative techniques"
       action={
         <Link href="/decorations/new">
           <ActionButton>Add New Decoration</ActionButton>
