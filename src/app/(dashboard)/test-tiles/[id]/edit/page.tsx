@@ -8,7 +8,7 @@ import { updateTestTile } from './actions'
 import type { TestTileFormData } from '@/lib/schemas/test-tile'
 
 export default async function EditTestTilePage({
-  params,
+  params: { id },
 }: {
   params: { id: string }
 }) {
@@ -20,7 +20,7 @@ export default async function EditTestTilePage({
 
   const testTile = await prisma.testTile.findUnique({
     where: {
-      id: params.id,
+      id,
       userId: session.user.id,
     },
     include: {
@@ -50,6 +50,7 @@ export default async function EditTestTilePage({
   ])
 
   const formData: TestTileFormData = {
+    id,
     name: testTile.name,
     stamp: testTile.stamp || null,
     notes: testTile.notes || null,
@@ -63,7 +64,7 @@ export default async function EditTestTilePage({
     <FormLayout 
       title="Edit Test Tile"
       description={`Editing ${testTile.name}`}
-      backHref={`/test-tiles/${params.id}`}
+      backHref={`/test-tiles/${id}`}
     >
       <TestTileForm 
         action={updateTestTile}

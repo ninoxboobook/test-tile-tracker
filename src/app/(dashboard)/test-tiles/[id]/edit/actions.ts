@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { testTileSchema } from '@/lib/schemas/test-tile'
+import { testTileUpdateSchema } from '@/lib/schemas/test-tile'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
@@ -47,17 +48,18 @@ export async function updateTestTile(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData.entries())
+  console.log('Update test tile raw data:', rawData)
   
   // Handle multiple selected decorations and collections
-  const decorationIds = formData.getAll('decorationIds').map(id => id.toString())
-  const collectionIds = formData.getAll('collectionIds').map(id => id.toString())
   const processedData = {
     ...rawData,
-    decorationIds,
-    collectionIds
+    decorationIds: formData.getAll('decorationIds'),
+    collectionIds: formData.getAll('collectionIds'),
   }
+
+  console.log('Update test tile processed data:', processedData)
   
-  const validatedData = testTileSchema.parse(processedData)
+  const validatedData = testTileUpdateSchema.parse(processedData)
 
   const updateData: Prisma.TestTileUpdateInput = {
     name: validatedData.name,
@@ -68,10 +70,10 @@ export async function updateTestTile(formData: FormData) {
       connect: { id: validatedData.clayBodyId }
     },
     decorations: {
-      set: decorationIds.map(id => ({ id }))
+      set: validatedData.decorationIds?.map(id => ({ id })) ?? []
     },
     collections: {
-      set: collectionIds.map(id => ({ id }))
+      set: validatedData.collectionIds?.map(id => ({ id })) ?? []
     }
   }
 

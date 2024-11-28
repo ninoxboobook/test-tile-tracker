@@ -100,6 +100,13 @@ export function TestTileForm({
         return action(formData)
       }}>
         <div className="space-y-6">
+          {initialData?.id && (
+            <input 
+              type="hidden" 
+              name="id" 
+              value={initialData.id} 
+            />
+          )}
           <FormField
             label="Name"
             name="name"
