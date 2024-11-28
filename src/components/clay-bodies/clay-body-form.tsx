@@ -22,6 +22,7 @@ export function ClayBodyForm({
 }: ClayBodyFormProps) {
   const {
     register,
+    control,
     formState: { errors, isSubmitting }
   } = useForm<ClayBodyFormData>({
     resolver: zodResolver(clayBodySchema),
@@ -41,7 +42,7 @@ export function ClayBodyForm({
       <FormSelect
         label="Type"
         name="type"
-        register={register}
+        control={control}
         options={[
           { value: 'Stoneware', label: 'Stoneware' },
           { value: 'Porcelain', label: 'Porcelain' },
@@ -81,7 +82,7 @@ export function ClayBodyForm({
         <FormSelect
           label="Texture"
           name="texture"
-          register={register}
+          control={control}
           options={[
             { value: 'Smooth', label: 'Smooth' },
             { value: 'Fine Grog', label: 'Fine Grog' },
@@ -94,7 +95,7 @@ export function ClayBodyForm({
         <FormSelect
           label="Plasticity"
           name="plasticity"
-          register={register}
+          control={control}
           options={[
             { value: 'Very Plastic', label: 'Very Plastic' },
             { value: 'Plastic', label: 'Plastic' },

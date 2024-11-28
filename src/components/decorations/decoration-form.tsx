@@ -22,6 +22,7 @@ export function DecorationForm({
 }: DecorationFormProps) {
   const {
     register,
+    control,
     formState: { errors, isSubmitting }
   } = useForm<DecorationFormData>({
     resolver: zodResolver(decorationSchema),
@@ -41,7 +42,7 @@ export function DecorationForm({
       <FormSelect
         label="Category"
         name="category"
-        register={register}
+        control={control}
         options={[
           { value: 'Glaze', label: 'Glaze' },
           { value: 'Underglaze', label: 'Underglaze' },
@@ -57,7 +58,7 @@ export function DecorationForm({
       <FormSelect
         label="Type"
         name="type"
-        register={register}
+        control={control}
         options={[
           { value: 'Commercial', label: 'Commercial' },
           { value: 'Studio Made', label: 'Studio Made' },
@@ -95,7 +96,7 @@ export function DecorationForm({
         <FormSelect
           label="Atmosphere"
           name="atmosphere"
-          register={register}
+          control={control}
           options={[
             { value: 'Oxidation', label: 'Oxidation' },
             { value: 'Reduction', label: 'Reduction' },
@@ -110,7 +111,7 @@ export function DecorationForm({
         <FormSelect
           label="Surface"
           name="surface"
-          register={register}
+          control={control}
           options={[
             { value: 'Matte', label: 'Matte' },
             { value: 'Satin', label: 'Satin' },
@@ -124,7 +125,7 @@ export function DecorationForm({
         <FormSelect
           label="Transparency"
           name="transparency"
-          register={register}
+          control={control}
           options={[
             { value: 'Opaque', label: 'Opaque' },
             { value: 'Semi-opaque', label: 'Semi-opaque' },
