@@ -29,12 +29,13 @@ export function TestTileForm({
   action,
   submitButtonText = 'Create Test Tile',
   clayBodies: initialClayBodies,
-  decorations,
+  decorations: initialDecorations,
   collections
 }: TestTileFormProps) {
   const [isClayBodyModalOpen, setIsClayBodyModalOpen] = useState(false)
   const [isDecorationModalOpen, setIsDecorationModalOpen] = useState(false)
   const [clayBodies, setClayBodies] = useState(initialClayBodies)
+  const [decorations, setDecorations] = useState(initialDecorations)
   const {
     register,
     setValue,
@@ -77,9 +78,11 @@ export function TestTileForm({
     }
 
     const decoration = await response.json()
-    const currentDecorations = document.getElementsByName('decorationIds')[0] as HTMLSelectElement
-    const selectedOptions = Array.from(currentDecorations.selectedOptions, option => option.value)
-    setValue('decorationIds', [...selectedOptions, decoration.id])
+    // Update the decorations list with the new decoration
+    setDecorations(prevDecorations => [...prevDecorations, { id: decoration.id, name: decoration.name }])
+    // Get current selected decorations and add the new one
+    const currentDecorations = watch('decorationIds') || []
+    setValue('decorationIds', [...currentDecorations, decoration.id], { shouldValidate: true })
     setIsDecorationModalOpen(false)
   }
 
