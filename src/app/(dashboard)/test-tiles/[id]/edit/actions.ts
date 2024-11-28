@@ -41,9 +41,23 @@ export async function getTestTile(id: string) {
 export async function updateTestTile(formData: FormData) {
   const session = await validateSession()
 
-  const id = formData.get('id') as string
+  const id = formData.get('id')
+  if (!id || typeof id !== 'string') {
+    throw new Error('Test tile ID is required')
+  }
+
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = testTileSchema.parse(rawData)
+  
+  // Handle multiple selected decorations and collections
+  const decorationIds = formData.getAll('decorationIds').map(id => id.toString())
+  const collectionIds = formData.getAll('collectionIds').map(id => id.toString())
+  const processedData = {
+    ...rawData,
+    decorationIds,
+    collectionIds
+  }
+  
+  const validatedData = testTileSchema.parse(processedData)
 
   const updateData: Prisma.TestTileUpdateInput = {
     name: validatedData.name,
@@ -53,24 +67,28 @@ export async function updateTestTile(formData: FormData) {
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },
-    decorations: validatedData.decorationIds?.length ? {
-      set: validatedData.decorationIds.map(id => ({ id }))
-    } : undefined,
-    collections: validatedData.collectionIds?.length ? {
-      set: validatedData.collectionIds.map(id => ({ id }))
-    } : undefined,
+    decorations: {
+      set: decorationIds.map(id => ({ id }))
+    },
+    collections: {
+      set: collectionIds.map(id => ({ id }))
+    }
   }
 
   await prisma.testTile.update({
     where: {
       id,
-      userId: session.user.id,
+      userId: session.user.id
     },
-    data: updateData
+    data: updateData,
+    include: {
+      clayBody: true,
+      decorations: true,
+      collections: true
+    }
   })
 
   revalidatePath('/test-tiles')
-  revalidatePath(`/test-tiles/${id}`)
   redirect(`/test-tiles/${id}`)
 }
 

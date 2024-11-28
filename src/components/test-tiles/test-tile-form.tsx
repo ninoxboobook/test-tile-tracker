@@ -88,7 +88,17 @@ export function TestTileForm({
 
   return (
     <>
-      <Form onSubmit={action}>
+      <Form onSubmit={(formData) => {
+        // Log form data before submission
+        const decorationIds = formData.getAll('decorationIds')
+        const collectionIds = formData.getAll('collectionIds')
+        console.log('Form submission data:', {
+          decorationIds,
+          collectionIds,
+          allEntries: Object.fromEntries(formData.entries())
+        })
+        return action(formData)
+      }}>
         <div className="space-y-6">
           <FormField
             label="Name"
@@ -139,6 +149,7 @@ export function TestTileForm({
                 value: decoration.id,
                 label: decoration.name
               }))}
+              value={watch('decorationIds')}
             />
             <div className="flex justify-end">
               <ActionButton
@@ -160,6 +171,7 @@ export function TestTileForm({
               value: collection.id,
               label: collection.name
             }))}
+            value={watch('collectionIds')}
           />
 
           <FormField

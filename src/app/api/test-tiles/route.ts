@@ -15,14 +15,27 @@ export const GET = createApiHandler(async (req, { session }) => {
 export const POST = createApiHandler(
   async (req, { session }) => {
     const body = await req.json();
+    const { decorationIds, collectionIds, ...rest } = body;
+
     const testTile = await prisma.testTile.create({
       data: {
-        ...body,
+        ...rest,
         userId: session.user.id,
+        decorations: decorationIds?.length ? {
+          connect: decorationIds.map((id: string) => ({ id }))
+        } : undefined,
+        collections: collectionIds?.length ? {
+          connect: collectionIds.map((id: string) => ({ id }))
+        } : undefined
+      },
+      include: {
+        clayBody: true,
+        decorations: true,
+        collections: true
       }
     });
     
     return NextResponse.json(testTile);
   },
   { validationSchema: testTileSchema }
-); 
+);

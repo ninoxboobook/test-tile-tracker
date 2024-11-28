@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export default async function TestTilePage({
-  params,
+  params: { id },
 }: {
   params: { id: string }
 }) {
@@ -18,7 +18,7 @@ export default async function TestTilePage({
 
   const testTile = await prisma.testTile.findUnique({
     where: {
-      id: params.id,
+      id,
       userId: session.user.id,
     },
     include: {

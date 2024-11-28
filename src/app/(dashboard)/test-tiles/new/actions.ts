@@ -16,13 +16,20 @@ export async function createTestTile(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData.entries())
+  console.log('Server action received data:', {
+    rawFormData: Object.fromEntries(formData.entries()),
+    decorationIds: formData.getAll('decorationIds'),
+    collectionIds: formData.getAll('collectionIds')
+  })
 
   // Convert comma-separated strings to arrays for multi-select fields
   const processedData = {
     ...rawData,
-    decorationIds: rawData.decorationIds ? String(rawData.decorationIds).split(',') : undefined,
-    collectionIds: rawData.collectionIds ? String(rawData.collectionIds).split(',') : undefined,
+    decorationIds: formData.getAll('decorationIds'),
+    collectionIds: formData.getAll('collectionIds'),
   }
+
+  console.log('Processed data:', processedData)
 
   const validatedData = testTileSchema.parse(processedData)
 
