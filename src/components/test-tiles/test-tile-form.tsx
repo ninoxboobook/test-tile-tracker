@@ -28,20 +28,25 @@ export function TestTileForm({
   initialData,
   action,
   submitButtonText = 'Create Test Tile',
-  clayBodies,
+  clayBodies: initialClayBodies,
   decorations,
   collections
 }: TestTileFormProps) {
   const [isClayBodyModalOpen, setIsClayBodyModalOpen] = useState(false)
   const [isDecorationModalOpen, setIsDecorationModalOpen] = useState(false)
+  const [clayBodies, setClayBodies] = useState(initialClayBodies)
   const {
     register,
     setValue,
+    watch,
     formState: { errors, isSubmitting }
   } = useForm<TestTileFormData>({
     resolver: zodResolver(testTileSchema),
     defaultValues: initialData
   })
+
+  // Watch the clayBodyId to make the select controlled
+  const selectedClayBodyId = watch('clayBodyId')
 
   const handleClayBodySubmit = async (formData: FormData) => {
     const response = await fetch('/api/clay-bodies', {
@@ -54,7 +59,10 @@ export function TestTileForm({
     }
 
     const clayBody = await response.json()
-    setValue('clayBodyId', clayBody.id)
+    // Update the clay bodies list with the new clay body
+    setClayBodies(prevBodies => [...prevBodies, { id: clayBody.id, name: clayBody.name }])
+    // Set the selected value to the new clay body
+    setValue('clayBodyId', clayBody.id, { shouldValidate: true })
     setIsClayBodyModalOpen(false)
   }
 
@@ -105,6 +113,7 @@ export function TestTileForm({
                 value: body.id,
                 label: body.name
               }))}
+              value={selectedClayBodyId}
             />
             <div className="flex justify-end">
               <ActionButton
