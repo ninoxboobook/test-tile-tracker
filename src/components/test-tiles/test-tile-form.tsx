@@ -40,6 +40,7 @@ export function TestTileForm({
     register,
     setValue,
     watch,
+    control,
     formState: { errors, isSubmitting }
   } = useForm<TestTileFormData>({
     resolver: zodResolver(testTileSchema),
@@ -92,7 +93,9 @@ export function TestTileForm({
         // Log form data before submission
         const decorationIds = formData.getAll('decorationIds')
         const collectionIds = formData.getAll('collectionIds')
+        const clayBodyId = formData.get('clayBodyId')
         console.log('Form submission data:', {
+          clayBodyId,
           decorationIds,
           collectionIds,
           allEntries: Object.fromEntries(formData.entries())
@@ -124,16 +127,12 @@ export function TestTileForm({
 
           <div className="space-y-2">
             <FormSelect
-              label="Clay Body"
               name="clayBodyId"
-              register={register}
+              label="Clay Body"
+              control={control}
+              options={clayBodies.map(body => ({ value: body.id, label: body.name }))}
               error={errors.clayBodyId}
               required
-              options={clayBodies.map(body => ({
-                value: body.id,
-                label: body.name
-              }))}
-              value={selectedClayBodyId}
             />
             <div className="flex justify-end">
               <ActionButton
