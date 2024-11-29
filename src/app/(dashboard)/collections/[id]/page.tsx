@@ -1,8 +1,10 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { notFound } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteCollection } from './actions'
 
 export default async function CollectionPage({
   params,
@@ -12,7 +14,7 @@ export default async function CollectionPage({
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
-    return notFound()
+    redirect('/login')
   }
 
   const collection = await prisma.collection.findUnique({
@@ -32,13 +34,24 @@ export default async function CollectionPage({
   return (
     <div className="space-y-6">
       <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold leading-6 text-gray-900">{collection.name}</h3>
-        <Link
-          href={`/collections/${collection.id}/edit`}
-          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Edit Collection
-        </Link>
+        <h3 className="text-2xl font-semibold leading-6 text-gray-900">
+          {collection.name}
+        </h3>
+        <div className="flex space-x-3">
+          <Link
+            href={`/collections/${collection.id}/edit`}
+            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
+          >
+            Edit Collection
+          </Link>
+          <DeleteButton
+            onDelete={async () => {
+              'use server'
+              await deleteCollection(collection.id)
+            }}
+            itemName="Collection"
+          />
+        </div>
       </div>
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
