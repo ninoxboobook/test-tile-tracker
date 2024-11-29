@@ -7,6 +7,8 @@ import Link from 'next/link'
 
 interface DecorationsTableProps {
   decorations: Decoration[]
+  view: 'grid' | 'table'
+  onViewChange: (view: 'grid' | 'table') => void
 }
 
 const columns: ColumnDef<Decoration>[] = [
@@ -24,7 +26,19 @@ const columns: ColumnDef<Decoration>[] = [
   },
   {
     accessorKey: 'type',
-    header: 'Type',
+    header: 'Category',
+  },
+  {
+    accessorKey: 'manufacturer',
+    header: 'Manufacturer',
+  },
+  {
+    accessorKey: 'cone',
+    header: 'Cone',
+  },
+  {
+    accessorKey: 'atmosphere',
+    header: 'Atmosphere',
   },
   {
     accessorKey: 'description',
@@ -35,28 +49,24 @@ const columns: ColumnDef<Decoration>[] = [
     },
   },
   {
-    accessorKey: 'recipe',
-    header: 'Recipe',
-    cell: ({ row }) => {
-      const recipe = row.getValue('recipe') as string
-      return recipe ? recipe.slice(0, 100) + (recipe.length > 100 ? '...' : '') : ''
-    },
-  },
-  {
     accessorKey: 'createdAt',
     header: 'Created',
-    cell: ({ row }) => {
-      return new Date(row.getValue('createdAt')).toLocaleDateString()
-    },
+    cell: ({ row }) => new Date(row.getValue('createdAt')).toLocaleDateString(),
   },
 ]
 
-export function DecorationsTable({ decorations }: DecorationsTableProps) {
+export function DecorationsTable({ 
+  decorations,
+  view,
+  onViewChange
+}: DecorationsTableProps) {
   return (
     <DataTable 
       columns={columns} 
       data={decorations} 
       filterColumn="name"
+      view={view}
+      onViewChange={onViewChange}
     />
   )
 }

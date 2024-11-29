@@ -13,6 +13,8 @@ type TestTileWithRelations = TestTile & {
 
 interface TestTilesTableProps {
   testTiles: TestTileWithRelations[]
+  view: 'grid' | 'table'
+  onViewChange: (view: 'grid' | 'table') => void
 }
 
 const columns: ColumnDef<TestTileWithRelations>[] = [
@@ -45,41 +47,20 @@ const columns: ColumnDef<TestTileWithRelations>[] = [
     ),
   },
   {
-    accessorKey: 'decorations	',
-    header: 'Decorations',
-    cell: ({ row }) => (
-      <div className="space-x-1">
-        {row.original.decorations.map((decoration, index) => (
-          <>
-            <Link
-              key={decoration.id}
-              href={`/decorations/${decoration.id}`}
-              className="text-clay-600 hover:text-clay-500"
-            >
-              {decoration.name}
-            </Link>
-            {index < row.original.decorations.length - 1 && ', '}
-          </>
-        ))}
-      </div>
-    ),
-  },
-  {
     accessorKey: 'collections',
     header: 'Collections',
     cell: ({ row }) => (
       <div className="space-x-1">
         {row.original.collections.map((collection, index) => (
-          <>
+          <span key={collection.id}>
             <Link
-              key={collection.id}
               href={`/collections/${collection.id}`}
               className="text-clay-600 hover:text-clay-500"
             >
               {collection.name}
             </Link>
             {index < row.original.collections.length - 1 && ', '}
-          </>
+          </span>
         ))}
       </div>
     ),
@@ -87,18 +68,22 @@ const columns: ColumnDef<TestTileWithRelations>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Created',
-    cell: ({ row }) => {
-      return new Date(row.getValue('createdAt')).toLocaleDateString()
-    },
+    cell: ({ row }) => new Date(row.getValue('createdAt')).toLocaleDateString(),
   },
 ]
 
-export function TestTilesTable({ testTiles }: TestTilesTableProps) {
+export function TestTilesTable({ 
+  testTiles,
+  view,
+  onViewChange
+}: TestTilesTableProps) {
   return (
     <DataTable 
       columns={columns} 
       data={testTiles} 
       filterColumn="name"
+      view={view}
+      onViewChange={onViewChange}
     />
   )
 } 

@@ -1,15 +1,21 @@
 'use client'
 
-import { Collection } from '@prisma/client'
+import { Collection, TestTile } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
 
-interface CollectionsTableProps {
-  collections: Collection[]
+type CollectionWithTestTiles = Collection & {
+  testTiles: Pick<TestTile, 'id' | 'imageUrl'>[]
 }
 
-const columns: ColumnDef<Collection>[] = [
+interface CollectionsTableProps {
+  collections: CollectionWithTestTiles[]
+  view: 'grid' | 'table'
+  onViewChange: (view: 'grid' | 'table') => void
+}
+
+const columns: ColumnDef<CollectionWithTestTiles>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -31,20 +37,29 @@ const columns: ColumnDef<Collection>[] = [
     },
   },
   {
+    accessorKey: 'testTiles',
+    header: 'Test Tiles',
+    cell: ({ row }) => row.original.testTiles.length,
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Created',
-    cell: ({ row }) => {
-      return new Date(row.getValue('createdAt')).toLocaleDateString()
-    },
+    cell: ({ row }) => new Date(row.getValue('createdAt')).toLocaleDateString(),
   },
 ]
 
-export function CollectionsTable({ collections }: CollectionsTableProps) {
+export function CollectionsTable({ 
+  collections,
+  view,
+  onViewChange
+}: CollectionsTableProps) {
   return (
     <DataTable 
       columns={columns} 
       data={collections} 
       filterColumn="name"
+      view={view}
+      onViewChange={onViewChange}
     />
   )
 }

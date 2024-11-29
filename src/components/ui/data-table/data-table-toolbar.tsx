@@ -1,17 +1,22 @@
 'use client'
 
 import { Table } from '@tanstack/react-table'
-import { Input } from '../forms/input'
+import { Input } from '@/components/ui/forms/input'
 import { DataTableViewOptions } from './data-table-view-options'
+import { ViewToggle } from '@/components/ui/data-view/view-toggle'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
   filterColumn?: string
+  view: 'grid' | 'table'
+  onViewChange: (view: 'grid' | 'table') => void
 }
 
 export function DataTableToolbar<TData>({
   table,
   filterColumn,
+  view,
+  onViewChange,
 }: DataTableToolbarProps<TData>) {
   return (
     <div className="flex items-center justify-between">
@@ -27,7 +32,10 @@ export function DataTableToolbar<TData>({
           />
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center space-x-4">
+        <ViewToggle view={view} onChange={onViewChange} />
+        <DataTableViewOptions table={table} />
+      </div>
     </div>
   )
 } 

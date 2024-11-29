@@ -7,6 +7,8 @@ import Link from 'next/link'
 
 interface ClayBodiesTableProps {
   clayBodies: ClayBody[]
+  view: 'grid' | 'table'
+  onViewChange: (view: 'grid' | 'table') => void
 }
 
 const columns: ColumnDef<ClayBody>[] = [
@@ -47,12 +49,18 @@ const columns: ColumnDef<ClayBody>[] = [
   },
 ]
 
-export function ClayBodiesTable({ clayBodies }: ClayBodiesTableProps) {
+export function ClayBodiesTable({ 
+  clayBodies, 
+  view, 
+  onViewChange 
+}: ClayBodiesTableProps) {
   return (
     <DataTable 
       columns={columns} 
       data={clayBodies} 
       filterColumn="name"
+      view={view}
+      onViewChange={onViewChange}
     />
   )
 }

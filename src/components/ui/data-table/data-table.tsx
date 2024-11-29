@@ -20,12 +20,16 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   filterColumn?: string
+  view: 'grid' | 'table'
+  onViewChange: (view: 'grid' | 'table') => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filterColumn,
+  view,
+  onViewChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -53,6 +57,8 @@ export function DataTable<TData, TValue>({
       <DataTableToolbar 
         table={table} 
         filterColumn={filterColumn}
+        view={view}
+        onViewChange={onViewChange}
       />
       <div className="rounded-md border">
         <div className="overflow-x-auto">
