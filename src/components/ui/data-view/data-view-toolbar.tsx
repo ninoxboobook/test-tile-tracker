@@ -36,7 +36,7 @@ export function DataViewToolbar<TData>({
   searchPlaceholder,
   table,
   filters = [],
-  activeFilters,
+  activeFilters = {},
   onFilterChange,
 }: DataViewToolbarProps<TData>) {
   return (
@@ -44,7 +44,7 @@ export function DataViewToolbar<TData>({
       <div className="flex items-center space-x-2">
         <Input
           placeholder={searchPlaceholder}
-          value={search}
+          value={search ?? ''}
           onChange={(e) => onSearchChange(e.target.value)}
           className="h-8 w-[250px]"
         />
@@ -73,7 +73,7 @@ export function DataViewToolbar<TData>({
                       <input
                         type="checkbox"
                         className="rounded border-gray-300 text-clay-600 focus:ring-clay-500"
-                        checked={activeFilters[filter.id]?.includes(option.value)}
+                        checked={activeFilters[filter.id]?.includes(option.value) ?? false}
                         onChange={(e) => {
                           const currentValues = activeFilters[filter.id] || []
                           const newValues = e.target.checked
@@ -101,7 +101,7 @@ export function DataViewToolbar<TData>({
       </div>
       <div className="flex items-center space-x-2">
         {view === 'table' && table && <DataTableViewOptions table={table} />}
-		<ViewToggle view={view} onChange={onViewChange} />
+        <ViewToggle view={view} onChange={onViewChange} />
       </div>
     </div>
   )

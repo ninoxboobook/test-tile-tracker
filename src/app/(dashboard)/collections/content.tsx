@@ -22,6 +22,7 @@ interface CollectionsContentProps {
 export function CollectionsContent({ collections }: CollectionsContentProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('collections')
   const [search, setSearch] = useState('')
+  const [activeFilters, setActiveFilters] = useState<Record<string, (string | number)[]>>({})
 
   const filteredCollections = useMemo(() => {
     return collections.filter(collection => 
@@ -59,6 +60,13 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
           onSearchChange={setSearch}
           searchPlaceholder="Search collections..."
           table={view === 'table' ? table : undefined}
+          activeFilters={activeFilters}
+          onFilterChange={(filterId, values) => {
+            setActiveFilters(prev => ({
+              ...prev,
+              [filterId]: values
+            }))
+          }}
         />
         {view === 'table' ? (
           <CollectionsTable 
