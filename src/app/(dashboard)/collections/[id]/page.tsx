@@ -6,11 +6,12 @@ import Link from 'next/link'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteCollection } from './actions'
 
-export default async function CollectionPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function CollectionPage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {

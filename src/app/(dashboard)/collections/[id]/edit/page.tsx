@@ -7,11 +7,12 @@ import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateCollection } from './actions'
 import type { CollectionFormData } from '@/lib/schemas/collection'
 
-export default async function EditCollectionPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function EditCollectionPage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {

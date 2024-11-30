@@ -7,11 +7,12 @@ import Image from 'next/image'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteDecoration } from './actions'
 
-export default async function DecorationPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function DecorationPage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {

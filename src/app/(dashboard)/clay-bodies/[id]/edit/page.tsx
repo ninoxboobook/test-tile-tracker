@@ -7,11 +7,12 @@ import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateClayBody } from './actions'
 import type { ClayBodyFormData } from '@/lib/schemas/clay-body'
 
-export default async function EditClayBodyPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function EditClayBodyPage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {

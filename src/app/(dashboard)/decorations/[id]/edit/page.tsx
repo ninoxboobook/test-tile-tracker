@@ -7,11 +7,12 @@ import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateDecoration } from './actions'
 import type { DecorationFormData } from '@/lib/schemas/decoration'
 
-export default async function EditDecorationPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function EditDecorationPage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
