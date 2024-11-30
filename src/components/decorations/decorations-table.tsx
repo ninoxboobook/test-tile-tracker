@@ -1,17 +1,16 @@
 'use client'
 
 import { Decoration } from '@prisma/client'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
 
 interface DecorationsTableProps {
   decorations: Decoration[]
-  view: 'grid' | 'table'
-  onViewChange: (view: 'grid' | 'table') => void
+  table?: Table<Decoration>
 }
 
-const columns: ColumnDef<Decoration>[] = [
+export const columns: ColumnDef<Decoration>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -26,19 +25,7 @@ const columns: ColumnDef<Decoration>[] = [
   },
   {
     accessorKey: 'type',
-    header: 'Category',
-  },
-  {
-    accessorKey: 'manufacturer',
-    header: 'Manufacturer',
-  },
-  {
-    accessorKey: 'cone',
-    header: 'Cone',
-  },
-  {
-    accessorKey: 'atmosphere',
-    header: 'Atmosphere',
+    header: 'Type',
   },
   {
     accessorKey: 'description',
@@ -51,22 +38,13 @@ const columns: ColumnDef<Decoration>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Created',
-    cell: ({ row }) => new Date(row.getValue('createdAt')).toLocaleDateString(),
+    cell: ({ row }) => {
+      const date = new Date(row.getValue('createdAt'))
+      return date.toISOString().split('T')[0]
+    },
   },
 ]
 
-export function DecorationsTable({ 
-  decorations,
-  view,
-  onViewChange
-}: DecorationsTableProps) {
-  return (
-    <DataTable 
-      columns={columns} 
-      data={decorations} 
-      filterColumn="name"
-      view={view}
-      onViewChange={onViewChange}
-    />
-  )
+export function DecorationsTable({ decorations, table }: DecorationsTableProps) {
+  return <DataTable columns={columns} data={decorations} table={table} />
 }

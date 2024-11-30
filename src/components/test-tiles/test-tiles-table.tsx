@@ -1,7 +1,7 @@
 'use client'
 
 import { TestTile, ClayBody, Collection, Decoration } from '@prisma/client'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
 
@@ -13,11 +13,10 @@ type TestTileWithRelations = TestTile & {
 
 interface TestTilesTableProps {
   testTiles: TestTileWithRelations[]
-  view: 'grid' | 'table'
-  onViewChange: (view: 'grid' | 'table') => void
+  table?: Table<TestTileWithRelations>
 }
 
-const columns: ColumnDef<TestTileWithRelations>[] = [
+export const columns: ColumnDef<TestTileWithRelations>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -68,22 +67,13 @@ const columns: ColumnDef<TestTileWithRelations>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Created',
-    cell: ({ row }) => new Date(row.getValue('createdAt')).toLocaleDateString(),
+    cell: ({ row }) => {
+      const date = new Date(row.getValue('createdAt'))
+      return date.toISOString().split('T')[0]
+    },
   },
 ]
 
-export function TestTilesTable({ 
-  testTiles,
-  view,
-  onViewChange
-}: TestTilesTableProps) {
-  return (
-    <DataTable 
-      columns={columns} 
-      data={testTiles} 
-      filterColumn="name"
-      view={view}
-      onViewChange={onViewChange}
-    />
-  )
+export function TestTilesTable({ testTiles, table }: TestTilesTableProps) {
+  return <DataTable columns={columns} data={testTiles} table={table} />
 } 

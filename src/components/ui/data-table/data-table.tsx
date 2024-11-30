@@ -11,31 +11,27 @@ import {
   getFilteredRowModel,
   ColumnFiltersState,
   VisibilityState,
+  Table,
 } from '@tanstack/react-table'
 import { useState } from 'react'
 import { DataTablePagination } from './data-table-pagination'
-import { DataTableToolbar } from './data-table-toolbar'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  filterColumn?: string
-  view: 'grid' | 'table'
-  onViewChange: (view: 'grid' | 'table') => void
+  table?: Table<TData>
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterColumn,
-  view,
-  onViewChange,
+  table: externalTable,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-  const table = useReactTable({
+  const table = externalTable ?? useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -54,12 +50,6 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar 
-        table={table} 
-        filterColumn={filterColumn}
-        view={view}
-        onViewChange={onViewChange}
-      />
       <div className="rounded-md border">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

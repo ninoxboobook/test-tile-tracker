@@ -1,24 +1,43 @@
 'use client'
 
 import { TestTile, ClayBody, Collection, Decoration } from '@prisma/client'
-import { TestTilesTable } from '@/components/test-tiles/test-tiles-table'
+import { useState, useMemo } from 'react'
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
+import { TestTilesTable, columns } from '@/components/test-tiles/test-tiles-table'
 import { TestTilesGrid } from '@/components/test-tiles/test-tiles-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/hooks/use-view-preference'
+import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
 import Link from 'next/link'
-import { ViewToggle } from '@/components/ui/data-view/view-toggle'
+
+type TestTileWithRelations = TestTile & {
+  clayBody: ClayBody
+  collections: Collection[]
+  decorations: Decoration[]
+}
 
 interface TestTilesContentProps {
-  testTiles: (TestTile & {
-    clayBody: ClayBody
-    collections: Collection[]
-    decorations: Decoration[]
-  })[]
+  testTiles: TestTileWithRelations[]
 }
 
 export function TestTilesContent({ testTiles }: TestTilesContentProps) {
   const [view, setView] = useViewPreference('test-tiles')
+  const [filter, setFilter] = useState('')
+
+  const filteredTestTiles = useMemo(() => {
+    return testTiles.filter(testTile => 
+      testTile.name.toLowerCase().includes(filter.toLowerCase())
+    )
+  }, [testTiles, filter])
+
+  const table = useReactTable({
+    data: filteredTestTiles,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  })
 
   return (
     <PageLayout 
@@ -30,20 +49,24 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
         </Link>
       }
     >
-      {view === 'table' ? (
-        <TestTilesTable 
-          testTiles={testTiles} 
+      <div className="space-y-4">
+        <DataViewToolbar
           view={view}
           onViewChange={setView}
+          filter={filter}
+          onFilterChange={setFilter}
+          filterPlaceholder="Filter test tiles..."
+          table={view === 'table' ? table : undefined}
         />
-      ) : (
-        <div className="space-y-4">
-          <div className="flex justify-end">
-            <ViewToggle view={view} onChange={setView} />
-          </div>
-          <TestTilesGrid testTiles={testTiles} />
-        </div>
-      )}
+        {view === 'table' ? (
+          <TestTilesTable 
+            testTiles={filteredTestTiles}
+            table={table}
+          />
+        ) : (
+          <TestTilesGrid testTiles={filteredTestTiles} />
+        )}
+      </div>
     </PageLayout>
   )
 } 

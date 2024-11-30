@@ -1,17 +1,16 @@
 'use client'
 
 import { ClayBody } from '@prisma/client'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
 
 interface ClayBodiesTableProps {
   clayBodies: ClayBody[]
-  view: 'grid' | 'table'
-  onViewChange: (view: 'grid' | 'table') => void
+  table?: Table<ClayBody>
 }
 
-const columns: ColumnDef<ClayBody>[] = [
+export const columns: ColumnDef<ClayBody>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -39,28 +38,21 @@ const columns: ColumnDef<ClayBody>[] = [
   {
     accessorKey: 'firingTemperature',
     header: 'Firing Temperature',
+    cell: ({ row }) => {
+      const temp = row.getValue('firingTemperature')
+      return temp ? `${temp}°C` : ''
+    },
   },
   {
     accessorKey: 'createdAt',
     header: 'Created',
     cell: ({ row }) => {
-      return new Date(row.getValue('createdAt')).toLocaleDateString()
+      const date = new Date(row.getValue('createdAt'))
+      return date.toISOString().split('T')[0]
     },
   },
 ]
 
-export function ClayBodiesTable({ 
-  clayBodies, 
-  view, 
-  onViewChange 
-}: ClayBodiesTableProps) {
-  return (
-    <DataTable 
-      columns={columns} 
-      data={clayBodies} 
-      filterColumn="name"
-      view={view}
-      onViewChange={onViewChange}
-    />
-  )
+export function ClayBodiesTable({ clayBodies, table }: ClayBodiesTableProps) {
+  return <DataTable columns={columns} data={clayBodies} table={table} />
 }

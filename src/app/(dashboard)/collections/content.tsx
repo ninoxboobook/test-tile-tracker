@@ -1,12 +1,14 @@
 'use client'
 
 import { Collection, TestTile } from '@prisma/client'
-import { CollectionsTable } from '@/components/collections/collections-table'
+import { useState, useMemo } from 'react'
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
+import { CollectionsTable, columns } from '@/components/collections/collections-table'
 import { CollectionsGrid } from '@/components/collections/collections-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/hooks/use-view-preference'
-import { ViewToggle } from '@/components/ui/data-view/view-toggle'
+import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
 import Link from 'next/link'
 
 interface CollectionsContentProps {
@@ -17,6 +19,22 @@ interface CollectionsContentProps {
 
 export function CollectionsContent({ collections }: CollectionsContentProps) {
   const [view, setView] = useViewPreference('collections')
+  const [filter, setFilter] = useState('')
+
+  // Filter collections based on name
+  const filteredCollections = useMemo(() => {
+    return collections.filter(collection => 
+      collection.name.toLowerCase().includes(filter.toLowerCase())
+    )
+  }, [collections, filter])
+
+  const table = useReactTable({
+    data: filteredCollections,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  })
 
   return (
     <PageLayout 
@@ -28,20 +46,24 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
         </Link>
       }
     >
-      {view === 'table' ? (
-        <CollectionsTable 
-          collections={collections} 
+      <div className="space-y-4">
+        <DataViewToolbar
           view={view}
           onViewChange={setView}
+          filter={filter}
+          onFilterChange={setFilter}
+          filterPlaceholder="Filter collections..."
+          table={view === 'table' ? table : undefined}
         />
-      ) : (
-        <div className="space-y-4">
-          <div className="flex justify-end">
-            <ViewToggle view={view} onChange={setView} />
-          </div>
-          <CollectionsGrid collections={collections} />
-        </div>
-      )}
+        {view === 'table' ? (
+          <CollectionsTable 
+            collections={filteredCollections}
+            table={table}
+          />
+        ) : (
+          <CollectionsGrid collections={filteredCollections} />
+        )}
+      </div>
     </PageLayout>
   )
 } 
