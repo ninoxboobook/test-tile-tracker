@@ -19,13 +19,13 @@ interface CollectionsContentProps {
 
 export function CollectionsContent({ collections }: CollectionsContentProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('collections')
-  const [filter, setFilter] = useState('')
+  const [search, setSearch] = useState('')
 
   const filteredCollections = useMemo(() => {
     return collections.filter(collection => 
-      collection.name.toLowerCase().includes(filter.toLowerCase())
+      collection.name.toLowerCase().includes(search.toLowerCase())
     )
-  }, [collections, filter])
+  }, [collections, search])
 
   const table = useReactTable({
     data: filteredCollections,
@@ -53,9 +53,9 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
         <DataViewToolbar
           view={view}
           onViewChange={setView}
-          filter={filter}
-          onFilterChange={setFilter}
-          filterPlaceholder="Filter collections..."
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search collections..."
           table={view === 'table' ? table : undefined}
         />
         {view === 'table' ? (

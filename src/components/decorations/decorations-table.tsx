@@ -24,6 +24,10 @@ export const columns: ColumnDef<Decoration>[] = [
     ),
   },
   {
+    accessorKey: 'category',
+    header: 'Category',
+  },
+  {
     accessorKey: 'type',
     header: 'Type',
   },

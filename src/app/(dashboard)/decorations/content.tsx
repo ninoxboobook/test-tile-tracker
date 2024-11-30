@@ -16,14 +16,14 @@ interface DecorationsContentProps {
 }
 
 export function DecorationsContent({ decorations }: DecorationsContentProps) {
-  const [view, setView] = useViewPreference('decorations')
-  const [filter, setFilter] = useState('')
+  const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('decorations')
+  const [search, setSearch] = useState('')
 
   const filteredDecorations = useMemo(() => {
     return decorations.filter(decoration => 
-      decoration.name.toLowerCase().includes(filter.toLowerCase())
+      decoration.name.toLowerCase().includes(search.toLowerCase())
     )
-  }, [decorations, filter])
+  }, [decorations, search])
 
   const table = useReactTable({
     data: filteredDecorations,
@@ -31,6 +31,10 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnVisibility,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   return (
@@ -47,9 +51,9 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
         <DataViewToolbar
           view={view}
           onViewChange={setView}
-          filter={filter}
-          onFilterChange={setFilter}
-          filterPlaceholder="Filter decorations..."
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search decorations..."
           table={view === 'table' ? table : undefined}
         />
         {view === 'table' ? (

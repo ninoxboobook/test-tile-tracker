@@ -16,14 +16,14 @@ interface ClayBodiesContentProps {
 }
 
 export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
-  const [view, setView] = useViewPreference('clay-bodies')
-  const [filter, setFilter] = useState('')
+  const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('clay-bodies')
+  const [search, setSearch] = useState('')
 
   const filteredClayBodies = useMemo(() => {
     return clayBodies.filter(clayBody => 
-      clayBody.name.toLowerCase().includes(filter.toLowerCase())
+      clayBody.name.toLowerCase().includes(search.toLowerCase())
     )
-  }, [clayBodies, filter])
+  }, [clayBodies, search])
 
   const table = useReactTable({
     data: filteredClayBodies,
@@ -31,6 +31,10 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnVisibility,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   return (
@@ -47,9 +51,9 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
         <DataViewToolbar
           view={view}
           onViewChange={setView}
-          filter={filter}
-          onFilterChange={setFilter}
-          filterPlaceholder="Filter clay bodies..."
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search clay bodies..."
           table={view === 'table' ? table : undefined}
         />
         {view === 'table' ? (

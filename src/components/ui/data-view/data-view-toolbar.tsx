@@ -8,26 +8,26 @@ import { DataTableViewOptions } from '../data-table/data-table-view-options'
 interface DataViewToolbarProps<TData> {
   view: 'grid' | 'table'
   onViewChange: (view: 'grid' | 'table') => void
-  filter: string
-  onFilterChange: (value: string) => void
-  filterPlaceholder: string
+  search: string
+  onSearchChange: (value: string) => void
+  searchPlaceholder: string
   table?: Table<TData>
 }
 
 export function DataViewToolbar<TData>({
   view,
   onViewChange,
-  filter,
-  onFilterChange,
-  filterPlaceholder,
+  search,
+  onSearchChange,
+  searchPlaceholder,
   table
 }: DataViewToolbarProps<TData>) {
   return (
     <div className="flex items-center justify-between">
       <Input
-        placeholder={filterPlaceholder}
-        value={filter}
-        onChange={(e) => onFilterChange(e.target.value)}
+        placeholder={searchPlaceholder}
+        value={search}
+        onChange={(e) => onSearchChange(e.target.value)}
         className="h-8 w-[250px]"
       />
       <div className="flex items-center space-x-2">

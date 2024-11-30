@@ -22,14 +22,14 @@ interface TestTilesContentProps {
 }
 
 export function TestTilesContent({ testTiles }: TestTilesContentProps) {
-  const [view, setView] = useViewPreference('test-tiles')
-  const [filter, setFilter] = useState('')
+  const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('test-tiles')
+  const [search, setSearch] = useState('')
 
   const filteredTestTiles = useMemo(() => {
     return testTiles.filter(testTile => 
-      testTile.name.toLowerCase().includes(filter.toLowerCase())
+      testTile.name.toLowerCase().includes(search.toLowerCase())
     )
-  }, [testTiles, filter])
+  }, [testTiles, search])
 
   const table = useReactTable({
     data: filteredTestTiles,
@@ -37,6 +37,10 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnVisibility,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   return (
@@ -53,9 +57,9 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
         <DataViewToolbar
           view={view}
           onViewChange={setView}
-          filter={filter}
-          onFilterChange={setFilter}
-          filterPlaceholder="Filter test tiles..."
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search test tiles..."
           table={view === 'table' ? table : undefined}
         />
         {view === 'table' ? (
