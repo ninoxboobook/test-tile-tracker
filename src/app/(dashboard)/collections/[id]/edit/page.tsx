@@ -29,7 +29,8 @@ export default async function EditCollectionPage({
     return notFound()
   }
 
-  const formData: CollectionFormData = {
+  const formData: CollectionFormData & { id: string } = {
+    id: collection.id,
     name: collection.name,
     description: collection.description || null,
   }

@@ -6,11 +6,10 @@ import { collectionSchema, type CollectionFormData } from '@/lib/schemas/collect
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
-import { FormSelect } from '@/components/ui/forms/form-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 
 interface CollectionFormProps {
-  initialData?: CollectionFormData
+  initialData?: CollectionFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }

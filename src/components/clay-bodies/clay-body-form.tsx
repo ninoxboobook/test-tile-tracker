@@ -10,7 +10,7 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 
 interface ClayBodyFormProps {
-  initialData?: ClayBodyFormData
+  initialData?: ClayBodyFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }
@@ -50,8 +50,6 @@ export function ClayBodyForm({
           { value: 'Stoneware', label: 'Stoneware' },
           { value: 'Porcelain', label: 'Porcelain' },
           { value: 'Earthenware', label: 'Earthenware' },
-          { value: 'Bone China', label: 'Bone China' },
-          { value: 'Wild Clay', label: 'Wild Clay' },
           { value: 'Other', label: 'Other' }
         ]}
         error={errors.type}
