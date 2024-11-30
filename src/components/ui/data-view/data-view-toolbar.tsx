@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/forms/input'
 import { ViewToggle } from './view-toggle'
 import { DataTableViewOptions } from '../data-table/data-table-view-options'
 import { Menu } from '@headlessui/react'
-import { FunnelIcon } from '@heroicons/react/24/outline'
 
 export type FilterOption = {
   id: string
@@ -46,19 +45,18 @@ export function DataViewToolbar<TData>({
           placeholder={searchPlaceholder}
           value={search ?? ''}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="h-8 w-[250px]"
+          className="h-8 w-[200px]"
         />
         {filters.map(filter => (
           <Menu as="div" key={filter.id} className="relative">
             <Menu.Button 
-              className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium ${
+              className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs font-medium ${
                 activeFilters[filter.id]?.length 
                   ? 'bg-clay-100 text-clay-900 border-clay-200 hover:bg-clay-200' 
                   : 'bg-white text-gray-700 hover:bg-gray-50'
               }`}
             >
-              <FunnelIcon className="h-4 w-4" />
-              {filter.label}
+              Filter by {filter.label}
               {activeFilters[filter.id]?.length > 0 && (
                 <span className="ml-1 rounded-full bg-clay-200 px-2 py-0.5 text-xs font-medium text-clay-900">
                   {activeFilters[filter.id].length}
