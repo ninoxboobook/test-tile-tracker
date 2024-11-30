@@ -1,24 +1,25 @@
+'use server'
+
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
-import { DecorationsContent } from './content'
+import { revalidatePath } from 'next/cache'
 
-export default async function DecorationsPage() {
+export async function deleteCollection(id: string) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
-    redirect('/login')
+    throw new Error('Unauthorized')
   }
 
-  const decorations = await prisma.decoration.findMany({
+  await prisma.collection.delete({
     where: {
+      id,
       userId: session.user.id
-    },
-    orderBy: {
-      createdAt: 'desc'
     }
   })
 
-  return <DecorationsContent decorations={decorations} />
-}
+  revalidatePath('/collections')
+  redirect('/collections')
+} 

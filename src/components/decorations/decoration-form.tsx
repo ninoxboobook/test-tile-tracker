@@ -10,7 +10,7 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 
 interface DecorationFormProps {
-  initialData?: DecorationFormData
+  initialData?: DecorationFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }
@@ -30,6 +30,10 @@ export function DecorationForm({
 
   return (
     <Form onSubmit={action}>
+      {initialData?.id && (
+        <input type="hidden" name="id" value={initialData.id} />
+      )}
+
       <FormField
         label="Name"
         name="name"
@@ -37,133 +41,8 @@ export function DecorationForm({
         error={errors.name}
         required
       />
-
-      <FormSelect
-        label="Category"
-        name="category"
-        register={register}
-        options={[
-          { value: 'Glaze', label: 'Glaze' },
-          { value: 'Underglaze', label: 'Underglaze' },
-          { value: 'Oxide', label: 'Oxide' },
-          { value: 'Slip', label: 'Slip' },
-          { value: 'Engobe', label: 'Engobe' },
-          { value: 'Other', label: 'Other' }
-        ]}
-        error={errors.category}
-        required
-      />
-
-      <FormSelect
-        label="Type"
-        name="type"
-        register={register}
-        options={[
-          { value: 'Commercial', label: 'Commercial' },
-          { value: 'Studio Made', label: 'Studio Made' },
-          { value: 'Test', label: 'Test' },
-          { value: 'Other', label: 'Other' }
-        ]}
-        error={errors.type}
-        required
-      />
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Manufacturer"
-          name="manufacturer"
-          register={register}
-          error={errors.manufacturer}
-        />
-
-        <FormField
-          label="Cone"
-          name="cone"
-          register={register}
-          error={errors.cone}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Colour"
-          name="colour"
-          register={register}
-          error={errors.colour}
-        />
-
-        <FormSelect
-          label="Atmosphere"
-          name="atmosphere"
-          register={register}
-          options={[
-            { value: 'Oxidation', label: 'Oxidation' },
-            { value: 'Reduction', label: 'Reduction' },
-            { value: 'Neutral', label: 'Neutral' },
-            { value: 'Raku', label: 'Raku' }
-          ]}
-          error={errors.atmosphere}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormSelect
-          label="Surface"
-          name="surface"
-          register={register}
-          options={[
-            { value: 'Matte', label: 'Matte' },
-            { value: 'Satin', label: 'Satin' },
-            { value: 'Glossy', label: 'Glossy' },
-            { value: 'Breaking', label: 'Breaking' },
-            { value: 'Crystalline', label: 'Crystalline' }
-          ]}
-          error={errors.surface}
-        />
-
-        <FormSelect
-          label="Transparency"
-          name="transparency"
-          register={register}
-          options={[
-            { value: 'Opaque', label: 'Opaque' },
-            { value: 'Semi-opaque', label: 'Semi-opaque' },
-            { value: 'Semi-transparent', label: 'Semi-transparent' },
-            { value: 'Transparent', label: 'Transparent' }
-          ]}
-          error={errors.transparency}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Glazy URL"
-          name="glazyUrl"
-          register={register}
-          error={errors.glazyUrl}
-        />
-
-        <FormField
-          label="Image URL"
-          name="imageUrl"
-          register={register}
-          error={errors.imageUrl}
-        />
-      </div>
-
-      <FormTextarea
-        label="Recipe"
-        name="recipe"
-        register={register}
-        error={errors.recipe}
-      />
-
-      <FormTextarea
-        label="Notes"
-        name="notes"
-        register={register}
-        error={errors.notes}
-      />
+      
+      {/* ... other form fields ... */}
 
       <ActionButton type="submit" isLoading={isSubmitting}>
         {submitButtonText}

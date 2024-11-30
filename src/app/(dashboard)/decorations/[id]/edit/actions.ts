@@ -8,35 +8,18 @@ import { decorationSchema } from '@/lib/schemas/decoration'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
-async function validateSession() {
+export async function updateDecoration(formData: FormData) {
   const session = await getServerSession(authOptions)
+
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
   }
-  return session
-}
 
-export async function getDecoration(id: string) {
-  const session = await validateSession()
-
-  const decoration = await prisma.decoration.findUnique({
-    where: { 
-      id,
-      userId: session.user.id 
-    },
-  })
-
-  if (!decoration) {
-    throw new Error('Decoration not found')
+  const id = formData.get('id')
+  if (!id || typeof id !== 'string') {
+    throw new Error('Decoration ID is required')
   }
 
-  return decoration
-}
-
-export async function updateDecoration(formData: FormData) {
-  const session = await validateSession()
-
-  const id = formData.get('id') as string
   const rawData = Object.fromEntries(formData.entries())
   const validatedData = decorationSchema.parse(rawData)
 
@@ -59,26 +42,11 @@ export async function updateDecoration(formData: FormData) {
   await prisma.decoration.update({
     where: {
       id,
-      userId: session.user.id,
+      userId: session.user.id
     },
-    data: updateData,
+    data: updateData
   })
 
   revalidatePath('/decorations')
-  revalidatePath(`/decorations/${id}`)
   redirect(`/decorations/${id}`)
-}
-
-export async function deleteDecoration(id: string) {
-  const session = await validateSession()
-
-  await prisma.decoration.delete({
-    where: {
-      id,
-      userId: session.user.id,
-    },
-  })
-
-  revalidatePath('/decorations')
-  redirect('/decorations')
 } 

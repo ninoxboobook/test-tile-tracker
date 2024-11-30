@@ -7,12 +7,13 @@ import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateTestTile } from './actions'
 import type { TestTileFormData } from '@/lib/schemas/test-tile'
 
-export default async function EditTestTilePage({
-  params: { id },
-}: {
-  params: { id: string }
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function EditTestTilePage({ params }: PageProps) {
   const session = await getServerSession(authOptions)
+  const { id } = await params
 
   if (!session?.user?.id) {
     redirect('/login')

@@ -29,7 +29,8 @@ export default async function EditDecorationPage({
     return notFound()
   }
 
-  const formData: DecorationFormData = {
+  const formData: DecorationFormData & { id: string } = {
+    id: decoration.id,
     name: decoration.name,
     category: decoration.category,
     type: decoration.type,

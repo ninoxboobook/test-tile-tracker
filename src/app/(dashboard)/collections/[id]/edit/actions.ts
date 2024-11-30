@@ -60,7 +60,11 @@ export async function createCollection(formData: FormData) {
 export async function updateCollection(formData: FormData) {
   const session = await validateSession()
 
-  const id = formData.get('id') as string
+  const id = formData.get('id')
+  if (!id || typeof id !== 'string') {
+    throw new Error('Collection ID is required')
+  }
+
   const rawData = Object.fromEntries(formData.entries())
   const validatedData = collectionSchema.parse(rawData)
 

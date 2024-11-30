@@ -10,7 +10,7 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 
 interface ClayBodyFormProps {
-  initialData?: ClayBodyFormData
+  initialData?: ClayBodyFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
 }
@@ -22,6 +22,7 @@ export function ClayBodyForm({
 }: ClayBodyFormProps) {
   const {
     register,
+    control,
     formState: { errors, isSubmitting }
   } = useForm<ClayBodyFormData>({
     resolver: zodResolver(clayBodySchema),
@@ -30,6 +31,9 @@ export function ClayBodyForm({
 
   return (
     <Form onSubmit={action}>
+      {initialData?.id && (
+        <input type="hidden" name="id" value={initialData.id} />
+      )}
       <FormField
         label="Name"
         name="name"
@@ -41,13 +45,11 @@ export function ClayBodyForm({
       <FormSelect
         label="Type"
         name="type"
-        register={register}
+        control={control}
         options={[
           { value: 'Stoneware', label: 'Stoneware' },
           { value: 'Porcelain', label: 'Porcelain' },
           { value: 'Earthenware', label: 'Earthenware' },
-          { value: 'Bone China', label: 'Bone China' },
-          { value: 'Wild Clay', label: 'Wild Clay' },
           { value: 'Other', label: 'Other' }
         ]}
         error={errors.type}
@@ -81,7 +83,7 @@ export function ClayBodyForm({
         <FormSelect
           label="Texture"
           name="texture"
-          register={register}
+          control={control}
           options={[
             { value: 'Smooth', label: 'Smooth' },
             { value: 'Fine Grog', label: 'Fine Grog' },
@@ -94,7 +96,7 @@ export function ClayBodyForm({
         <FormSelect
           label="Plasticity"
           name="plasticity"
-          register={register}
+          control={control}
           options={[
             { value: 'Very Plastic', label: 'Very Plastic' },
             { value: 'Plastic', label: 'Plastic' },

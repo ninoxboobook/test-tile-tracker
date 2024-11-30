@@ -1,19 +1,22 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { notFound } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteTestTile } from './actions'
 
-export default async function TestTilePage({
-  params: { id },
-}: {
-  params: { id: string }
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function TestTilePage({ params }: PageProps) {
   const session = await getServerSession(authOptions)
+  const { id } = await params
 
   if (!session?.user?.id) {
-    return notFound()
+    redirect('/login')
   }
 
   const testTile = await prisma.testTile.findUnique({
@@ -36,12 +39,21 @@ export default async function TestTilePage({
     <div className="space-y-6">
       <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
         <h3 className="text-2xl font-semibold leading-6 text-gray-900">{testTile.name}</h3>
-        <Link
-          href={`/test-tiles/${testTile.id}/edit`}
-          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Edit Test Tile
-        </Link>
+        <div className="flex space-x-3">
+          <Link
+            href={`/test-tiles/${testTile.id}/edit`}
+            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
+          >
+            Edit Test Tile
+          </Link>
+          <DeleteButton
+            onDelete={async () => {
+              'use server'
+              await deleteTestTile(testTile.id)
+            }}
+            itemName="Test Tile"
+          />
+        </div>
       </div>
 
       {testTile.imageUrl && (

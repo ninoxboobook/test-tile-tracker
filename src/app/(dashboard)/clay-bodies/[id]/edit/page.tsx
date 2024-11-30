@@ -5,7 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateClayBody } from './actions'
-import { ClayBodyFormData } from '@/lib/schemas/clay-body'
+import type { ClayBodyFormData } from '@/lib/schemas/clay-body'
 
 export default async function EditClayBodyPage({
   params,
@@ -29,7 +29,8 @@ export default async function EditClayBodyPage({
     return notFound()
   }
 
-  const formData: ClayBodyFormData = {
+  const formData: ClayBodyFormData & { id: string } = {
+    id: clayBody.id,
     name: clayBody.name,
     type: clayBody.type,
     manufacturer: clayBody.manufacturer || null,

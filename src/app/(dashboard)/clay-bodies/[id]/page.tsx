@@ -4,6 +4,8 @@ import { prisma } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteClayBody } from './actions'
 
 export default async function ClayBodyPage({
   params,
@@ -34,12 +36,21 @@ export default async function ClayBodyPage({
     <div className="space-y-6">
       <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
         <h3 className="text-2xl font-semibold leading-6 text-gray-900">{clayBody.name}</h3>
-        <Link
-          href={`/clay-bodies/${clayBody.id}/edit`}
-          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Edit Clay Body
-        </Link>
+        <div className="flex space-x-3">
+          <Link
+            href={`/clay-bodies/${clayBody.id}/edit`}
+            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
+          >
+            Edit Clay Body
+          </Link>
+          <DeleteButton
+            onDelete={async () => {
+              'use server'
+              await deleteClayBody(clayBody.id)
+            }}
+            itemName="Clay Body"
+          />
+        </div>
       </div>
 
       {clayBody.imageUrl && (
