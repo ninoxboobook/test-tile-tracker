@@ -31,8 +31,8 @@ export function DataViewToolbar<TData>({
         className="h-8 w-[250px]"
       />
       <div className="flex items-center space-x-2">
-        <ViewToggle view={view} onChange={onViewChange} />
         {view === 'table' && table && <DataTableViewOptions table={table} />}
+		<ViewToggle view={view} onChange={onViewChange} />
       </div>
     </div>
   )
