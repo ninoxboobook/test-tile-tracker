@@ -30,6 +30,9 @@ export function CollectionForm({
 
   return (
     <Form onSubmit={action}>
+      {initialData?.id && (
+        <input type="hidden" name="id" value={initialData.id} />
+      )}
       <FormField
         label="Name"
         name="name"

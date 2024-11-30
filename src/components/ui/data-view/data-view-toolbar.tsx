@@ -65,7 +65,7 @@ export function DataViewToolbar<TData>({
                 </span>
               )}
             </Menu.Button>
-            <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
               <div className="p-2">
                 <div className="space-y-2">
                   {filter.options.map((option) => (
@@ -100,8 +100,8 @@ export function DataViewToolbar<TData>({
         ))}
       </div>
       <div className="flex items-center space-x-2">
-        <ViewToggle view={view} onChange={onViewChange} />
         {view === 'table' && table && <DataTableViewOptions table={table} />}
+		<ViewToggle view={view} onChange={onViewChange} />
       </div>
     </div>
   )
