@@ -18,10 +18,9 @@ interface CollectionsContentProps {
 }
 
 export function CollectionsContent({ collections }: CollectionsContentProps) {
-  const [view, setView] = useViewPreference('collections')
+  const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('collections')
   const [filter, setFilter] = useState('')
 
-  // Filter collections based on name
   const filteredCollections = useMemo(() => {
     return collections.filter(collection => 
       collection.name.toLowerCase().includes(filter.toLowerCase())
@@ -34,6 +33,10 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnVisibility,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   return (
