@@ -9,6 +9,9 @@ import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
 export async function createTestTile(formData: FormData) {
+  console.log('Raw form data:', Object.fromEntries(formData.entries()))
+  console.log('All entries:', Array.from(formData.entries()))
+  
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {

@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useForm, FieldError, Merge, Control } from 'react-hook-form'
+import { useState, useEffect, useMemo } from 'react'
+import { useForm, FieldError, Merge, Control, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { testTileSchema, type TestTileFormData } from '@/lib/schemas/test-tile'
@@ -56,17 +56,44 @@ export function TestTileForm({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const {
     register,
-    setValue,
-    watch,
     control,
+    watch,
+    setValue,
     formState: { errors }
   } = useForm<TestTileFormData>({
     resolver: zodResolver(testTileSchema),
-    defaultValues: initialData
+    defaultValues: {
+      ...initialData,
+      decorationLayers: initialData?.decorationLayers || [{
+        order: 1,
+        decorationIds: []
+      }]
+    }
   })
 
-  // Watch the clayBodyId to make the select controlled
-  const selectedClayBodyId = watch('clayBodyId')
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "decorationLayers"
+  });
+
+  const handleLayerChange = (order: number, decorationIds: string[]) => {
+    console.log('Layer change:', { order, decorationIds })
+    fields[order - 1].decorationIds = decorationIds
+  }
+
+  const watchFieldArray = watch("decorationLayers");
+  const controlledFields = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchFieldArray[index]
+    };
+  });
+
+  const canAddLayer = controlledFields[controlledFields.length - 1]?.decorationIds?.length > 0;
+
+  const addLayer = () => {
+    append({ order: controlledFields.length + 1, decorationIds: [] });
+  };
 
   const handleClayBodySubmit = async (formData: FormData) => {
     const response = await fetch('/api/clay-bodies', {
@@ -107,70 +134,25 @@ export function TestTileForm({
     setIsDecorationModalOpen(false)
   }
 
-  const canAddLayer = decorationLayers[decorationLayers.length - 1].decorationIds.length > 0
-
-  const handleLayerChange = (order: number, decorationIds: string[]) => {
-    setDecorationLayers(layers =>
-      layers.map(layer =>
-        layer.order === order ? { ...layer, decorationIds } : layer
-      )
-    )
-    // Update the form value
-    setValue(`decorationLayers.${order - 1}.decorationIds`, decorationIds)
-  }
-
-  // Watch decoration layers to keep local state in sync
-  const formDecorationLayers = watch('decorationLayers')
-  
-  // Update local state when form values change
-  useEffect(() => {
-    if (formDecorationLayers) {
-      setDecorationLayers(
-        formDecorationLayers.map((layer, index) => ({
-          order: index + 1,
-          decorationIds: layer.decorationIds || []
-        }))
-      )
-    }
-  }, [formDecorationLayers])
-
-  const addLayer = () => {
-    if (canAddLayer) {
-      setDecorationLayers(layers => [
-        ...layers,
-        { order: layers.length + 1, decorationIds: [] }
-      ])
-    }
-  }
-
-  const removeLayer = (order: number) => {
-    setDecorationLayers(layers => {
-      const newLayers = layers.filter(layer => layer.order !== order)
-      // Reorder remaining layers
-      return newLayers.map((layer, index) => ({
-        ...layer,
-        order: index + 1
-      }))
-    })
-  }
-
   const handleSubmit = async (formData: FormData) => {
     try {
       setIsSubmitting(true)
       
+      // Get the current form values
+      const values = watch()
+      
       // Add decoration layers to form data
-      decorationLayers.forEach((layer, index) => {
-        if (layer.decorationIds.length > 0) {
-          formData.append(`decorationLayers[${index}][order]`, layer.order.toString())
-          layer.decorationIds.forEach(id => {
-            formData.append(`decorationLayers[${index}][decorationIds][]`, id)
-          })
-        }
+      values.decorationLayers?.forEach((layer, index) => {
+        console.log(`Adding layer ${index + 1}:`, layer)
+        formData.append(`decorationLayers[${index}][order]`, (index + 1).toString())
+        layer.decorationIds?.forEach(id => {
+          formData.append(`decorationLayers[${index}][decorationIds][]`, id)
+        })
       })
 
+      console.log('Form data before submission:', Object.fromEntries(formData.entries()))
       await action(formData)
     } catch (error) {
-      // If it's a redirect error, we don't need to handle it
       if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
         return
       }
@@ -238,22 +220,23 @@ export function TestTileForm({
               </button>
             </div>
 
-            {decorationLayers.map((layer) => (
-              <div key={layer.order} className="flex items-start gap-2">
+            {controlledFields.map((field, index) => (
+              <div key={field.id} className="flex items-start gap-2">
                 <FormMultiSelect
-                  label={`Layer ${layer.order}`}
-                  name={`decorationLayers.${layer.order - 1}.decorationIds`}
+                  label={`Layer ${index + 1}`}
+                  name={`decorationLayers.${index}.decorationIds`}
                   control={control}
                   options={decorations.map(d => ({
                     label: d.name,
                     value: d.id
                   }))}
-                  error={errors.decorationLayers?.[layer.order - 1]?.decorationIds}
+                  error={errors.decorationLayers?.[index]?.decorationIds}
+                  onChange={(values) => handleLayerChange(index + 1, values)}
                 />
-                {layer.order > 1 && (
+                {index > 0 && (
                   <button
                     type="button"
-                    onClick={() => removeLayer(layer.order)}
+                    onClick={() => remove(index)}
                     className="mt-8 text-red-600 hover:text-red-800"
                   >
                     Remove
