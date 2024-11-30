@@ -11,10 +11,12 @@ import { useViewPreference } from '@/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
 import Link from 'next/link'
 
+type CollectionWithTiles = Collection & {
+  testTiles: Pick<TestTile, 'id' | 'imageUrl'>[]
+}
+
 interface CollectionsContentProps {
-  collections: (Collection & {
-    testTiles: Pick<TestTile, 'id' | 'imageUrl'>[]
-  })[]
+  collections: CollectionWithTiles[]
 }
 
 export function CollectionsContent({ collections }: CollectionsContentProps) {
@@ -69,4 +71,4 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
       </div>
     </PageLayout>
   )
-} 
+}

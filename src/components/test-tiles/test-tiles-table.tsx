@@ -46,6 +46,25 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
     ),
   },
   {
+    accessorKey: 'decorations',
+    header: 'Decorations',
+    cell: ({ row }) => (
+      <div className="space-x-1">
+        {row.original.decorations.map((decoration, index) => (
+          <span key={decoration.id}>
+            <Link
+              href={`/decorations/${decoration.id}`}
+              className="text-clay-600 hover:text-clay-500"
+            >
+              {decoration.name}
+            </Link>
+            {index < row.original.decorations.length - 1 && ', '}
+          </span>
+        ))}
+      </div>
+    ),
+  },
+  {
     accessorKey: 'collections',
     header: 'Collections',
     cell: ({ row }) => (
