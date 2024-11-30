@@ -13,7 +13,7 @@ export function DataTableViewOptions<TData>({
 }: DataTableViewOptionsProps<TData>) {
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50">
+      <Menu.Button className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
         <EyeIcon className="h-4 w-4" />
         Show/Hide Columns
       </Menu.Button>

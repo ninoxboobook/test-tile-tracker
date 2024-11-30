@@ -50,7 +50,7 @@ export function DataViewToolbar<TData>({
         {filters.map(filter => (
           <Menu as="div" key={filter.id} className="relative">
             <Menu.Button 
-              className={`flex items-center gap-2 rounded-md border px-3 py-2 text-xs font-medium ${
+              className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium ${
                 activeFilters[filter.id]?.length 
                   ? 'bg-clay-100 text-clay-900 border-clay-200 hover:bg-clay-200' 
                   : 'bg-white text-gray-700 hover:bg-gray-50'
