@@ -16,7 +16,14 @@ export async function createCollection(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = collectionSchema.parse(rawData)
+  
+  // Handle multiple selected test tiles
+  const processedData = {
+    ...rawData,
+    testTileIds: formData.getAll('testTileIds')
+  }
+
+  const validatedData = collectionSchema.parse(processedData)
 
   const createData: Prisma.CollectionCreateInput = {
     name: validatedData.name,
@@ -25,7 +32,10 @@ export async function createCollection(formData: FormData) {
       connect: {
         id: session.user.id
       }
-    }
+    },
+    testTiles: validatedData.testTileIds?.length ? {
+      connect: validatedData.testTileIds.map(id => ({ id }))
+    } : undefined
   }
 
   const collection = await prisma.collection.create({

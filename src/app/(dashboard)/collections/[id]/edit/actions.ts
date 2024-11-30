@@ -66,11 +66,19 @@ export async function updateCollection(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = collectionSchema.parse(rawData)
+  const processedData = {
+    ...rawData,
+    testTileIds: formData.getAll('testTileIds')
+  }
+  
+  const validatedData = collectionSchema.parse(processedData)
 
   const updateData: Prisma.CollectionUpdateInput = {
     name: validatedData.name,
     description: validatedData.description || null,
+    testTiles: {
+      set: validatedData.testTileIds?.map(id => ({ id })) ?? []
+    }
   }
 
   await prisma.collection.update({

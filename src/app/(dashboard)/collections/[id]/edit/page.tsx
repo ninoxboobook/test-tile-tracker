@@ -24,16 +24,26 @@ export default async function EditCollectionPage(
       id: params.id,
       userId: session.user.id,
     },
+    include: {
+      testTiles: true,
+    },
   })
 
   if (!collection) {
     return notFound()
   }
 
+  const testTiles = await prisma.testTile.findMany({
+    where: { userId: session.user.id },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' }
+  })
+
   const formData: CollectionFormData & { id: string } = {
     id: collection.id,
     name: collection.name,
     description: collection.description || null,
+    testTileIds: collection.testTiles.map(tile => tile.id),
   }
 
   return (
@@ -46,6 +56,7 @@ export default async function EditCollectionPage(
         action={updateCollection}
         initialData={formData}
         submitButtonText="Update Collection"
+        testTiles={testTiles}
       />
     </FormLayout>
   )

@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { CollectionForm } from '@/components/collections/collection-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
@@ -12,13 +13,23 @@ export default async function NewCollectionPage() {
     redirect('/login')
   }
 
+  // Fetch test tiles for the current user
+  const testTiles = await prisma.testTile.findMany({
+    where: { userId: session.user.id },
+    select: { id: true, name: true },
+    orderBy: { name: 'asc' }
+  })
+
   return (
     <FormLayout 
       title="New Collection"
       description="Create a new collection of tiles"
       backHref="/collections"
     >
-      <CollectionForm action={createCollection} />
+      <CollectionForm 
+        action={createCollection} 
+        testTiles={testTiles}
+      />
     </FormLayout>
   )
 }
