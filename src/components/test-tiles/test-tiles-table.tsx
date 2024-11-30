@@ -1,15 +1,10 @@
 'use client'
 
-import { TestTile, ClayBody, Collection, Decoration } from '@prisma/client'
+import { ClayBody, Collection, Decoration } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
+import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
-
-type TestTileWithRelations = TestTile & {
-  clayBody: ClayBody
-  collections: Collection[]
-  decorations: Decoration[]
-}
 
 interface TestTilesTableProps {
   testTiles: TestTileWithRelations[]
@@ -50,17 +45,19 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
     header: 'Decorations',
     cell: ({ row }) => (
       <div className="space-x-1">
-        {row.original.decorations.map((decoration, index) => (
-          <span key={decoration.id}>
-            <Link
+        {row.original.decorationLayers.flatMap(layer => 
+          layer.decorations.map((decoration, index) => (
+            <span key={decoration.id}>
+              <Link
               href={`/decorations/${decoration.id}`}
               className="text-clay-600 hover:text-clay-500"
             >
               {decoration.name}
-            </Link>
-            {index < row.original.decorations.length - 1 && ', '}
-          </span>
-        ))}
+              </Link>
+              {index < layer.decorations.length - 1 && ', '}
+            </span>
+          ))
+        )}
       </div>
     ),
   },

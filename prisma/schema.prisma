@@ -85,7 +85,7 @@ model Decoration {
   createdAt         DateTime                  @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime                  @updatedAt @db.Timestamptz(6)
   user              User                     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  testTiles         TestTile[]
+  decorationLayers  DecorationLayer[]
 
   @@map("decorations")
   @@unique([userId, name], map: "decorations_user_id_name")
@@ -93,21 +93,34 @@ model Decoration {
 }
 
 model TestTile {
-  id           String        @id @default(uuid()) @db.Uuid
-  name         String        @db.VarChar(255)
-  stamp        String?       @db.VarChar(255)
-  notes        String?       @db.Text
-  imageUrl     String?       @db.VarChar(255)
-  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime      @updatedAt @db.Timestamptz(6)
-  userId       String        @db.Uuid
-  clayBodyId   String        @db.Uuid
-  decorations  Decoration[]
-  collections  Collection[]
-  clayBody     ClayBody      @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String            @db.VarChar(255)
+  stamp            String?           @db.VarChar(255)
+  notes            String?           @db.Text
+  imageUrl         String?           @db.VarChar(255)
+  createdAt        DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime          @updatedAt @db.Timestamptz(6)
+  userId           String            @db.Uuid
+  clayBodyId       String            @db.Uuid
+  decorationLayers DecorationLayer[]
+  collections      Collection[]
+  clayBody         ClayBody          @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user             User              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("test_tiles")
+}
+
+model DecorationLayer {
+  id          String      @id @default(uuid()) @db.Uuid
+  order       Int         // Layer number (1, 2, 3, etc.)
+  testTile    TestTile    @relation(fields: [testTileId], references: [id], onDelete: Cascade)
+  testTileId  String      @db.Uuid
+  decorations Decoration[]
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
+
+  @@unique([testTileId, order])
+  @@map("decoration_layers")
 }
 
 model Session {

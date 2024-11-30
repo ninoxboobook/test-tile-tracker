@@ -1,6 +1,5 @@
 'use client'
 
-import { TestTile, ClayBody, Collection, Decoration } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { TestTilesTable, columns } from '@/components/test-tiles/test-tiles-table'
@@ -10,13 +9,8 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
+import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
-
-type TestTileWithRelations = TestTile & {
-  clayBody: ClayBody
-  collections: Collection[]
-  decorations: Decoration[]
-}
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]
@@ -66,7 +60,9 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
         case 'decorations':
           uniqueValues = Array.from(new Set(
             testTiles.flatMap(item => 
-              item.decorations.map(d => d.name)
+              item.decorationLayers.flatMap(layer => 
+                layer.decorations.map(d => d.name)
+              )
             ).filter(value => value.trim() !== '')
           )).sort()
           break
@@ -109,7 +105,9 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
             case 'clayBody':
               return values.includes(testTile.clayBody.name)
             case 'decorations':
-              return testTile.decorations.some(d => values.includes(d.name))
+              return testTile.decorationLayers.some(layer => 
+                layer.decorations.some(d => values.includes(d.name))
+              )
             case 'collections':
               return testTile.collections.some(c => values.includes(c.name))
             default:

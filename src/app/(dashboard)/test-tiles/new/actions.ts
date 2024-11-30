@@ -15,17 +15,38 @@ export async function createTestTile(formData: FormData) {
     redirect('/login')
   }
 
+  // Process the form data
   const rawData = Object.fromEntries(formData.entries())
-  console.log('Server action received data:', {
-    rawFormData: Object.fromEntries(formData.entries()),
-    decorationIds: formData.getAll('decorationIds'),
-    collectionIds: formData.getAll('collectionIds')
+  
+  // Extract decoration layers data
+  const decorationLayers: Array<{ order: number; decorationIds: string[] }> = []
+  const entries = Array.from(formData.entries())
+  
+  entries.forEach(([key, value]) => {
+    if (key.startsWith('decorationLayers[')) {
+      const matches = key.match(/decorationLayers\[(\d+)\]\[(\w+)\](?:\[\])?/)
+      if (matches) {
+        const [, indexStr, field] = matches
+        const index = parseInt(indexStr)
+        
+        if (!decorationLayers[index]) {
+          decorationLayers[index] = { order: index + 1, decorationIds: [] }
+        }
+        
+        if (field === 'order') {
+          decorationLayers[index].order = parseInt(value as string)
+        } else if (field === 'decorationIds') {
+          if (!decorationLayers[index].decorationIds.includes(value as string)) {
+            decorationLayers[index].decorationIds.push(value as string)
+          }
+        }
+      }
+    }
   })
 
-  // Convert comma-separated strings to arrays for multi-select fields
   const processedData = {
     ...rawData,
-    decorationIds: formData.getAll('decorationIds'),
+    decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
   }
 
@@ -48,16 +69,28 @@ export async function createTestTile(formData: FormData) {
         id: validatedData.clayBodyId
       }
     },
-    decorations: validatedData.decorationIds?.length ? {
-      connect: validatedData.decorationIds.map(id => ({ id }))
-    } : undefined,
+    decorationLayers: {
+      create: validatedData.decorationLayers.map(layer => ({
+        order: layer.order,
+        decorations: {
+          connect: layer.decorationIds.map(id => ({ id }))
+        }
+      }))
+    },
     collections: validatedData.collectionIds?.length ? {
       connect: validatedData.collectionIds.map(id => ({ id }))
     } : undefined
   }
 
   const testTile = await prisma.testTile.create({
-    data: createData
+    data: createData,
+    include: {
+      decorationLayers: {
+        include: {
+          decorations: true
+        }
+      }
+    }
   })
 
   revalidatePath('/test-tiles')

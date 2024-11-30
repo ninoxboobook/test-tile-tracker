@@ -26,7 +26,14 @@ export default async function EditTestTilePage({ params }: PageProps) {
     },
     include: {
       clayBody: true,
-      decorations: true,
+      decorationLayers: {
+        include: {
+          decorations: true
+        },
+        orderBy: {
+          order: 'asc'
+        }
+      },
       collections: true,
     },
   })
@@ -53,11 +60,14 @@ export default async function EditTestTilePage({ params }: PageProps) {
   const formData: TestTileFormData = {
     id,
     name: testTile.name,
-    stamp: testTile.stamp || null,
-    notes: testTile.notes || null,
-    imageUrl: testTile.imageUrl || null,
+    stamp: testTile.stamp || undefined,
+    notes: testTile.notes || undefined,
+    imageUrl: testTile.imageUrl || undefined,
     clayBodyId: testTile.clayBodyId,
-    decorationIds: testTile.decorations.map(decoration => decoration.id),
+    decorationLayers: testTile.decorationLayers.map(layer => ({
+      order: layer.order,
+      decorationIds: layer.decorations.map(d => d.id)
+    })),
     collectionIds: testTile.collections.map(collection => collection.id),
   }
 
