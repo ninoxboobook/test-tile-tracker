@@ -15,15 +15,12 @@ export async function createCollection(formData: FormData) {
     redirect('/login')
   }
 
-  const rawData = Object.fromEntries(formData.entries())
-  
-  // Handle multiple selected test tiles
-  const processedData = {
-    ...rawData,
+  const rawData = {
+    ...Object.fromEntries(formData.entries()),
     testTileIds: formData.getAll('testTileIds')
   }
 
-  const validatedData = collectionSchema.parse(processedData)
+  const validatedData = collectionSchema.parse(rawData)
 
   const createData: Prisma.CollectionCreateInput = {
     name: validatedData.name,
@@ -42,6 +39,9 @@ export async function createCollection(formData: FormData) {
     data: createData
   })
 
+  console.log('Raw form data:', Object.fromEntries(formData.entries()))
+  console.log('All entries:', Array.from(formData.entries()))
+  
   revalidatePath('/collections')
   redirect(`/collections/${collection.id}`)
 } 
