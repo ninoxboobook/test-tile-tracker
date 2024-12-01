@@ -18,7 +18,7 @@ export default async function DashboardLayout({
     <div className="min-h-full">
       <DashboardNav user={session.user} />
       <div className="py-10">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto sm:px-6">
           {children}
         </div>
       </div>

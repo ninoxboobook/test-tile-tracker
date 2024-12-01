@@ -32,12 +32,16 @@ export const columns: ColumnDef<Decoration>[] = [
     header: 'Type',
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ row }) => {
-      const description = row.getValue('description') as string
-      return description ? description.slice(0, 100) + (description.length > 100 ? '...' : '') : ''
-    },
+    accessorKey: 'cone',
+    header: 'Cone',
+  },
+  {
+    accessorKey: 'atmosphere',
+    header: 'Atmosphere',
+  },
+  {
+    accessorKey: 'colour',
+    header: 'Colour',
   },
   {
     accessorKey: 'createdAt',

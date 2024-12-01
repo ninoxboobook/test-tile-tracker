@@ -22,11 +22,15 @@ export default async function DecorationPage(
   const decoration = await prisma.decoration.findUnique({
     where: {
       id: params.id,
-      userId: session.user.id,
+      userId: session.user.id
     },
     include: {
-      testTiles: true,
-    },
+      decorationLayers: {
+        include: {
+          testTile: true
+        }
+      }
+    }
   })
 
   if (!decoration) {
@@ -149,7 +153,7 @@ export default async function DecorationPage(
         )}
       </dl>
 
-      {decoration.testTiles.length > 0 && (
+      {decoration.decorationLayers.length > 0 && (
         <div className="mt-8">
           <h4 className="text-lg font-medium text-gray-900 mb-4">Test Tiles</h4>
           {/* Add your test tiles list component here */}

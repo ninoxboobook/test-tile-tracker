@@ -47,12 +47,12 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
       <div className="space-x-1">
         {row.original.decorationLayers.flatMap(layer => 
           layer.decorations.map((decoration, index) => (
-            <span key={decoration.id}>
+            <span key={`${row.original.id}-${layer.order}-${decoration.id}`}>
               <Link
-              href={`/decorations/${decoration.id}`}
-              className="text-clay-600 hover:text-clay-500"
-            >
-              {decoration.name}
+                href={`/decorations/${decoration.id}`}
+                className="text-clay-600 hover:text-clay-500"
+              >
+                {decoration.name}
               </Link>
               {index < layer.decorations.length - 1 && ', '}
             </span>
