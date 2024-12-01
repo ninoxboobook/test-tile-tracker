@@ -150,6 +150,11 @@ export function TestTileForm({
         })
       })
 
+      // add collections to form data
+      values.collectionIds?.forEach(collection => {
+        formData.append('collectionIds', collection)
+      })
+
       console.log('Form data before submission:', Object.fromEntries(formData.entries()))
       await action(formData)
     } catch (error) {

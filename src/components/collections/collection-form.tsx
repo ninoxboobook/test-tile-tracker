@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { FieldError, Merge, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { collectionSchema, type CollectionFormData } from '@/lib/schemas/collection'
@@ -17,16 +18,21 @@ interface CollectionFormProps {
   testTiles: Pick<TestTile, 'id' | 'name'>[]
 }
 
+
 export function CollectionForm({
   initialData,
   action,
   submitButtonText = 'Create Collection',
   testTiles
 }: CollectionFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const {
     register,
     control,
-    formState: { errors, isSubmitting }
+    watch,
+    setValue,
+    formState: { errors }
   } = useForm<CollectionFormData>({
     resolver: zodResolver(collectionSchema),
     defaultValues: {
@@ -35,8 +41,34 @@ export function CollectionForm({
     }
   })
 
+
+const handleSubmit = async (formData: FormData) => {
+  try {
+    setIsSubmitting(true)
+    
+    // Get the current form values
+    const values = watch()
+    
+    // add test tiles to form data
+    values.testTileIds?.forEach(testTile   => {
+      formData.append('testTileIds', testTile)
+    })
+
+    console.log('Form data before submission:', Object.fromEntries(formData.entries()))
+    await action(formData)
+  } catch (error) {
+    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+      return
+    }
+    console.error('Form submission error:', error)
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+
+
   return (
-    <Form onSubmit={action}>
+    <Form onSubmit={handleSubmit}>
       {initialData?.id && (
         <input type="hidden" name="id" value={initialData.id} />
       )}
