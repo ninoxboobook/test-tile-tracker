@@ -28,9 +28,19 @@ export async function POST(request: NextRequest) {
 
     const createData: Prisma.ClayBodyCreateInput = {
       name: validatedData.name,
-      type: validatedData.type,
+      type: {
+        connectOrCreate: validatedData.type.map(type => ({
+          where: { name: type },
+          create: { name: type }
+        }))
+      },
       manufacturer: validatedData.manufacturer || null,
-      cone: validatedData.cone || null,
+      cone: validatedData.cone ? {
+        connectOrCreate: validatedData.cone.map(cone => ({
+          where: { name: cone },
+          create: { name: cone }
+        }))
+      } : undefined,
       firingTemperature: validatedData.firingTemperature || null,
       texture: validatedData.texture || null,
       plasticity: validatedData.plasticity || null,

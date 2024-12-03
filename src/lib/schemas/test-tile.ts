@@ -12,6 +12,8 @@ export const testTileSchema = z.object({
   clayBodyId: z.string().uuid({ message: 'Clay body is required' }),
   decorationLayers: z.array(decorationLayerSchema),
   collectionIds: z.array(z.string().uuid()).optional(),
+  atmosphere: z.array(z.string()).optional().nullable(),
+  cone: z.array(z.string()).optional().nullable(),
   imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
   notes: z.string().optional().nullable()
 })

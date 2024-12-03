@@ -48,9 +48,19 @@ export async function createClayBody(data: ClayBodyFormData) {
   const clayBody = await prisma.clayBody.create({
     data: {
       name: validatedData.name,
-      type: validatedData.type,
+      type: {
+        connectOrCreate: validatedData.type.map(type => ({
+          where: { name: type },
+          create: { name: type }
+        }))
+      },
+      cone: validatedData.cone ? {
+        connectOrCreate: validatedData.cone.map(cone => ({
+          where: { name: cone },
+          create: { name: cone }
+        }))
+      } : undefined,
       manufacturer: validatedData.manufacturer,
-      cone: validatedData.cone,
       firingTemperature: validatedData.firingTemperature,
       plasticity: validatedData.plasticity,
       texture: validatedData.texture,
@@ -89,9 +99,21 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
     },
     data: {
       name: validatedData.name,
-      type: validatedData.type,
+      type: {
+        set: [],
+        connectOrCreate: validatedData.type.map(type => ({
+          where: { name: type },
+          create: { name: type }
+        }))
+      },
+      cone: {
+        set: [],
+        connectOrCreate: validatedData.cone?.map(cone => ({
+          where: { name: cone },
+          create: { name: cone }
+        })) ?? []
+      },
       manufacturer: validatedData.manufacturer,
-      cone: validatedData.cone,
       firingTemperature: validatedData.firingTemperature,
       plasticity: validatedData.plasticity,
       texture: validatedData.texture,

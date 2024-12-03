@@ -51,6 +51,8 @@ export async function createTestTile(formData: FormData) {
     ...rawData,
     decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
+    atmosphere: formData.getAll('atmosphere'),
+    cone: formData.getAll('cone')
   }
 
   console.log('Processed data:', processedData)
@@ -72,6 +74,18 @@ export async function createTestTile(formData: FormData) {
         id: validatedData.clayBodyId
       }
     },
+    atmosphere: validatedData.atmosphere ? {
+      connectOrCreate: validatedData.atmosphere.map(atm => ({
+        where: { name: atm },
+        create: { name: atm }
+      }))
+    } : undefined,
+    cone: validatedData.cone ? {
+      connectOrCreate: validatedData.cone.map(cone => ({
+        where: { name: cone },
+        create: { name: cone }
+      }))
+    } : undefined,
     decorationLayers: {
       create: validatedData.decorationLayers.map(layer => ({
         order: layer.order,

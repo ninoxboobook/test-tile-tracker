@@ -6,7 +6,16 @@ import { NextResponse } from 'next/server';
 export const GET = createApiHandler(async (req, { session }) => {
   const testTiles = await prisma.testTile.findMany({
     where: { userId: session.user.id },
-    include: { clayBody: true, decorations: true }
+    include: { 
+      clayBody: true, 
+      decorationLayers: {
+        include: {
+          decorations: true
+        }
+      },
+      atmosphere: true,
+      cone: true
+    }
   });
   
   return NextResponse.json(testTiles);
@@ -15,23 +24,46 @@ export const GET = createApiHandler(async (req, { session }) => {
 export const POST = createApiHandler(
   async (req, { session }) => {
     const body = await req.json();
-    const { decorationIds, collectionIds, ...rest } = body;
+    const { decorationLayers, collectionIds, atmosphere: atmosphereNames, cone: coneNames, ...rest } = body;
 
     const testTile = await prisma.testTile.create({
       data: {
         ...rest,
         userId: session.user.id,
-        decorations: decorationIds?.length ? {
-          connect: decorationIds.map((id: string) => ({ id }))
-        } : undefined,
+        decorationLayers: {
+          create: decorationLayers.map((layer: any) => ({
+            order: layer.order,
+            decorations: {
+              connect: layer.decorationIds.map((id: string) => ({ id }))
+            }
+          }))
+        },
         collections: collectionIds?.length ? {
           connect: collectionIds.map((id: string) => ({ id }))
+        } : undefined,
+        atmosphere: atmosphereNames?.length ? {
+          connectOrCreate: atmosphereNames.map((name: string) => ({
+            where: { name },
+            create: { name }
+          }))
+        } : undefined,
+        cone: coneNames?.length ? {
+          connectOrCreate: coneNames.map((name: string) => ({
+            where: { name },
+            create: { name }
+          }))
         } : undefined
       },
       include: {
         clayBody: true,
-        decorations: true,
-        collections: true
+        decorationLayers: {
+          include: {
+            decorations: true
+          }
+        },
+        collections: true,
+        atmosphere: true,
+        cone: true
       }
     });
     

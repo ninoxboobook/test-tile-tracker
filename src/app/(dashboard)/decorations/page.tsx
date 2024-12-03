@@ -15,6 +15,11 @@ export default async function DecorationsPage() {
     where: {
       userId: session.user.id
     },
+    include: {
+      category: true,
+      cone: true,
+      atmosphere: true
+    },
     orderBy: {
       createdAt: 'desc'
     }

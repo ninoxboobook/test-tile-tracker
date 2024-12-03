@@ -1,6 +1,6 @@
 'use client'
 
-import { Decoration } from '@prisma/client'
+import { Decoration, DecorationCategory, Cone, Atmosphere } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { DecorationsTable, columns } from '@/components/decorations/decorations-table'
@@ -13,12 +13,16 @@ import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import Link from 'next/link'
 
 interface DecorationsContentProps {
-  decorations: Decoration[]
+  decorations: (Decoration & {
+    category: DecorationCategory[]
+    cone: Cone[]
+    atmosphere: Atmosphere[]
+  })[]
 }
 
 // Define filterable columns configuration
-const filterConfig: FilterableColumnConfig<'category' | 'type'> = {
-  columns: ['category', 'type'] as const,
+const filterConfig: FilterableColumnConfig<'type'> = {
+  columns: ['type'] as const,
   getLabel: (columnId) => 
     columns.find(col => 'accessorKey' in col && col.accessorKey === columnId)?.header as string || columnId
 }
@@ -49,28 +53,91 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
       return {
         id: columnId,
         label: filterConfig.getLabel(columnId),
-        options: uniqueValues.map(value => ({
-          label: String(value),
-          value: value
+        values: uniqueValues.map(value => ({
+          value,
+          label: value,
         }))
-      }
-    })
+      } satisfies PotentialFilter
+    }).filter((filter): filter is PotentialFilter => filter !== null)
 
-    return generatedFilters.filter((filter): filter is PotentialFilter<FilterableColumn> => filter !== null)
+    // Add categories filter
+    const uniqueCategories = Array.from(new Set(
+      decorations.flatMap(item => 
+        item.category.map(cat => cat.name)
+      )
+    )).sort()
+
+    if (uniqueCategories.length > 0) {
+      generatedFilters.push({
+        id: 'category',
+        label: 'Category',
+        values: uniqueCategories.map(value => ({
+          value,
+          label: value,
+        }))
+      })
+    }
+
+    // Add cones filter
+    const uniqueCones = Array.from(new Set(
+      decorations.flatMap(item => 
+        item.cone.map(c => c.name)
+      )
+    )).sort()
+
+    if (uniqueCones.length > 0) {
+      generatedFilters.push({
+        id: 'cone',
+        label: 'Cone',
+        values: uniqueCones.map(value => ({
+          value,
+          label: value,
+        }))
+      })
+    }
+
+    // Add atmospheres filter
+    const uniqueAtmospheres = Array.from(new Set(
+      decorations.flatMap(item => 
+        item.atmosphere.map(a => a.name)
+      )
+    )).sort()
+
+    if (uniqueAtmospheres.length > 0) {
+      generatedFilters.push({
+        id: 'atmosphere',
+        label: 'Atmosphere',
+        values: uniqueAtmospheres.map(value => ({
+          value,
+          label: value,
+        }))
+      })
+    }
+
+    return generatedFilters
   }, [decorations])
 
   const filteredDecorations = useMemo(() => {
     return decorations
-      .filter(decoration => 
-        decoration.name.toLowerCase().includes(search.toLowerCase())
-      )
       .filter(decoration => {
         return Object.entries(activeFilters).every(([filterId, values]) => {
           if (values.length === 0) return true
+          if (filterId === 'category') {
+            return decoration.category.some(cat => values.includes(cat.name))
+          }
+          if (filterId === 'cone') {
+            return decoration.cone.some(c => values.includes(c.name))
+          }
+          if (filterId === 'atmosphere') {
+            return decoration.atmosphere.some(a => values.includes(a.name))
+          }
           const value = decoration[filterId as FilterableColumn]
           return value !== null && values.includes(value)
         })
       })
+      .filter(decoration => 
+        decoration.name.toLowerCase().includes(search.toLowerCase())
+      )
   }, [decorations, search, activeFilters])
 
   const table = useReactTable({

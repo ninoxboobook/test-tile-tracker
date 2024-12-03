@@ -42,7 +42,8 @@ model Collection {
 model ClayBody {
   id                String               @id @default(uuid()) @db.Uuid
   name              String               @db.VarChar(255)
-  type              ClayBodyType[]
+  typeId            String               @db.Uuid
+  type              ClayBodyType         @relation(fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   manufacturer      String?              @db.VarChar(255)
   cone              Cone[]
   firingTemperature String?              @db.VarChar(255)
@@ -68,8 +69,9 @@ model ClayBody {
 model Decoration {
   id                String                    @id @default(uuid()) @db.Uuid
   name              String                    @db.VarChar(255)
-  category          String                    @db.VarChar(255)
-  type              DecorationType[]
+  typeId            String                    @db.Uuid
+  type              DecorationType            @relation(fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  source            String?                   @db.VarChar(255)
   manufacturer      String?                   @db.VarChar(255)
   cone              Cone[]
   atmosphere        Atmosphere[]
@@ -100,8 +102,10 @@ model TestTile {
   updatedAt        DateTime          @updatedAt @db.Timestamptz(6)
   userId           String            @db.Uuid
   clayBodyId       String            @db.Uuid
-  cone             Cone[]
-  atmosphere       Atmosphere[]
+  coneId           String            @db.Uuid
+  cone             Cone              @relation(fields: [coneId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  atmosphereId     String            @db.Uuid
+  atmosphere       Atmosphere        @relation(fields: [atmosphereId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   decorationLayers DecorationLayer[]
   collections      Collection[]
   clayBody         ClayBody          @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -146,11 +150,8 @@ model Cone {
 id          String        @id @default(uuid()) @db.Uuid
 name        String        @unique
 clayBodies  ClayBody[]
-
 decorations Decoration[]
-
 testTiles   TestTile[]
-
 createdAt   DateTime      @default(now()) @db.Timestamptz(6)
 updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
 
@@ -161,9 +162,7 @@ model Atmosphere {
 id          String        @id @default(uuid()) @db.Uuid
 name        String        @unique
 decorations Decoration[]
-
 testTiles   TestTile[]
-
 createdAt   DateTime      @default(now()) @db.Timestamptz(6)
 updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
 
@@ -174,7 +173,6 @@ model DecorationType {
 id          String        @id @default(uuid()) @db.Uuid
 name        String        @unique
 decorations Decoration[]
-
 createdAt   DateTime      @default(now()) @db.Timestamptz(6)
 updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
 
@@ -185,7 +183,6 @@ model ClayBodyType {
 id          String        @id @default(uuid()) @db.Uuid
 name        String        @unique
 clayBodies  ClayBody[]
-
 createdAt   DateTime      @default(now()) @db.Timestamptz(6)
 updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
 

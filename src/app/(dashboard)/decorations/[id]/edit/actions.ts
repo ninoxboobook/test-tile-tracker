@@ -25,11 +25,29 @@ export async function updateDecoration(formData: FormData) {
 
   const updateData: Prisma.DecorationUpdateInput = {
     name: validatedData.name,
-    category: validatedData.category,
+    category: {
+      set: [],
+      connectOrCreate: validatedData.category.map(cat => ({
+        where: { name: cat },
+        create: { name: cat }
+      }))
+    },
     type: validatedData.type,
     manufacturer: validatedData.manufacturer || null,
-    cone: validatedData.cone || null,
-    atmosphere: validatedData.atmosphere || null,
+    cone: {
+      set: [],
+      connectOrCreate: validatedData.cone?.map(cone => ({
+        where: { name: cone },
+        create: { name: cone }
+      })) ?? []
+    },
+    atmosphere: {
+      set: [],
+      connectOrCreate: validatedData.atmosphere?.map(atm => ({
+        where: { name: atm },
+        create: { name: atm }
+      })) ?? []
+    },
     colour: validatedData.colour || null,
     surface: validatedData.surface || null,
     transparency: validatedData.transparency || null,

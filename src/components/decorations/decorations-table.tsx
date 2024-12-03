@@ -1,16 +1,28 @@
 'use client'
 
-import { Decoration } from '@prisma/client'
+import { Decoration, DecorationCategory, Cone, Atmosphere } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
 
 interface DecorationsTableProps {
-  decorations: Decoration[]
-  table?: Table<Decoration>
+  decorations: (Decoration & {
+    category: DecorationCategory[]
+    cone: Cone[]
+    atmosphere: Atmosphere[]
+  })[]
+  table?: Table<Decoration & {
+    category: DecorationCategory[]
+    cone: Cone[]
+    atmosphere: Atmosphere[]
+  }>
 }
 
-export const columns: ColumnDef<Decoration>[] = [
+export const columns: ColumnDef<Decoration & {
+  category: DecorationCategory[]
+  cone: Cone[]
+  atmosphere: Atmosphere[]
+}>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -24,20 +36,23 @@ export const columns: ColumnDef<Decoration>[] = [
     ),
   },
   {
-    accessorKey: 'category',
+    id: 'category',
     header: 'Category',
+    accessorFn: (row) => row.category.map(cat => cat.name).join(', '),
   },
   {
     accessorKey: 'type',
     header: 'Type',
   },
   {
-    accessorKey: 'cone',
+    id: 'cone',
     header: 'Cone',
+    accessorFn: (row) => row.cone.map(c => c.name).join(', '),
   },
   {
-    accessorKey: 'atmosphere',
+    id: 'atmosphere',
     header: 'Atmosphere',
+    accessorFn: (row) => row.atmosphere.map(a => a.name).join(', '),
   },
   {
     accessorKey: 'colour',
