@@ -1,28 +1,17 @@
 'use client'
 
-import { Decoration, DecorationCategory, Cone, Atmosphere } from '@prisma/client'
+import { Decoration, DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
+import { DecorationWithRelations } from '@/lib/schemas/decoration'
 
 interface DecorationsTableProps {
-  decorations: (Decoration & {
-    category: DecorationCategory[]
-    cone: Cone[]
-    atmosphere: Atmosphere[]
-  })[]
-  table?: Table<Decoration & {
-    category: DecorationCategory[]
-    cone: Cone[]
-    atmosphere: Atmosphere[]
-  }>
+  decorations: DecorationWithRelations[]
+  table?: Table<DecorationWithRelations>
 }
 
-export const columns: ColumnDef<Decoration & {
-  category: DecorationCategory[]
-  cone: Cone[]
-  atmosphere: Atmosphere[]
-}>[] = [
+export const columns: ColumnDef<DecorationWithRelations>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -36,13 +25,13 @@ export const columns: ColumnDef<Decoration & {
     ),
   },
   {
-    id: 'category',
-    header: 'Category',
-    accessorFn: (row) => row.category.map(cat => cat.name).join(', '),
+    accessorKey: 'source',
+    header: 'Source',
   },
   {
-    accessorKey: 'type',
+    id: 'type',
     header: 'Type',
+    accessorFn: (row) => row.type.name,
   },
   {
     id: 'cone',
@@ -59,11 +48,15 @@ export const columns: ColumnDef<Decoration & {
     header: 'Colour',
   },
   {
+    accessorKey: 'manufacturer',
+    header: 'Manufacturer',
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Created',
     cell: ({ row }) => {
       const date = new Date(row.getValue('createdAt'))
-      return date.toISOString().split('T')[0]
+      return date.toLocaleDateString()
     },
   },
 ]

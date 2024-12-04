@@ -2,31 +2,47 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { decorationSchema, type DecorationFormData } from '@/lib/schemas/decoration'
+import { decorationSchema, type DecorationFormData, type DecorationWithRelations } from '@/lib/schemas/decoration'
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
+import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { DecorationType, Cone, Atmosphere } from '@prisma/client'
 
 interface DecorationFormProps {
-  initialData?: DecorationFormData & { id?: string }
+  initialData?: DecorationWithRelations
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
+  decorationTypes: DecorationType[]
+  cones: Cone[]
+  atmospheres: Atmosphere[]
 }
 
 export function DecorationForm({
   initialData,
   action,
-  submitButtonText = 'Create Decoration'
+  submitButtonText = 'Create Decoration',
+  decorationTypes,
+  cones,
+  atmospheres
 }: DecorationFormProps) {
+  const defaultValues: Partial<DecorationFormData> = initialData
+    ? {
+        ...initialData,
+        coneIds: initialData.cone.map(c => c.id),
+        atmosphereIds: initialData.atmosphere.map(a => a.id)
+      }
+    : {}
+
   const {
     register,
     control,
     formState: { errors, isSubmitting }
   } = useForm<DecorationFormData>({
     resolver: zodResolver(decorationSchema),
-    defaultValues: initialData
+    defaultValues
   })
 
   return (
@@ -44,23 +60,20 @@ export function DecorationForm({
       />
 
       <FormSelect
-        label="Category"
-        name="category"
+        label="Type"
+        name="typeId"
         control={control}
-        options={[
-          { value: 'Glaze', label: 'Glaze' },
-          { value: 'Underglaze', label: 'Underglaze' },
-          { value: 'Oxide', label: 'Oxide' },
-          { value: 'Slip', label: 'Slip' },
-          { value: 'Engobe', label: 'Engobe' },
-          { value: 'Other', label: 'Other' }
-        ]}
-        error={errors.category}
+        options={decorationTypes.map(type => ({
+          value: type.id,
+          label: type.name
+        }))}
+        error={errors.typeId}
         required
       />
+
       <FormSelect
-        label="Type"
-        name="type"
+        label="Source"
+        name="source"
         control={control}
         options={[
           { value: 'Commercial', label: 'Commercial' },
@@ -68,9 +81,9 @@ export function DecorationForm({
           { value: 'Test', label: 'Test' },
           { value: 'Other', label: 'Other' }
         ]}
-        error={errors.type}
-        required
+        error={errors.source}
       />
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <FormField
           label="Manufacturer"
@@ -78,13 +91,18 @@ export function DecorationForm({
           register={register}
           error={errors.manufacturer}
         />
-        <FormField
+        <FormMultiSelect
           label="Cone"
-          name="cone"
-          register={register}
-          error={errors.cone}
+          name="coneIds"
+          control={control}
+          options={cones.map(cone => ({
+            value: cone.id,
+            label: cone.name
+          }))}
+          error={errors.coneIds}
         />
       </div>
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <FormField
           label="Colour"
@@ -92,19 +110,18 @@ export function DecorationForm({
           register={register}
           error={errors.colour}
         />
-        <FormSelect
+        <FormMultiSelect
           label="Atmosphere"
-          name="atmosphere"
+          name="atmosphereIds"
           control={control}
-          options={[
-            { value: 'Oxidation', label: 'Oxidation' },
-            { value: 'Reduction', label: 'Reduction' },
-            { value: 'Neutral', label: 'Neutral' },
-            { value: 'Raku', label: 'Raku' }
-          ]}
-          error={errors.atmosphere}
+          options={atmospheres.map(atm => ({
+            value: atm.id,
+            label: atm.name
+          }))}
+          error={errors.atmosphereIds}
         />
       </div>
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <FormSelect
           label="Surface"
@@ -132,36 +149,45 @@ export function DecorationForm({
           error={errors.transparency}
         />
       </div>
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <FormField
           label="Glazy URL"
           name="glazyUrl"
           register={register}
           error={errors.glazyUrl}
+          placeholder="https://glazy.org/recipes/2468"
         />
         <FormField
           label="Image URL"
           name="imageUrl"
           register={register}
           error={errors.imageUrl}
+          placeholder="https://example.com/image.jpg"
         />
       </div>
+
       <FormTextarea
         label="Recipe"
         name="recipe"
         register={register}
         error={errors.recipe}
+        placeholder="Add the recipe for this decoration..."
       />
+
       <FormTextarea
         label="Notes"
         name="notes"
         register={register}
         error={errors.notes}
+        placeholder="Add any additional notes about this decoration..."
       />
 
-      <ActionButton type="submit" isLoading={isSubmitting}>
-        {submitButtonText}
-      </ActionButton>
+      <div className="mt-6 flex justify-end">
+        <ActionButton type="submit" disabled={isSubmitting}>
+          {submitButtonText}
+        </ActionButton>
+      </div>
     </Form>
   )
-} 
+}

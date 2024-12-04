@@ -19,12 +19,27 @@ export default async function EditDecorationPage(
     redirect('/login')
   }
 
-  const decoration = await prisma.decoration.findUnique({
-    where: {
-      id: params.id,
-      userId: session.user.id,
-    },
-  })
+  const [decoration, decorationTypes, cones, atmospheres] = await Promise.all([
+    prisma.decoration.findUnique({
+      where: {
+        id: params.id,
+        userId: session.user.id,
+      },
+      include: {
+        atmosphere: true,
+        cone: true
+      }
+    }),
+    prisma.decorationType.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.cone.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.atmosphere.findMany({
+      orderBy: { name: 'asc' }
+    })
+  ])
 
   if (!decoration) {
     return notFound()
@@ -33,11 +48,11 @@ export default async function EditDecorationPage(
   const formData: DecorationFormData & { id: string } = {
     id: decoration.id,
     name: decoration.name,
-    category: decoration.category,
-    type: decoration.type,
+    typeId: decoration.typeId,
+    source: decoration.source || null,
     manufacturer: decoration.manufacturer || null,
-    cone: decoration.cone || null,
-    atmosphere: decoration.atmosphere || null,
+    cone: decoration.cone.map(c => c.name),
+    atmosphere: decoration.atmosphere.map(a => a.name),
     colour: decoration.colour || null,
     surface: decoration.surface || null,
     transparency: decoration.transparency || null,
@@ -57,7 +72,10 @@ export default async function EditDecorationPage(
         action={updateDecoration}
         initialData={formData}
         submitButtonText="Update Decoration"
+        decorationTypes={decorationTypes}
+        cones={cones}
+        atmospheres={atmospheres}
       />
     </FormLayout>
   )
-} 
+}

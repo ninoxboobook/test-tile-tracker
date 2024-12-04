@@ -6,8 +6,8 @@ export const decorationSchema = z.object({
   typeId: z.string().uuid('Decoration type is required'),
   source: z.string().optional().nullable(),
   manufacturer: z.string().optional().nullable(),
-  cone: z.array(z.string()).optional(),
-  atmosphere: z.array(z.string()).optional(),
+  coneIds: z.array(z.string().uuid('Invalid cone ID')).optional(),
+  atmosphereIds: z.array(z.string().uuid('Invalid atmosphere ID')).optional(),
   colour: z.string().optional().nullable(),
   surface: z.string().optional().nullable(),
   transparency: z.string().optional().nullable(),
@@ -17,4 +17,35 @@ export const decorationSchema = z.object({
   notes: z.string().optional().nullable(),
 })
 
-export type DecorationFormData = z.infer<typeof decorationSchema> 
+export type DecorationFormData = z.infer<typeof decorationSchema>
+
+// Type for the complete decoration with relationships
+export type DecorationWithRelations = {
+  id: string
+  name: string
+  typeId: string
+  type: {
+    id: string
+    name: string
+  }
+  source?: string | null
+  manufacturer?: string | null
+  cone: Array<{
+    id: string
+    name: string
+  }>
+  atmosphere: Array<{
+    id: string
+    name: string
+  }>
+  colour?: string | null
+  surface?: string | null
+  transparency?: string | null
+  glazyUrl?: string | null
+  imageUrl?: string | null
+  recipe?: string | null
+  notes?: string | null
+  userId: string
+  createdAt: Date
+  updatedAt: Date
+}

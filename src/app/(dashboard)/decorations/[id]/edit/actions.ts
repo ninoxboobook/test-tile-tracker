@@ -21,27 +21,31 @@ export async function updateDecoration(formData: FormData) {
   }
 
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = decorationSchema.parse(rawData)
+  
+  // Handle array fields from FormData
+  const coneIds = formData.getAll('coneIds[]').map(id => id.toString())
+  const atmosphereIds = formData.getAll('atmosphereIds[]').map(id => id.toString())
+  
+  const validatedData = decorationSchema.parse({
+    ...rawData,
+    coneIds,
+    atmosphereIds
+  })
 
   const updateData: Prisma.DecorationUpdateInput = {
     name: validatedData.name,
     type: {
       connect: { id: validatedData.typeId }
     },
+    source: validatedData.source || null,
     manufacturer: validatedData.manufacturer || null,
     cone: {
-      set: [],
-      connectOrCreate: validatedData.cone?.map(cone => ({
-        where: { name: cone },
-        create: { name: cone }
-      })) ?? []
+      set: [], // Clear existing relationships
+      connect: validatedData.coneIds?.map(id => ({ id })) ?? []
     },
     atmosphere: {
-      set: [],
-      connectOrCreate: validatedData.atmosphere?.map(atm => ({
-        where: { name: atm },
-        create: { name: atm }
-      })) ?? []
+      set: [], // Clear existing relationships
+      connect: validatedData.atmosphereIds?.map(id => ({ id })) ?? []
     },
     colour: validatedData.colour || null,
     surface: validatedData.surface || null,
@@ -62,4 +66,42 @@ export async function updateDecoration(formData: FormData) {
 
   revalidatePath('/decorations')
   redirect(`/decorations/${id}`)
-} 
+}
+
+export async function getDecoration(id: string, userId: string) {
+  return prisma.decoration.findUnique({
+    where: {
+      id,
+      userId
+    },
+    include: {
+      type: true,
+      cone: true,
+      atmosphere: true
+    }
+  })
+}
+
+export async function getDecorationTypes() {
+  return prisma.decorationType.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
+}
+
+export async function getCones() {
+  return prisma.cone.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
+}
+
+export async function getAtmospheres() {
+  return prisma.atmosphere.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
+}
