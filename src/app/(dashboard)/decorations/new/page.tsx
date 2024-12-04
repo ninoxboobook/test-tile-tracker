@@ -28,7 +28,7 @@ export default async function NewDecorationPage() {
   return (
     <FormLayout 
       title="New Decoration"
-      description="Add a new glaze or surface decoration"
+      description="Add a new decoration to your database"
       backHref="/decorations"
     >
       <DecorationForm 

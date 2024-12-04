@@ -48,4 +48,11 @@ export type DecorationWithRelations = {
   userId: string
   createdAt: Date
   updatedAt: Date
+  decorationLayers: Array<{
+    id: string
+    testTile: {
+      id: string
+      name: string
+    } | null
+  }>
 }
