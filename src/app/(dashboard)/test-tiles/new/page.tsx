@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { TestTileForm } from '@/components/test-tiles/test-tile-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { createTestTile } from './actions'
-
+import { ClayBody, Collection, Decoration } from '@prisma/client'
 export default async function NewTestTilePage() {
   const session = await getServerSession(authOptions)
 
@@ -57,9 +57,9 @@ export default async function NewTestTilePage() {
     >
       <TestTileForm 
         action={createTestTile}
-        clayBodies={clayBodies}
-        decorations={decorations}
-        collections={collections}
+        clayBodies={clayBodies as ClayBody[]}
+        decorations={decorations as Decoration[]}
+        collections={collections as Collection[]}
         cones={cones}
         atmospheres={atmospheres}
         clayBodyTypes={clayBodyTypes}

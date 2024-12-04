@@ -6,6 +6,7 @@ import { TestTileForm } from '@/components/test-tiles/test-tile-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateTestTile } from './actions'
 import type { TestTileFormData } from '@/lib/schemas/test-tile'
+import { ClayBody, Collection, Decoration } from '@prisma/client'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -69,7 +70,8 @@ export default async function EditTestTilePage({ params }: PageProps) {
     }),
   ])
 
-  const formData: TestTileFormData = {
+  const formData: TestTileFormData & { id: string } = {
+    id: testTile.id,
     name: testTile.name,
     stamp: testTile.stamp || undefined,
     notes: testTile.notes || undefined,
@@ -96,9 +98,9 @@ export default async function EditTestTilePage({ params }: PageProps) {
         submitButtonText="Update Test Tile"
         cones={cones}
         atmospheres={atmospheres}
-        clayBodies={clayBodies}
-        decorations={decorations}
-        collections={collections}
+        clayBodies={clayBodies as ClayBody[]}
+        decorations={decorations as Decoration[]}
+        collections={collections as Collection[]}
         clayBodyTypes={clayBodyTypes}
         decorationTypes={decorationTypes}
       />

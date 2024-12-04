@@ -14,6 +14,10 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { Modal } from '@/components/ui/modal'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { DecorationForm } from '@/components/decorations/decoration-form'
+import { ClayBody, Collection, Decoration, DecorationType } from '@prisma/client'
+import { ClayBodyType } from '@prisma/client'
+import { Atmosphere } from '@prisma/client'
+import { Cone } from '@prisma/client'
 
 interface DecorationLayer {
   order: number
@@ -24,13 +28,13 @@ interface TestTileFormProps {
   initialData?: TestTileFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
-  clayBodies: Array<{ id: string; name: string }>
-  decorations: Array<{ id: string; name: string }>
-  collections: Array<{ id: string; name: string }>
-  cones: Array<{ id: string; name: string; createdAt: Date; updatedAt: Date }>
-  atmospheres: Array<{ id: string; name: string; createdAt: Date; updatedAt: Date }>
-  clayBodyTypes: Array<{ id: string; name: string; createdAt: Date; updatedAt: Date }>
-  decorationTypes: Array<{ id: string; name: string; createdAt: Date; updatedAt: Date }>
+  clayBodies: Array<ClayBody>
+  decorations: Array<Decoration>
+  collections: Array<Collection>
+  cones: Array<Cone>
+  atmospheres: Array<Atmosphere>
+  clayBodyTypes: Array<ClayBodyType>
+  decorationTypes: Array<DecorationType>
 }
 
 export function TestTileForm({
@@ -102,7 +106,7 @@ export function TestTileForm({
 
     const clayBody = await response.json()
     // Update the clay bodies list with the new clay body
-    setClayBodies(prevBodies => [...prevBodies, { id: clayBody.id, name: clayBody.name }])
+    setClayBodies(prevBodies => [...prevBodies, clayBody])
     // Set the selected value to the new clay body
     setValue('clayBodyId', clayBody.id, { shouldValidate: true })
     setIsClayBodyModalOpen(false)
@@ -130,7 +134,7 @@ export function TestTileForm({
     }
 
     const decoration = await response.json()
-    setDecorations(prevDecorations => [...prevDecorations, { id: decoration.id, name: decoration.name }])
+    setDecorations(prevDecorations => [...prevDecorations, decoration])
 
     // Add the new decoration to the current layer
     const currentLayer = decorationLayers[decorationLayers.length - 1]
@@ -145,6 +149,11 @@ export function TestTileForm({
 
       // Get the current form values
       const values = watch()
+
+      // Ensure the ID is included in the form data for updates
+      if (initialData?.id) {
+        formData.set('id', initialData.id)
+      }
 
       // Add decoration layers to form data
       values.decorationLayers?.forEach((layer, index) => {
@@ -175,14 +184,10 @@ export function TestTileForm({
   return (
     <>
       <Form onSubmit={handleSubmit}>
+        {initialData?.id && (
+          <input type="hidden" name="id" value={initialData.id} />
+        )}
         <div className="space-y-6">
-          {initialData?.id && (
-            <input
-              type="hidden"
-              name="id"
-              value={initialData.id}
-            />
-          )}
           <FormField
             label="Name"
             name="name"
