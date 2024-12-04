@@ -1,7 +1,7 @@
 import { z } from 'zod'
-import { baseEntitySchema } from './base'
 
 export const decorationSchema = z.object({
+  id: z.string().uuid().optional(),
   name: z.string().min(1, 'Name is required'),
   typeId: z.string().uuid('Decoration type is required'),
   source: z.string().optional().nullable(),
@@ -15,6 +15,8 @@ export const decorationSchema = z.object({
   imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
   recipe: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 })
 
 export type DecorationFormData = z.infer<typeof decorationSchema>

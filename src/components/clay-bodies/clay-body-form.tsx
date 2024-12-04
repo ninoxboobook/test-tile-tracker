@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { clayBodySchema, type ClayBodyFormData } from '@/lib/schemas/clay-body'
@@ -16,7 +17,7 @@ interface ClayBodyFormProps {
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
   clayBodyTypes: ClayBodyType[]
-  cones: Cone[]
+  cones: Array<Cone>
 }
 
 export function ClayBodyForm({
@@ -26,17 +27,50 @@ export function ClayBodyForm({
   clayBodyTypes,
   cones
 }: ClayBodyFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const {
     register,
     control,
-    formState: { errors, isSubmitting }
+    watch,
+    formState: { errors }
   } = useForm<ClayBodyFormData>({
     resolver: zodResolver(clayBodySchema),
     defaultValues: initialData
   })
 
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      setIsSubmitting(true)
+
+      // Get the current form values
+      const values = watch()
+
+      // Ensure the ID is included in the form data for updates
+      if (initialData?.id) {
+        formData.set('id', initialData.id)
+      }
+      console.log(values.cone)
+
+      values.cone?.forEach(yeet => {
+        formData.append('cone', yeet)
+      })      
+      console.log('All cone values:', formData.getAll('cone'));
+      console.log(formData);
+
+      console.log('Form data before submission:', Object.fromEntries(formData.entries()))
+      await action(formData)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        return
+      }
+      console.error('Form submission error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <Form onSubmit={action}>
+    <Form onSubmit={handleSubmit}>
       {initialData?.id && (
         <input type="hidden" name="id" value={initialData.id} />
       )}
@@ -73,7 +107,7 @@ export function ClayBodyForm({
           name="cone"
           control={control}
           options={cones.map(cone => ({
-            value: cone.name,
+            value: cone.id,
             label: cone.name
           }))}
           error={errors.cone}

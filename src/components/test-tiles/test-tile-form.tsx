@@ -163,12 +163,12 @@ export function TestTileForm({
           formData.append(`decorationLayers[${index}][decorationIds][]`, id)
         })
       })
-
+      console.log(values.collectionIds)
       // add collections to form data
       values.collectionIds?.forEach(collection => {
         formData.append('collectionIds', collection)
       })
-
+      console.log(formData);
       console.log('Form data before submission:', Object.fromEntries(formData.entries()))
       await action(formData)
     } catch (error) {
