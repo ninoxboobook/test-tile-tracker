@@ -26,6 +26,8 @@ export default async function ClayBodyPage(
     },
     include: {
       testTiles: true,
+      type: true,
+      cone: true
     },
   })
 
@@ -68,7 +70,7 @@ export default async function ClayBodyPage(
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
           <dt className="text-sm font-medium text-gray-500">Type</dt>
-          <dd className="mt-1 text-sm text-gray-900">{clayBody.type}</dd>
+          <dd className="mt-1 text-sm text-gray-900">{clayBody.type?.name}</dd>
         </div>
 
         {clayBody.manufacturer && (
@@ -78,10 +80,10 @@ export default async function ClayBodyPage(
           </div>
         )}
 
-        {clayBody.cone && (
+        {clayBody.cone.length > 0 && (
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Cone</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.cone}</dd>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.cone.map(c => c.name).join(', ')}</dd>
           </div>
         )}
 
@@ -106,24 +108,10 @@ export default async function ClayBodyPage(
           </div>
         )}
 
-        {clayBody.shrinkage !== null && (
+        {clayBody.texture && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Shrinkage (%)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.shrinkage.toFixed(1)}</dd>
-          </div>
-        )}
-
-        {clayBody.absorption !== null && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Absorption (%)</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.absorption.toFixed(1)}</dd>
-          </div>
-        )}
-
-        {clayBody.meshSize !== null && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Mesh Size</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.meshSize}</dd>
+            <dt className="text-sm font-medium text-gray-500">Texture</dt>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.texture}</dd>
           </div>
         )}
 
@@ -134,10 +122,24 @@ export default async function ClayBodyPage(
           </div>
         )}
 
-        {clayBody.texture && (
+        {clayBody.shrinkage !== null && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Texture</dt>
-            <dd className="mt-1 text-sm text-gray-900">{clayBody.texture}</dd>
+            <dt className="text-sm font-medium text-gray-500">Shrinkage (%)</dt>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.shrinkage}</dd>
+          </div>
+        )}
+
+        {clayBody.absorption !== null && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Absorption (%)</dt>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.absorption}</dd>
+          </div>
+        )}
+
+        {clayBody.meshSize !== null && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Mesh Size</dt>
+            <dd className="mt-1 text-sm text-gray-900">{clayBody.meshSize}</dd>
           </div>
         )}
 
@@ -150,9 +152,29 @@ export default async function ClayBodyPage(
       </dl>
 
       {clayBody.testTiles.length > 0 && (
-        <div className="mt-8">
-          <h4 className="text-lg font-medium text-gray-900 mb-4">Test Tiles</h4>
-          {/* Add your test tiles list component here */}
+        <div className="border-t border-gray-200 pt-6">
+          <h3 className="text-lg font-medium text-gray-900">Test Tiles</h3>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {clayBody.testTiles.map((testTile) => (
+              <Link
+                key={testTile.id}
+                href={`/test-tiles/${testTile.id}`}
+                className="group relative block w-full aspect-square rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 overflow-hidden"
+              >
+                {testTile.imageUrl && (
+                  <Image
+                    src={testTile.imageUrl}
+                    alt={testTile.name || ''}
+                    fill
+                    className="pointer-events-none object-cover group-hover:opacity-75"
+                  />
+                )}
+                <div className="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/50 to-transparent">
+                  <p className="text-sm font-medium text-white">{testTile.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

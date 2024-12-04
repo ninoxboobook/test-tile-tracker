@@ -49,10 +49,7 @@ export async function createClayBody(data: ClayBodyFormData) {
     data: {
       name: validatedData.name,
       type: {
-        connectOrCreate: validatedData.type.map(type => ({
-          where: { name: type },
-          create: { name: type }
-        }))
+        connect: { id: validatedData.typeId }
       },
       cone: validatedData.cone ? {
         connectOrCreate: validatedData.cone.map(cone => ({
@@ -71,7 +68,11 @@ export async function createClayBody(data: ClayBodyFormData) {
       meshSize: validatedData.meshSize,
       imageUrl: validatedData.imageUrl,
       notes: validatedData.notes,
-      userId: session.user.id,
+      user: {
+        connect: {
+          id: session.user.id
+        }
+      }
     },
   })
 
@@ -100,11 +101,7 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
     data: {
       name: validatedData.name,
       type: {
-        set: [],
-        connectOrCreate: validatedData.type.map(type => ({
-          where: { name: type },
-          create: { name: type }
-        }))
+        connect: { id: validatedData.typeId }
       },
       cone: {
         set: [],

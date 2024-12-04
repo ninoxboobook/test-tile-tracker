@@ -19,12 +19,24 @@ export default async function EditClayBodyPage(
     redirect('/login')
   }
 
-  const clayBody = await prisma.clayBody.findUnique({
-    where: {
-      id: params.id,
-      userId: session.user.id,
-    },
-  })
+  const [clayBody, clayBodyTypes, cones] = await Promise.all([
+    prisma.clayBody.findUnique({
+      where: {
+        id: params.id,
+        userId: session.user.id,
+      },
+      include: {
+        type: true,
+        cone: true
+      }
+    }),
+    prisma.clayBodyType.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.cone.findMany({
+      orderBy: { name: 'asc' }
+    })
+  ])
 
   if (!clayBody) {
     return notFound()
@@ -33,9 +45,9 @@ export default async function EditClayBodyPage(
   const formData: ClayBodyFormData & { id: string } = {
     id: clayBody.id,
     name: clayBody.name,
-    type: clayBody.type,
+    typeId: clayBody.typeId,
     manufacturer: clayBody.manufacturer || null,
-    cone: clayBody.cone || null,
+    cone: clayBody.cone.map(c => c.name),
     firingTemperature: clayBody.firingTemperature || null,
     texture: clayBody.texture || null,
     plasticity: clayBody.plasticity || null,
@@ -51,13 +63,15 @@ export default async function EditClayBodyPage(
   return (
     <FormLayout 
       title="Edit Clay Body"
-      description={`Editing ${clayBody.name}`}
-      backHref={`/clay-bodies/${params.id}`}
+      description="Update your clay body details"
+      backHref={`/clay-bodies/${clayBody.id}`}
     >
       <ClayBodyForm 
-        action={updateClayBody}
+        action={updateClayBody} 
         initialData={formData}
         submitButtonText="Update Clay Body"
+        clayBodyTypes={clayBodyTypes}
+        cones={cones}
       />
     </FormLayout>
   )

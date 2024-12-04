@@ -1,16 +1,21 @@
 'use client'
 
-import { ClayBody } from '@prisma/client'
+import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
 
-interface ClayBodiesTableProps {
-  clayBodies: ClayBody[]
-  table?: Table<ClayBody>
+type ClayBodyWithRelations = ClayBody & {
+  type: ClayBodyType | null
+  cone: Cone[]
 }
 
-export const columns: ColumnDef<ClayBody>[] = [
+interface ClayBodiesTableProps {
+  clayBodies: ClayBodyWithRelations[]
+  table?: Table<ClayBodyWithRelations>
+}
+
+export const columns: ColumnDef<ClayBodyWithRelations>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -26,6 +31,7 @@ export const columns: ColumnDef<ClayBody>[] = [
   {
     accessorKey: 'type',
     header: 'Type',
+    cell: ({ row }) => row.original.type?.name ?? '',
   },
   {
     accessorKey: 'manufacturer',
@@ -34,6 +40,7 @@ export const columns: ColumnDef<ClayBody>[] = [
   {
     accessorKey: 'cone',
     header: 'Cone',
+    cell: ({ row }) => row.original.cone.map(c => c.name).join(', '),
   },
   {
     accessorKey: 'firingTemperature',

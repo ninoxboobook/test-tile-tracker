@@ -7,18 +7,24 @@ import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
+import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { ClayBodyType, Cone } from '@prisma/client'
 
 interface ClayBodyFormProps {
   initialData?: ClayBodyFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
+  clayBodyTypes: ClayBodyType[]
+  cones: Cone[]
 }
 
 export function ClayBodyForm({
   initialData,
   action,
-  submitButtonText = 'Create Clay Body'
+  submitButtonText = 'Create Clay Body',
+  clayBodyTypes,
+  cones
 }: ClayBodyFormProps) {
   const {
     register,
@@ -44,15 +50,13 @@ export function ClayBodyForm({
 
       <FormSelect
         label="Type"
-        name="type"
+        name="typeId"
         control={control}
-        options={[
-          { value: 'Stoneware', label: 'Stoneware' },
-          { value: 'Porcelain', label: 'Porcelain' },
-          { value: 'Earthenware', label: 'Earthenware' },
-          { value: 'Other', label: 'Other' }
-        ]}
-        error={errors.type}
+        options={clayBodyTypes.map(type => ({
+          value: type.id,
+          label: type.name
+        }))}
+        error={errors.typeId}
         required
       />
 
@@ -64,10 +68,14 @@ export function ClayBodyForm({
       />
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
+        <FormMultiSelect
           label="Cone"
           name="cone"
-          register={register}
+          control={control}
+          options={cones.map(cone => ({
+            value: cone.name,
+            label: cone.name
+          }))}
           error={errors.cone}
         />
 
@@ -142,15 +150,15 @@ export function ClayBodyForm({
           register={register}
           error={errors.absorption}
         />
-      </div>
 
-      <FormField
-        label="Mesh Size"
-        name="meshSize"
+        <FormField
+          label="Mesh Size"
+          name="meshSize"
         type="number"
-        register={register}
-        error={errors.meshSize}
-      />
+          register={register}
+          error={errors.meshSize}
+        />
+      </div>
 
       <FormField
         label="Image URL"
@@ -168,9 +176,14 @@ export function ClayBodyForm({
         placeholder="Add any additional notes about this clay body..."
       />
 
-      <ActionButton type="submit" isLoading={isSubmitting}>
-        {submitButtonText}
-      </ActionButton>
+      <div className="mt-6 flex justify-end">
+        <ActionButton
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {submitButtonText}
+        </ActionButton>
+      </div>
     </Form>
   )
 }
