@@ -29,9 +29,16 @@ export async function createClayBody(formData: FormData) {
 
   const createData: Prisma.ClayBodyCreateInput = {
     name: validatedData.name,
-    type: validatedData.type,
+    type: {
+      connect: { id: validatedData.typeId }
+    },
     manufacturer: validatedData.manufacturer,
-    cone: validatedData.cone,
+    cone: {
+      connectOrCreate: validatedData.cone?.map(cone => ({
+        where: { name: cone },
+        create: { name: cone }
+      })) ?? []
+    },
     firingTemperature: validatedData.firingTemperature,
     texture: validatedData.texture,
     plasticity: validatedData.plasticity,

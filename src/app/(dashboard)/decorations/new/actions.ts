@@ -20,13 +20,10 @@ export async function createDecoration(formData: FormData) {
 
   const createData: Prisma.DecorationCreateInput = {
     name: validatedData.name,
-    category: {
-      connectOrCreate: validatedData.category.map(cat => ({
-        where: { name: cat },
-        create: { name: cat }
-      }))
+    type: {
+      connect: { id: validatedData.typeId }
     },
-    type: validatedData.type,
+    source: validatedData.source || null,
     manufacturer: validatedData.manufacturer || null,
     cone: validatedData.cone ? {
       connectOrCreate: validatedData.cone.map(cone => ({

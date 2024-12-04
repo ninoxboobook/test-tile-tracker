@@ -92,6 +92,12 @@ export async function updateTestTile(formData: FormData) {
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },
+    cone: {
+      connect: { id: validatedData.coneId }
+    },
+    atmosphere: {
+      connect: { id: validatedData.atmosphereId }
+    },
     decorationLayers: {
       deleteMany: {},
       create: validatedData.decorationLayers.map(layer => ({

@@ -16,7 +16,7 @@ export default async function DecorationsPage() {
       userId: session.user.id
     },
     include: {
-      category: true,
+      type: true,
       cone: true,
       atmosphere: true
     },

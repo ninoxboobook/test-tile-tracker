@@ -25,14 +25,9 @@ export async function updateDecoration(formData: FormData) {
 
   const updateData: Prisma.DecorationUpdateInput = {
     name: validatedData.name,
-    category: {
-      set: [],
-      connectOrCreate: validatedData.category.map(cat => ({
-        where: { name: cat },
-        create: { name: cat }
-      }))
+    type: {
+      connect: { id: validatedData.typeId }
     },
-    type: validatedData.type,
     manufacturer: validatedData.manufacturer || null,
     cone: {
       set: [],

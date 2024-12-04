@@ -74,18 +74,12 @@ export async function createTestTile(formData: FormData) {
         id: validatedData.clayBodyId
       }
     },
-    atmosphere: validatedData.atmosphere ? {
-      connectOrCreate: validatedData.atmosphere.map(atm => ({
-        where: { name: atm },
-        create: { name: atm }
-      }))
-    } : undefined,
-    cone: validatedData.cone ? {
-      connectOrCreate: validatedData.cone.map(cone => ({
-        where: { name: cone },
-        create: { name: cone }
-      }))
-    } : undefined,
+    cone: {
+      connect: { id: validatedData.coneId }
+    },
+    atmosphere: {
+      connect: { id: validatedData.atmosphereId }
+    },
     decorationLayers: {
       create: validatedData.decorationLayers.map(layer => ({
         order: layer.order,
