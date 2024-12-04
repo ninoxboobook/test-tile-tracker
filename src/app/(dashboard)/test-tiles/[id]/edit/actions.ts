@@ -32,6 +32,8 @@ export async function getTestTile(id: string) {
       },
       collections: true,
       clayBody: true,
+      cone: true,
+      atmosphere: true
     }
   })
 
@@ -125,7 +127,9 @@ export async function updateTestTile(formData: FormData) {
           decorations: true
         }
       },
-      collections: true
+      collections: true,
+      cone: true,
+      atmosphere: true
     }
   })
 

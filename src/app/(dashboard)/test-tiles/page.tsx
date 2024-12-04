@@ -25,7 +25,9 @@ export default async function TestTilesPage() {
           order: 'asc'
         }
       },
-      collections: true
+      collections: true,
+      cone: true,
+      atmosphere: true
     },
     orderBy: {
       updatedAt: 'desc'

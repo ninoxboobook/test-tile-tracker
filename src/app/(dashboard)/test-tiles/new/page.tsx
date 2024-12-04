@@ -13,8 +13,16 @@ export default async function NewTestTilePage() {
     redirect('/login')
   }
 
-  // Get all available clay bodies, decorations, and collections for the form
-  const [clayBodies, decorations, collections] = await Promise.all([
+  // Get all available data for the forms
+  const [
+    clayBodies, 
+    decorations, 
+    collections, 
+    cones, 
+    atmospheres,
+    clayBodyTypes,
+    decorationTypes
+  ] = await Promise.all([
     prisma.clayBody.findMany({
       where: { userId: session.user.id },
       select: { id: true, name: true },
@@ -26,6 +34,18 @@ export default async function NewTestTilePage() {
     prisma.collection.findMany({
       where: { userId: session.user.id },
       select: { id: true, name: true },
+    }),
+    prisma.cone.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
+    prisma.atmosphere.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
+    prisma.clayBodyType.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
+    prisma.decorationType.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
     }),
   ])
 
@@ -40,6 +60,10 @@ export default async function NewTestTilePage() {
         clayBodies={clayBodies}
         decorations={decorations}
         collections={collections}
+        cones={cones}
+        atmospheres={atmospheres}
+        clayBodyTypes={clayBodyTypes}
+        decorationTypes={decorationTypes}
       />
     </FormLayout>
   )

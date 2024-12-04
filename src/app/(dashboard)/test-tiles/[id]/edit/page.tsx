@@ -42,7 +42,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
     return notFound()
   }
 
-  const [clayBodies, decorations, collections] = await Promise.all([
+  const [clayBodies, decorations, collections, cones, atmospheres, clayBodyTypes, decorationTypes] = await Promise.all([
     prisma.clayBody.findMany({
       where: { userId: session.user.id },
       select: { id: true, name: true },
@@ -55,15 +55,28 @@ export default async function EditTestTilePage({ params }: PageProps) {
       where: { userId: session.user.id },
       select: { id: true, name: true },
     }),
+    prisma.cone.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
+    prisma.atmosphere.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
+    prisma.clayBodyType.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
+    prisma.decorationType.findMany({
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
+    }),
   ])
 
   const formData: TestTileFormData = {
-    id,
     name: testTile.name,
     stamp: testTile.stamp || undefined,
     notes: testTile.notes || undefined,
     imageUrl: testTile.imageUrl || undefined,
     clayBodyId: testTile.clayBodyId,
+    coneId: testTile.coneId,
+    atmosphereId: testTile.atmosphereId,
     decorationLayers: testTile.decorationLayers.map(layer => ({
       order: layer.order,
       decorationIds: layer.decorations.map(d => d.id)
@@ -81,9 +94,13 @@ export default async function EditTestTilePage({ params }: PageProps) {
         action={updateTestTile}
         initialData={formData}
         submitButtonText="Update Test Tile"
+        cones={cones}
+        atmospheres={atmospheres}
         clayBodies={clayBodies}
         decorations={decorations}
         collections={collections}
+        clayBodyTypes={clayBodyTypes}
+        decorationTypes={decorationTypes}
       />
     </FormLayout>
   )

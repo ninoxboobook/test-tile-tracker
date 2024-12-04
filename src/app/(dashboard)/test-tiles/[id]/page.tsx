@@ -35,6 +35,8 @@ export default async function TestTilePage({ params }: PageProps) {
         }
       },
       collections: true,
+      cone: true,
+      atmosphere: true
     },
   })
 

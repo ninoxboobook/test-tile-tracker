@@ -1,6 +1,6 @@
 'use client'
 
-import { ClayBody, Collection, Decoration } from '@prisma/client'
+import { ClayBody, Collection, Decoration, Cone, Atmosphere } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import { TestTileWithRelations } from '@/types/test-tile'
@@ -39,6 +39,14 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
         {row.original.clayBody.name}
       </Link>
     ),
+  },
+  {
+    accessorKey: 'cone.name',
+    header: 'Cone',
+  },
+  {
+    accessorKey: 'atmosphere.name',
+    header: 'Atmosphere',
   },
   {
     accessorKey: 'decorations',

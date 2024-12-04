@@ -17,8 +17,8 @@ interface TestTilesContentProps {
 }
 
 // Define filterable columns configuration
-const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collections'> = {
-  columns: ['clayBody', 'decorations', 'collections'] as const,
+const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collections' | 'cone' | 'atmosphere'> = {
+  columns: ['clayBody', 'decorations', 'collections', 'cone', 'atmosphere'] as const,
   getLabel: (columnId) => {
     switch (columnId) {
       case 'clayBody':
@@ -27,6 +27,10 @@ const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collect
         return 'Decorations'
       case 'collections':
         return 'Collections'
+      case 'cone':
+        return 'Cone'
+      case 'atmosphere':
+        return 'Atmosphere'
       default:
         return columnId
     }
@@ -73,6 +77,18 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
             ).filter(value => value.trim() !== '')
           )).sort()
           break
+        case 'cone':
+          uniqueValues = Array.from(new Set(
+            testTiles.map(item => item.cone.name)
+              .filter(value => value.trim() !== '')
+          )).sort()
+          break
+        case 'atmosphere':
+          uniqueValues = Array.from(new Set(
+            testTiles.map(item => item.atmosphere.name)
+              .filter(value => value.trim() !== '')
+          )).sort()
+          break
       }
 
       if (uniqueValues.length === 0) {
@@ -110,6 +126,10 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
               )
             case 'collections':
               return testTile.collections.some(c => values.includes(c.name))
+            case 'cone':
+              return values.includes(testTile.cone.name)
+            case 'atmosphere':
+              return values.includes(testTile.atmosphere.name)
             default:
               return true
           }
