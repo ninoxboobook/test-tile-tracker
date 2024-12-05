@@ -222,37 +222,51 @@ export function TestTileForm({
               </ActionButton>
             </div>
           </div>
-          <div className="space-y-4">
-            <label className="block text-sm font-medium text-gray-700">Decorations</label>
-            {fields.map((field, index) => (
-              <div key={field.id} className="flex items-center space-x-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Decorations</h3>
+              <button
+                type="button"
+                onClick={() => setIsDecorationModalOpen(true)}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                Add New Decoration
+              </button>
+            </div>
+
+            {controlledFields.map((field, index) => (
+              <div key={field.id} className="flex items-start gap-2">
                 <FormMultiSelect
-                  name={`decorationLayers.${index}.decorationIds`}
                   label={`Layer ${index + 1}`}
+                  name={`decorationLayers.${index}.decorationIds`}
                   control={control}
-                  options={decorations.map(d => ({ value: d.id, label: d.name }))}
+                  options={decorations.map(d => ({
+                    label: d.name,
+                    value: d.id
+                  }))}
                   error={errors.decorationLayers?.[index]?.decorationIds}
+                  onChange={(values) => handleLayerChange(index + 1, values)}
                 />
                 {index > 0 && (
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="mt-8"
+                    className="mt-8 text-red-600 hover:text-red-800"
                   >
                     Remove
                   </button>
                 )}
               </div>
             ))}
-            {canAddLayer && (
-              <button
-                type="button"
-                onClick={addLayer}
-                className="mt-2"
-              >
-                Add Layer
-              </button>
-            )}
+
+            <button
+              type="button"
+              onClick={addLayer}
+              disabled={!canAddLayer}
+              className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400"
+            >
+              Add Layer
+            </button>
           </div>
 
           <FormSelect

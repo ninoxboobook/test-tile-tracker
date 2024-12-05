@@ -77,8 +77,8 @@ export function DecorationForm({
         control={control}
         options={[
           { value: 'Commercial', label: 'Commercial' },
-          { value: 'Studio Made', label: 'Studio Made' },
-          { value: 'Test', label: 'Test' },
+          { value: 'Studio Made/Community', label: 'Studio Made/Community' },
+          { value: 'Recipe', label: 'Recipe' },
           { value: 'Other', label: 'Other' }
         ]}
         error={errors.source}
