@@ -1,86 +1,71 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
-import { clayBodySchema } from '@/lib/schemas/clay-body'
-import { Prisma } from '@prisma/client'
+import { createApiHandler } from '@/lib/api/baseHandler';
+import { prisma } from '@/lib/prisma';
+import { clayBodySchema } from '@/lib/schemas/clay-body';
+import { NextResponse } from 'next/server';
+import { Prisma } from '@prisma/client';
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await getServerSession(authOptions)
+// Helper function to ensure cone data is always an array
+function ensureConeArray(coneData: string | string[] | undefined): string[] {
+  if (!coneData) return [];
+  if (typeof coneData === 'string') return [coneData];
+  return coneData;
+}
 
-    if (!session?.user?.id) {
-      return new NextResponse('Unauthorized', { status: 401 })
+export const GET = createApiHandler(async (req, { session }) => {
+  const clayBodies = await prisma.clayBody.findMany({
+    where: { userId: session.user.id },
+    include: {
+      type: true,
+      cone: true
     }
+  });
+  
+  return NextResponse.json(clayBodies);
+});
 
-    const formData = await request.formData()
-    
-    // Convert FormData to object while preserving arrays
-    const entries = Array.from(formData.entries());
-    const rawData = entries.reduce((acc, [key, value]) => {
-      if (key === 'cone') {
-        if (!acc[key]) {
-          acc[key] = formData.getAll(key);
-        }
-      } else {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as Record<string, any>);
+export const POST = createApiHandler(
+  async (req, { session }) => {
+    const body = await req.json();
+    const { cone: coneData, ...rest } = body;
 
-    // Convert string numbers to actual numbers before validation
+    // Ensure cone data is processed as an array
+    const coneNames = ensureConeArray(coneData);
+
+    // Convert string numbers to actual numbers
     const processedData = {
-      ...rawData,
-      shrinkage: rawData.shrinkage ? parseFloat(rawData.shrinkage as string) : null,
-      absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
-      meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
-    }
-
-    const validatedData = clayBodySchema.parse(processedData)
+      ...rest,
+      shrinkage: rest.shrinkage ? parseFloat(rest.shrinkage) : null,
+      absorption: rest.absorption ? parseFloat(rest.absorption) : null,
+      meshSize: rest.meshSize ? parseInt(rest.meshSize) : null,
+    };
 
     const createData: Prisma.ClayBodyCreateInput = {
-      name: validatedData.name,
+      ...processedData,
       type: {
-        connect: { id: validatedData.typeId }
+        connect: { id: processedData.typeId }
       },
-      manufacturer: validatedData.manufacturer || null,
-      cone: validatedData.cone ? {
-        connectOrCreate: validatedData.cone.map(cone => ({
-          where: { name: cone },
-          create: { name: cone }
+      cone: coneNames.length ? {
+        connectOrCreate: coneNames.map((name: string) => ({
+          where: { name },
+          create: { name }
         }))
       } : undefined,
-      firingTemperature: validatedData.firingTemperature || null,
-      texture: validatedData.texture || null,
-      plasticity: validatedData.plasticity || null,
-      colourOxidation: validatedData.colourOxidation || null,
-      colourReduction: validatedData.colourReduction || null,
-      shrinkage: validatedData.shrinkage || null,
-      absorption: validatedData.absorption || null,
-      meshSize: validatedData.meshSize || null,
-      imageUrl: validatedData.imageUrl || null,
-      notes: validatedData.notes || null,
       user: {
         connect: {
           id: session.user.id
         }
       }
-    }
+    };
 
     const clayBody = await prisma.clayBody.create({
       data: createData,
-      select: {
-        id: true,
-        name: true
+      include: {
+        type: true,
+        cone: true
       }
-    })
-
-    return NextResponse.json(clayBody)
-  } catch (error) {
-    console.error('Error creating clay body:', error)
-    return new NextResponse(
-      error instanceof Error ? error.message : 'Internal Server Error',
-      { status: 500 }
-    )
-  }
-}
+    });
+    
+    return NextResponse.json(clayBody);
+  },
+  { validationSchema: clayBodySchema }
+);

@@ -49,16 +49,35 @@ export function ClayBodyForm({
       if (initialData?.id) {
         formData.set('id', initialData.id)
       }
-      console.log(values.cone)
 
-      values.cone?.forEach(yeet => {
-        formData.append('cone', yeet)
-      })      
-      console.log('All cone values:', formData.getAll('cone'));
-      console.log(formData);
+      // Convert form data to a regular object while preserving arrays
+      const formDataObj = Array.from(formData.entries()).reduce((acc, [key, value]) => {
+        if (key === 'cone') {
+          if (!acc[key]) {
+            acc[key] = formData.getAll(key);
+          }
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>);
 
-      console.log('Form data before submission:', Object.fromEntries(formData.entries()))
-      await action(formData)
+      // Now add the cone values from the form state
+      if (values.cone?.length) {
+        formDataObj.cone = values.cone;
+      }
+
+      // Convert back to FormData
+      const newFormData = new FormData();
+      Object.entries(formDataObj).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(v => newFormData.append(key, v));
+        } else if (value !== null && value !== undefined) {
+          newFormData.append(key, value);
+        }
+      });
+
+      await action(newFormData)
     } catch (error) {
       if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
         return
@@ -188,7 +207,7 @@ export function ClayBodyForm({
         <FormField
           label="Mesh Size"
           name="meshSize"
-        type="number"
+          type="number"
           register={register}
           error={errors.meshSize}
         />

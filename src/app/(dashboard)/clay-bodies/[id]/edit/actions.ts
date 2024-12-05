@@ -20,8 +20,19 @@ export async function updateClayBody(formData: FormData) {
     throw new Error('Clay body ID is required')
   }
 
-  const rawData = Object.fromEntries(formData.entries())
-  
+  // Convert FormData to object while preserving arrays
+  const entries = Array.from(formData.entries());
+  const rawData = entries.reduce((acc, [key, value]) => {
+    if (key === 'cone') {
+      if (!acc[key]) {
+        acc[key] = formData.getAll(key);
+      }
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
   // Convert string numbers to actual numbers before validation
   const processedData = {
     ...rawData,
@@ -38,12 +49,9 @@ export async function updateClayBody(formData: FormData) {
       connect: { id: validatedData.typeId }
     },
     manufacturer: validatedData.manufacturer,
-    cone: {
-      connectOrCreate: validatedData.cone?.map(cone => ({
-        where: { name: cone },
-        create: { name: cone }
-      })) ?? []
-    },
+    cone: validatedData.cone?.length ? {
+      connect: validatedData.cone.map(id => ({ id }))
+    } : undefined,
     firingTemperature: validatedData.firingTemperature,
     texture: validatedData.texture,
     plasticity: validatedData.plasticity,
