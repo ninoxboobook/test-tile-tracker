@@ -20,16 +20,27 @@ export async function updateDecoration(formData: FormData) {
     throw new Error('Decoration ID is required')
   }
 
-  const rawData = Object.fromEntries(formData.entries())
-  
-  // Handle array fields from FormData
-  const coneIds = formData.getAll('coneIds[]').map(id => id.toString())
-  const atmosphereIds = formData.getAll('atmosphereIds[]').map(id => id.toString())
-  
+  // Convert FormData to object while preserving arrays
+  const entries = Array.from(formData.entries());
+  const rawData = entries.reduce((acc, [key, value]) => {
+    if (key === 'coneIds') {
+      if (!acc[key]) {
+        const values = formData.getAll(key);
+        acc[key] = values.map(v => typeof v === 'string' ? v : '');
+      }
+    } else if (key === 'atmosphereIds') {
+      if (!acc[key]) {
+        const values = formData.getAll(key);
+        acc[key] = values.map(v => typeof v === 'string' ? v : '');
+      }
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
   const validatedData = decorationSchema.parse({
-    ...rawData,
-    coneIds,
-    atmosphereIds
+    ...rawData
   })
 
   const updateData: Prisma.DecorationUpdateInput = {

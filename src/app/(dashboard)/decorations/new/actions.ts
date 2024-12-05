@@ -13,18 +13,28 @@ export async function createDecoration(formData: FormData) {
 
   if (!session?.user?.id) {
     redirect('/login')
-  }
-
-  const rawData = Object.fromEntries(formData.entries())
-  
-  // Handle array fields from FormData
-  const coneIds = formData.getAll('coneIds[]').map(id => id.toString())
-  const atmosphereIds = formData.getAll('atmosphereIds[]').map(id => id.toString())
+  }  
+   // Convert FormData to object while preserving arrays
+   const entries = Array.from(formData.entries());
+   const rawData = entries.reduce((acc, [key, value]) => {
+     if (key === 'coneIds') {
+       if (!acc[key]) {
+         const values = formData.getAll(key);
+         acc[key] = values.map(v => typeof v === 'string' ? v : '');
+       }
+     } else if (key === 'atmosphereIds') {
+      if (!acc[key]) {
+        const values = formData.getAll(key);
+        acc[key] = values.map(v => typeof v === 'string' ? v : '');
+      }
+     } else {
+      acc[key] = value;
+    }
+     return acc;
+   }, {} as Record<string, any>);
   
   const validatedData = decorationSchema.parse({
     ...rawData,
-    coneIds,
-    atmosphereIds
   })
 
   const createData: Prisma.DecorationCreateInput = {
@@ -34,12 +44,12 @@ export async function createDecoration(formData: FormData) {
     },
     source: validatedData.source || null,
     manufacturer: validatedData.manufacturer || null,
-    cone: {
-      connect: validatedData.coneIds?.map(id => ({ id })) ?? []
-    },
-    atmosphere: {
-      connect: validatedData.atmosphereIds?.map(id => ({ id })) ?? []
-    },
+    cone: validatedData.coneIds?.length ? {
+      connect: validatedData.coneIds.map(id => ({ id }))
+    } : undefined,
+    atmosphere: validatedData.atmosphereIds?.length ? {
+      connect: validatedData.atmosphereIds.map(id => ({ id }))
+    } : undefined,
     colour: validatedData.colour || null,
     surface: validatedData.surface || null,
     transparency: validatedData.transparency || null,
@@ -54,17 +64,26 @@ export async function createDecoration(formData: FormData) {
     }
   }
 
-  const decoration = await prisma.decoration.create({
-    data: createData,
-    include: {
-      type: true,
-      cone: true,
-      atmosphere: true
-    }
-  })
+  try {
+    const decoration = await prisma.decoration.create({
+      data: createData,
+      include: {
+        type: true,
+        cone: true,
+        atmosphere: true
+      }
+    })
 
-  revalidatePath('/decorations')
-  redirect(`/decorations/${decoration.id}`)
+    revalidatePath('/decorations')
+    redirect(`/decorations/${decoration.id}`)
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        throw new Error('A decoration with this name already exists')
+      }
+    }
+    throw error
+  }
 }
 
 // Helper functions for fetching data needed by the form

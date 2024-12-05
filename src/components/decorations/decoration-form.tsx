@@ -10,14 +10,15 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DecorationType, Cone, Atmosphere } from '@prisma/client'
+import { useState } from 'react'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
   decorationTypes: DecorationType[]
-  cones: Cone[]
-  atmospheres: Atmosphere[]
+  cones: Array<Cone>
+  atmospheres: Array<Atmosphere>
 }
 
 export function DecorationForm({
@@ -28,6 +29,8 @@ export function DecorationForm({
   cones,
   atmospheres
 }: DecorationFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string>('')
   const defaultValues: Partial<DecorationFormData> = initialData
     ? {
         ...initialData,
@@ -39,14 +42,74 @@ export function DecorationForm({
   const {
     register,
     control,
-    formState: { errors, isSubmitting }
+    watch,
+    formState: { errors }
   } = useForm<DecorationFormData>({
     resolver: zodResolver(decorationSchema),
     defaultValues
   })
 
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      setIsSubmitting(true)
+
+      // Get the current form values
+      const values = watch()
+
+      // Ensure the ID is included in the form data for updates
+      if (initialData?.id) {
+        formData.set('id', initialData.id)
+      }
+
+      // Convert form data to a regular object while preserving arrays
+      const formDataObj = Array.from(formData.entries()).reduce((acc, [key, value]) => {
+        if (key === 'coneIds' || key === 'atmosphereIds') {
+          if (!acc[key]) {
+            acc[key] = formData.getAll(key);
+          }
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>);
+
+      // Now add the cone values from the form state
+      if (values.coneIds?.length) {
+        formDataObj.coneIds = values.coneIds;
+      }
+
+      // Add atmosphere values from form state
+      if (values.atmosphereIds?.length) {
+        formDataObj.atmosphereIds = values.atmosphereIds;
+      }
+
+      // Convert back to FormData
+      const newFormData = new FormData();
+      Object.entries(formDataObj).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(v => newFormData.append(key, v));
+        } else if (value !== null && value !== undefined) {
+          newFormData.append(key, value);
+        }
+      });
+      setError('')
+      await action(newFormData)
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
+    }
+  }
+
   return (
-    <Form onSubmit={action}>
+    <Form onSubmit={handleSubmit}>
+      {error && (
+        <div className="mb-4 rounded-md border border-red-500 bg-red-50 p-4 text-sm text-red-500">
+          {error}
+        </div>
+      )}
       {initialData?.id && (
         <input type="hidden" name="id" value={initialData.id} />
       )}
