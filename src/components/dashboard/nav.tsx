@@ -75,6 +75,19 @@ export function DashboardNav({ user }: { user: any }) {
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
                         {({ active }) => (
+                          <Link
+                            href="/profile"
+                            className={classNames(
+                              active ? 'bg-gray-100' : '',
+                              'block px-4 py-2 text-sm text-gray-700'
+                            )}
+                          >
+                            Profile Settings
+                          </Link>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
                           <button
                             onClick={() => signOut({ callbackUrl: '/' })}
                             className={classNames(
@@ -112,9 +125,9 @@ export function DashboardNav({ user }: { user: any }) {
                   href={item.href}
                   className={classNames(
                     pathname === item.href
-                      ? 'border-clay-500 bg-clay-50 text-clay-700'
-                      : 'border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800',
-                    'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
+                      ? 'bg-clay-50 border-clay-500 text-clay-700'
+                      : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700',
+                    'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
                   )}
                 >
                   {item.name}
@@ -123,12 +136,10 @@ export function DashboardNav({ user }: { user: any }) {
             </div>
             <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="flex items-center px-4">
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
-                    <span className="text-white font-medium">
-                      {user?.name?.[0]?.toUpperCase() || 'U'}
-                    </span>
-                  </div>
+                <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
+                  <span className="text-white font-medium">
+                    {user?.name?.[0]?.toUpperCase() || 'U'}
+                  </span>
                 </div>
                 <div className="ml-3">
                   <div className="text-base font-medium text-gray-800">{user?.name}</div>
@@ -136,6 +147,13 @@ export function DashboardNav({ user }: { user: any }) {
                 </div>
               </div>
               <div className="mt-3 space-y-1">
+                <Disclosure.Button
+                  as={Link}
+                  href="/profile"
+                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                >
+                  Profile Settings
+                </Disclosure.Button>
                 <Disclosure.Button
                   as="button"
                   onClick={() => signOut({ callbackUrl: '/' })}
