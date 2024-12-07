@@ -14,7 +14,7 @@ import { ClayBodyType, Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 
 interface ClayBodyFormProps {
-  initialData?: ClayBodyFormData & { id?: string }
+  initialData?: any
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
   clayBodyTypes: ClayBodyType[]
@@ -37,7 +37,10 @@ export function ClayBodyForm({
     formState: { errors }
   } = useForm<ClayBodyFormData>({
     resolver: zodResolver(clayBodySchema),
-    defaultValues: initialData
+    defaultValues: {
+      ...initialData,
+      cone: initialData?.coneIds || []
+    }
   })
 
   const handleSubmit = async (formData: FormData) => {

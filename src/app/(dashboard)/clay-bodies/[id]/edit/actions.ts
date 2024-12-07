@@ -25,7 +25,8 @@ export async function updateClayBody(formData: FormData) {
   const rawData = entries.reduce((acc, [key, value]) => {
     if (key === 'cone' || key === 'imageUrl') {
       if (!acc[key]) {
-        acc[key] = formData.getAll(key);
+        const values = formData.getAll(key);
+        acc[key] = values.filter(v => typeof v === 'string');
       }
     } else {
       acc[key] = value;
@@ -39,7 +40,7 @@ export async function updateClayBody(formData: FormData) {
     shrinkage: rawData.shrinkage ? parseFloat(rawData.shrinkage as string) : null,
     absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
     meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
-    imageUrl: rawData.imageUrl?.filter((url: any) => typeof url === 'string') || []
+    imageUrl: rawData.imageUrl || []
   }
 
   const validatedData = clayBodySchema.parse(processedData)
