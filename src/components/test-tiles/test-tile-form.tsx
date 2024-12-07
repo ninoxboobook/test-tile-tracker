@@ -18,6 +18,7 @@ import { ClayBody, Collection, Decoration, DecorationType } from '@prisma/client
 import { ClayBodyType } from '@prisma/client'
 import { Atmosphere } from '@prisma/client'
 import { Cone } from '@prisma/client'
+import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 
 interface DecorationLayer {
   order: number
@@ -163,12 +164,19 @@ export function TestTileForm({
           formData.append(`decorationLayers[${index}][decorationIds][]`, id)
         })
       })
-      console.log(values.collectionIds)
-      // add collections to form data
+
+      // Add collections to form data
       values.collectionIds?.forEach(collection => {
         formData.append('collectionIds', collection)
       })
-      console.log(formData);
+
+      // Add imageUrl values from form state
+      if (values.imageUrl?.length) {
+        values.imageUrl.forEach(url => {
+          formData.append('imageUrl', url)
+        })
+      }
+
       console.log('Form data before submission:', Object.fromEntries(formData.entries()))
       await action(formData)
     } catch (error) {
@@ -298,13 +306,18 @@ export function TestTileForm({
             error={errors.collectionIds as FieldError | Merge<FieldError, (FieldError | undefined)[]>}
           />
 
-          <FormField
-            label="Image URL"
-            name="imageUrl"
-            register={register}
-            error={errors.imageUrl}
-            placeholder="https://example.com/image.jpg"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Images</label>
+            <ImageDropzone
+              currentImageUrl={initialData?.imageUrl}
+              onImagesSelected={(urls) => {
+                setValue('imageUrl', urls, { shouldValidate: true });
+              }}
+            />
+            {errors.imageUrl && (
+              <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
+            )}
+          </div>
 
           <FormTextarea
             label="Notes"

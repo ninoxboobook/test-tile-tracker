@@ -11,6 +11,25 @@ interface PageProps {
   params: Promise<{ id: string }>
 }
 
+function TestTileImages({ imageUrl }: { imageUrl: string[] | null }) {
+  if (!imageUrl?.length) return null
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {imageUrl.map((url: string, index: number) => (
+        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
+          <Image
+            src={url}
+            alt={`Test tile image ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default async function TestTilePage({ params }: PageProps) {
   const session = await getServerSession(authOptions)
   const { id } = await params
@@ -65,16 +84,7 @@ export default async function TestTilePage({ params }: PageProps) {
         </div>
       </div>
 
-      {testTile.imageUrl && (
-        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-          <Image
-            src={testTile.imageUrl}
-            alt={testTile.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
+      <TestTileImages imageUrl={testTile.imageUrl} />
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">

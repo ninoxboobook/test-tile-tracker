@@ -82,6 +82,7 @@ export async function updateTestTile(formData: FormData) {
     ...Object.fromEntries(formData.entries()),
     decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
+    imageUrl: formData.getAll('imageUrl').filter(url => typeof url === 'string')
   }
 
   const validatedData = testTileSchema.parse(processedData)
@@ -90,7 +91,7 @@ export async function updateTestTile(formData: FormData) {
     name: validatedData.name,
     stamp: validatedData.stamp || null,
     notes: validatedData.notes || null,
-    imageUrl: validatedData.imageUrl || null,
+    imageUrl: validatedData.imageUrl || [],
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },
@@ -129,7 +130,7 @@ export async function updateTestTile(formData: FormData) {
       },
       collections: true,
       cone: true,
-      atmosphere: true
+      atmosphere: true,
     }
   })
 

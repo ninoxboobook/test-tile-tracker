@@ -52,7 +52,8 @@ export async function createTestTile(formData: FormData) {
     decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
     atmosphere: formData.getAll('atmosphere'),
-    cone: formData.getAll('cone')
+    cone: formData.getAll('cone'),
+    imageUrl: formData.getAll('imageUrl').filter(url => typeof url === 'string')
   }
 
   console.log('Processed data:', processedData)
@@ -63,7 +64,7 @@ export async function createTestTile(formData: FormData) {
     name: validatedData.name,
     stamp: validatedData.stamp || null,
     notes: validatedData.notes || null,
-    imageUrl: validatedData.imageUrl || null,
+    imageUrl: validatedData.imageUrl || [],
     user: {
       connect: {
         id: session.user.id
