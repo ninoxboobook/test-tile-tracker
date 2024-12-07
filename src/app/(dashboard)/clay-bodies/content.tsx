@@ -1,6 +1,6 @@
 'use client'
 
-import { ClayBody } from '@prisma/client'
+import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { ClayBodiesTable, columns } from '@/components/clay-bodies/clay-bodies-table'
@@ -13,7 +13,10 @@ import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import Link from 'next/link'
 
 interface ClayBodiesContentProps {
-  clayBodies: ClayBody[]
+  clayBodies: (ClayBody & {
+    type: ClayBodyType | null
+    cone: Cone[]
+  })[]
 }
 
 // Define filterable columns configuration
@@ -32,18 +35,44 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
 
   const filters = useMemo(() => {
     const generatedFilters = filterConfig.columns.map(columnId => {
-      const uniqueValues = Array.from(new Set(
-        clayBodies
-          .map(item => item[columnId])
-          .filter((value): value is string => 
-            value !== null && 
-            value !== undefined && 
-            value.trim() !== ''
-          )
-      )).sort()
+      let uniqueValues: string[] = [];
+
+      switch (columnId) {
+        case 'type':
+          uniqueValues = Array.from(new Set(
+            clayBodies
+              .map(item => item.type?.name)
+              .filter((value): value is string => 
+                value !== null && 
+                value !== undefined && 
+                value.trim() !== ''
+              )
+          )).sort();
+          break;
+        
+        case 'cone':
+          uniqueValues = Array.from(new Set(
+            clayBodies.flatMap(item => 
+              item.cone.map(c => c.name)
+            ).filter(value => value.trim() !== '')
+          )).sort();
+          break;
+        
+        case 'manufacturer':
+          uniqueValues = Array.from(new Set(
+            clayBodies
+              .map(item => item.manufacturer)
+              .filter((value): value is string => 
+                value !== null && 
+                value !== undefined && 
+                value.trim() !== ''
+              )
+          )).sort();
+          break;
+      }
 
       if (uniqueValues.length === 0) {
-        return null
+        return null;
       }
 
       return {
@@ -59,30 +88,47 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
     return generatedFilters.filter((filter): filter is PotentialFilter<FilterableColumn> => filter !== null)
   }, [clayBodies])
 
-  const filteredClayBodies = useMemo(() => {
-    return clayBodies
-      .filter(clayBody => 
-        clayBody.name.toLowerCase().includes(search.toLowerCase())
-      )
-      .filter(clayBody => {
-        return Object.entries(activeFilters).every(([filterId, values]) => {
-          if (values.length === 0) return true
-          const value = clayBody[filterId as FilterableColumn]
-          return value !== null && values.includes(value)
-        })
-      })
-  }, [clayBodies, search, activeFilters])
-
   const table = useReactTable({
-    data: filteredClayBodies,
+    data: clayBodies,
     columns,
+    state: {
+      columnVisibility,
+      globalFilter: search,
+    },
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnVisibility,
+    globalFilterFn: (row, columnId, filterValue) => {
+      const value = row.getValue(columnId)
+      if (typeof value === 'string') {
+        return value.toLowerCase().includes(filterValue.toLowerCase())
+      }
+      return false
     },
-    onColumnVisibilityChange: setColumnVisibility,
+    filterFns: {
+      customFilter: (row, columnId, values) => {
+        const value = row.getValue(columnId)
+        if (!values.length) return true
+
+        switch (columnId) {
+          case 'type':
+            const typeValue = (row.original as typeof clayBodies[number]).type?.name
+            return typeValue !== null && values.includes(typeValue)
+          
+          case 'cone':
+            const coneNames = (row.original as typeof clayBodies[number]).cone.map(c => c.name)
+            return coneNames.some(name => values.includes(name))
+          
+          case 'manufacturer':
+            const manufacturerValue = (row.original as typeof clayBodies[number]).manufacturer
+            return manufacturerValue !== null && values.includes(manufacturerValue)
+          
+          default:
+            return false
+        }
+      }
+    }
   })
 
   return (
@@ -114,11 +160,11 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
         />
         {view === 'table' ? (
           <ClayBodiesTable 
-            clayBodies={filteredClayBodies}
+            clayBodies={clayBodies}
             table={table}
           />
         ) : (
-          <ClayBodiesGrid clayBodies={filteredClayBodies} />
+          <ClayBodiesGrid clayBodies={clayBodies} />
         )}
       </div>
     </PageLayout>

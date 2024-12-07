@@ -158,6 +158,13 @@ export function NavMenu() {
                 </div>
                 <div className="mt-3 space-y-1">
                   <Disclosure.Button
+                    as={Link}
+                    href="/profile"
+                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                  >
+                    Profile Settings
+                  </Disclosure.Button>
+                  <Disclosure.Button
                     as="button"
                     onClick={() => signOut()}
                     className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"

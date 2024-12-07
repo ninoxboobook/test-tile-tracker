@@ -1,16 +1,17 @@
 'use client'
 
-import { Decoration } from '@prisma/client'
+import { Decoration, DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table/data-table'
 import Link from 'next/link'
+import { DecorationWithRelations } from '@/lib/schemas/decoration'
 
 interface DecorationsTableProps {
-  decorations: Decoration[]
-  table?: Table<Decoration>
+  decorations: DecorationWithRelations[]
+  table?: Table<DecorationWithRelations>
 }
 
-export const columns: ColumnDef<Decoration>[] = [
+export const columns: ColumnDef<DecorationWithRelations>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -24,27 +25,38 @@ export const columns: ColumnDef<Decoration>[] = [
     ),
   },
   {
-    accessorKey: 'category',
-    header: 'Category',
+    accessorKey: 'source',
+    header: 'Source',
   },
   {
-    accessorKey: 'type',
+    id: 'type',
     header: 'Type',
+    accessorFn: (row) => row.type.name,
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
-    cell: ({ row }) => {
-      const description = row.getValue('description') as string
-      return description ? description.slice(0, 100) + (description.length > 100 ? '...' : '') : ''
-    },
+    id: 'cone',
+    header: 'Cone',
+    accessorFn: (row) => row.cone.map(c => c.name).join(', '),
+  },
+  {
+    id: 'atmosphere',
+    header: 'Atmosphere',
+    accessorFn: (row) => row.atmosphere.map(a => a.name).join(', '),
+  },
+  {
+    accessorKey: 'colour',
+    header: 'Colour',
+  },
+  {
+    accessorKey: 'manufacturer',
+    header: 'Manufacturer',
   },
   {
     accessorKey: 'createdAt',
     header: 'Created',
     cell: ({ row }) => {
       const date = new Date(row.getValue('createdAt'))
-      return date.toISOString().split('T')[0]
+      return date.toLocaleDateString()
     },
   },
 ]

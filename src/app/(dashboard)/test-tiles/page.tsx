@@ -17,11 +17,20 @@ export default async function TestTilesPage() {
     },
     include: {
       clayBody: true,
+      decorationLayers: {
+        include: {
+          decorations: true
+        },
+        orderBy: {
+          order: 'asc'
+        }
+      },
       collections: true,
-      decorations: true,
+      cone: true,
+      atmosphere: true
     },
     orderBy: {
-      createdAt: 'desc'
+      updatedAt: 'desc'
     }
   })
 

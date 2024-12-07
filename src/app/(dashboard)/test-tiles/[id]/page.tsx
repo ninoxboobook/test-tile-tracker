@@ -26,8 +26,17 @@ export default async function TestTilePage({ params }: PageProps) {
     },
     include: {
       clayBody: true,
-      decorations: true,
+      decorationLayers: {
+        include: {
+          decorations: true
+        },
+        orderBy: {
+          order: 'asc'
+        }
+      },
       collections: true,
+      cone: true,
+      atmosphere: true
     },
   })
 
@@ -84,15 +93,15 @@ export default async function TestTilePage({ params }: PageProps) {
           </div>
         )}
 
-        {testTile.decorations.length > 0 && (
+        {testTile.decorationLayers.length > 0 && (
           <div className="sm:col-span-2">
             <dt className="text-sm font-medium text-gray-500">Decorations</dt>
             <dd className="mt-1 text-sm text-gray-900">
               <ul className="space-y-1">
-                {testTile.decorations.map(decoration => (
-                  <li key={decoration.id}>
-                    <Link href={`/decorations/${decoration.id}`} className="text-indigo-600 hover:text-indigo-500">
-                      {decoration.name}
+                {testTile.decorationLayers.map(layer => (
+                  <li key={layer.id}>
+                    <Link href={`/decorations/${layer.id}`} className="text-indigo-600 hover:text-indigo-500">
+                      {layer.decorations.map(d => d.name).join(', ')}
                     </Link>
                   </li>
                 ))}

@@ -1,9 +1,10 @@
 import { z } from 'zod'
 
 export const collectionSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(255),
+  id: z.string().uuid(),
+  name: z.string().min(1, 'Name is required'),
   description: z.string().optional().nullable(),
-  testTileIds: z.array(z.string()).optional(),
+  testTileIds: z.array(z.string().uuid()).optional(),
 })
 
 export type CollectionFormData = z.infer<typeof collectionSchema> 

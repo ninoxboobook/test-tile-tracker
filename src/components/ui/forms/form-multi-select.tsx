@@ -19,6 +19,7 @@ interface FormMultiSelectProps {
   required?: boolean
   placeholder?: string
   className?: string
+  onChange?: (values: string[]) => void
 }
 
 export function FormMultiSelect({
@@ -29,7 +30,8 @@ export function FormMultiSelect({
   options,
   required,
   placeholder = 'Select options',
-  className
+  className,
+  onChange: onExternalChange
 }: FormMultiSelectProps) {
   const [query, setQuery] = useState('')
   const {
@@ -47,7 +49,6 @@ export function FormMultiSelect({
           return option.label.toLowerCase().includes(query.toLowerCase())
         })
 
-  // Get selected options with their full details
   const selectedOptions = value.map(
     (selectedValue: string) => options.find((option) => option.value === selectedValue)
   ).filter((option: Option | undefined): option is Option => option !== undefined)
@@ -57,10 +58,13 @@ export function FormMultiSelect({
       ? value.filter((v: string) => v !== selectedValue)
       : [...value, selectedValue]
     onChange(newValue)
+    onExternalChange?.(newValue)
   }
 
   const removeOption = (optionValue: string) => {
-    onChange(value.filter((v: string) => v !== optionValue))
+    const newValue = value.filter((v: string) => v !== optionValue)
+    onChange(newValue)
+    onExternalChange?.(newValue)
   }
 
   return (
@@ -126,16 +130,6 @@ export function FormMultiSelect({
           </Combobox.Options>
         </div>
       </Combobox>
-
-      {/* Hidden input for form data */}
-      {value.map((selectedValue: string) => (
-        <input
-          key={selectedValue}
-          type="hidden"
-          name={name}
-          value={selectedValue}
-        />
-      ))}
 
       {error && (
         <p className="mt-2 text-sm text-red-600" id={`${name}-error`}>

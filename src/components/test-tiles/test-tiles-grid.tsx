@@ -1,13 +1,8 @@
 'use client'
 
-import { TestTile, ClayBody, Collection, Decoration } from '@prisma/client'
-import { BaseGrid } from '@/components/ui/data-view/base-grid'
-
-type TestTileWithRelations = TestTile & {
-  clayBody: ClayBody
-  collections: Collection[]
-  decorations: Decoration[]
-}
+import { TestTileWithRelations } from '@/types/test-tile'
+import Link from 'next/link'
+import { BaseGrid } from '../ui/data-view/base-grid'
 
 interface TestTilesGridProps {
   testTiles: TestTileWithRelations[]
@@ -44,8 +39,8 @@ export function TestTilesGrid({ testTiles }: TestTilesGridProps) {
                 {testTile.collections.length > 0 && (
                   <div>Collections: {testTile.collections.map(c => c.name).join(', ')}</div>
                 )}
-                {testTile.decorations.length > 0 && (
-                  <div>Decorations: {testTile.decorations.map(d => d.name).join(', ')}</div>
+                {testTile.decorationLayers.length > 0 && (
+                  <div>Decorations: {testTile.decorationLayers.map(d => d.decorations.map(dd => dd.name).join(', ')).join(', ')}</div>
                 )}
               </div>
             </div>

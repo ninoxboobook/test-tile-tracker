@@ -15,8 +15,19 @@ export async function createClayBody(formData: FormData) {
     redirect('/login')
   }
 
-  const rawData = Object.fromEntries(formData.entries())
-  
+  // Convert FormData to object while preserving arrays
+  const entries = Array.from(formData.entries());
+  const rawData = entries.reduce((acc, [key, value]) => {
+    if (key === 'cone') {
+      if (!acc[key]) {
+        acc[key] = formData.getAll(key);
+      }
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
   // Convert string numbers to actual numbers before validation
   const processedData = {
     ...rawData,
@@ -29,9 +40,16 @@ export async function createClayBody(formData: FormData) {
 
   const createData: Prisma.ClayBodyCreateInput = {
     name: validatedData.name,
-    type: validatedData.type,
+    type: {
+      connect: { id: validatedData.typeId }
+    },
     manufacturer: validatedData.manufacturer,
-    cone: validatedData.cone,
+    cone: {
+      connectOrCreate: validatedData.cone?.map(cone => ({
+        where: { name: cone },
+        create: { name: cone }
+      })) ?? []
+    },
     firingTemperature: validatedData.firingTemperature,
     texture: validatedData.texture,
     plasticity: validatedData.plasticity,

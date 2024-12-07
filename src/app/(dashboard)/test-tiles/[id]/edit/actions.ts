@@ -5,7 +5,6 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { testTileSchema } from '@/lib/schemas/test-tile'
-import { testTileUpdateSchema } from '@/lib/schemas/test-tile'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
@@ -26,9 +25,15 @@ export async function getTestTile(id: string) {
       userId: session.user.id 
     },
     include: {
-      decorations: true,
+      decorationLayers: {
+        include: {
+          decorations: true
+        }
+      },
       collections: true,
       clayBody: true,
+      cone: true,
+      atmosphere: true
     }
   })
 
@@ -47,19 +52,39 @@ export async function updateTestTile(formData: FormData) {
     throw new Error('Test tile ID is required')
   }
 
-  const rawData = Object.fromEntries(formData.entries())
-  console.log('Update test tile raw data:', rawData)
+  // Extract decoration layers data
+  const decorationLayers: Array<{ order: number; decorationIds: string[] }> = []
+  const entries = Array.from(formData.entries())
   
-  // Handle multiple selected decorations and collections
+  entries.forEach(([key, value]) => {
+    if (key.startsWith('decorationLayers[')) {
+      const matches = key.match(/decorationLayers\[(\d+)\]\[(\w+)\](?:\[\])?/)
+      if (matches) {
+        const [, indexStr, field] = matches
+        const index = parseInt(indexStr)
+        
+        if (!decorationLayers[index]) {
+          decorationLayers[index] = { order: index + 1, decorationIds: [] }
+        }
+        
+        if (field === 'order') {
+          decorationLayers[index].order = parseInt(value as string)
+        } else if (field === 'decorationIds') {
+          if (!decorationLayers[index].decorationIds.includes(value as string)) {
+            decorationLayers[index].decorationIds.push(value as string)
+          }
+        }
+      }
+    }
+  })
+
   const processedData = {
-    ...rawData,
-    decorationIds: formData.getAll('decorationIds'),
+    ...Object.fromEntries(formData.entries()),
+    decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
   }
 
-  console.log('Update test tile processed data:', processedData)
-  
-  const validatedData = testTileUpdateSchema.parse(processedData)
+  const validatedData = testTileSchema.parse(processedData)
 
   const updateData: Prisma.TestTileUpdateInput = {
     name: validatedData.name,
@@ -69,8 +94,20 @@ export async function updateTestTile(formData: FormData) {
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },
-    decorations: {
-      set: validatedData.decorationIds?.map(id => ({ id })) ?? []
+    cone: {
+      connect: { id: validatedData.coneId }
+    },
+    atmosphere: {
+      connect: { id: validatedData.atmosphereId }
+    },
+    decorationLayers: {
+      deleteMany: {},
+      create: validatedData.decorationLayers.map(layer => ({
+        order: layer.order,
+        decorations: {
+          connect: layer.decorationIds.map(id => ({ id }))
+        }
+      }))
     },
     collections: {
       set: validatedData.collectionIds?.map(id => ({ id })) ?? []
@@ -85,8 +122,14 @@ export async function updateTestTile(formData: FormData) {
     data: updateData,
     include: {
       clayBody: true,
-      decorations: true,
-      collections: true
+      decorationLayers: {
+        include: {
+          decorations: true
+        }
+      },
+      collections: true,
+      cone: true,
+      atmosphere: true
     }
   })
 

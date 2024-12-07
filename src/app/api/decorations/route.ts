@@ -20,11 +20,26 @@ export async function POST(request: NextRequest) {
 
     const createData: Prisma.DecorationCreateInput = {
       name: validatedData.name,
-      category: validatedData.category,
+      category: {
+        connectOrCreate: validatedData.category.map(cat => ({
+          where: { name: cat },
+          create: { name: cat }
+        }))
+      },
       type: validatedData.type,
       manufacturer: validatedData.manufacturer || null,
-      cone: validatedData.cone || null,
-      atmosphere: validatedData.atmosphere || null,
+      cone: validatedData.cone ? {
+        connectOrCreate: validatedData.cone.map(cone => ({
+          where: { name: cone },
+          create: { name: cone }
+        }))
+      } : undefined,
+      atmosphere: validatedData.atmosphere ? {
+        connectOrCreate: validatedData.atmosphere.map(atm => ({
+          where: { name: atm },
+          create: { name: atm }
+        }))
+      } : undefined,
       colour: validatedData.colour || null,
       surface: validatedData.surface || null,
       transparency: validatedData.transparency || null,

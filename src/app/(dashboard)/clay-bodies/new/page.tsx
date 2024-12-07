@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
@@ -12,13 +13,26 @@ export default async function NewClayBodyPage() {
     redirect('/login')
   }
 
+  const [clayBodyTypes, cones] = await Promise.all([
+    prisma.clayBodyType.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.cone.findMany({
+      orderBy: { name: 'asc' }
+    })
+  ])
+
   return (
     <FormLayout 
       title="New Clay Body"
       description="Add a new clay body to your database"
       backHref="/clay-bodies"
     >
-      <ClayBodyForm action={createClayBody} />
+      <ClayBodyForm 
+        action={createClayBody} 
+        clayBodyTypes={clayBodyTypes}
+        cones={cones}
+      />
     </FormLayout>
   )
 }

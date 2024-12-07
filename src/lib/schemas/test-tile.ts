@@ -1,19 +1,21 @@
 import { z } from 'zod'
 
-export const testTileSchema = z.object({
-  id: z.string().uuid('Invalid test tile ID').optional(), // Optional for create, required for update
-  name: z.string().min(1, 'Name is required').max(255),
-  stamp: z.string().max(255).optional().nullable(),
-  notes: z.string().optional().nullable(),
-  imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
-  clayBodyId: z.string().uuid('Invalid clay body ID'),
-  decorationIds: z.array(z.string().uuid('Invalid decoration ID')).optional(),
-  collectionIds: z.array(z.string().uuid('Invalid collection ID')).optional(),
+export const decorationLayerSchema = z.object({
+  order: z.number().int().min(1).max(20),
+  decorationIds: z.array(z.string().uuid())
 })
 
-// Separate schema for updates that requires the ID
-export const testTileUpdateSchema = testTileSchema.extend({
-  id: z.string().uuid('Invalid test tile ID'),
+export const testTileSchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string().min(1, 'Name is required'),
+  stamp: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
+  imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
+  clayBodyId: z.string().uuid('Clay body is required'),
+  coneId: z.string().uuid('Cone is required'),
+  atmosphereId: z.string().uuid('Atmosphere is required'),
+  decorationLayers: z.array(decorationLayerSchema).optional().default([]),
+  collectionIds: z.array(z.string().uuid()).optional().default([]),
 })
 
 export type TestTileFormData = z.infer<typeof testTileSchema> 

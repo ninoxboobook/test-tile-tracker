@@ -1,6 +1,5 @@
 'use client'
 
-import { TestTile, ClayBody, Collection, Decoration } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { TestTilesTable, columns } from '@/components/test-tiles/test-tiles-table'
@@ -10,21 +9,16 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
+import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
-
-type TestTileWithRelations = TestTile & {
-  clayBody: ClayBody
-  collections: Collection[]
-  decorations: Decoration[]
-}
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]
 }
 
 // Define filterable columns configuration
-const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collections'> = {
-  columns: ['clayBody', 'decorations', 'collections'] as const,
+const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collections' | 'cone' | 'atmosphere'> = {
+  columns: ['clayBody', 'decorations', 'collections', 'cone', 'atmosphere'] as const,
   getLabel: (columnId) => {
     switch (columnId) {
       case 'clayBody':
@@ -33,6 +27,10 @@ const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collect
         return 'Decorations'
       case 'collections':
         return 'Collections'
+      case 'cone':
+        return 'Cone'
+      case 'atmosphere':
+        return 'Atmosphere'
       default:
         return columnId
     }
@@ -66,7 +64,9 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
         case 'decorations':
           uniqueValues = Array.from(new Set(
             testTiles.flatMap(item => 
-              item.decorations.map(d => d.name)
+              item.decorationLayers.flatMap(layer => 
+                layer.decorations.map(d => d.name)
+              )
             ).filter(value => value.trim() !== '')
           )).sort()
           break
@@ -75,6 +75,18 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
             testTiles.flatMap(item => 
               item.collections.map(c => c.name)
             ).filter(value => value.trim() !== '')
+          )).sort()
+          break
+        case 'cone':
+          uniqueValues = Array.from(new Set(
+            testTiles.map(item => item.cone.name)
+              .filter(value => value.trim() !== '')
+          )).sort()
+          break
+        case 'atmosphere':
+          uniqueValues = Array.from(new Set(
+            testTiles.map(item => item.atmosphere.name)
+              .filter(value => value.trim() !== '')
           )).sort()
           break
       }
@@ -109,9 +121,15 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
             case 'clayBody':
               return values.includes(testTile.clayBody.name)
             case 'decorations':
-              return testTile.decorations.some(d => values.includes(d.name))
+              return testTile.decorationLayers.some(layer => 
+                layer.decorations.some(d => values.includes(d.name))
+              )
             case 'collections':
               return testTile.collections.some(c => values.includes(c.name))
+            case 'cone':
+              return values.includes(testTile.cone.name)
+            case 'atmosphere':
+              return values.includes(testTile.atmosphere.name)
             default:
               return true
           }

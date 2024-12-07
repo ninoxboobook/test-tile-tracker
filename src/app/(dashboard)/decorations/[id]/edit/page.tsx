@@ -5,7 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { DecorationForm } from '@/components/decorations/decoration-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateDecoration } from './actions'
-import type { DecorationFormData } from '@/lib/schemas/decoration'
+import { type DecorationWithRelations } from '@/lib/schemas/decoration'
 
 export default async function EditDecorationPage(
   props: {
@@ -19,32 +19,49 @@ export default async function EditDecorationPage(
     redirect('/login')
   }
 
-  const decoration = await prisma.decoration.findUnique({
-    where: {
-      id: params.id,
-      userId: session.user.id,
-    },
-  })
+  const [decoration, decorationTypes, cones, atmospheres] = await Promise.all([
+    prisma.decoration.findUnique({
+      where: {
+        id: params.id,
+        userId: session.user.id,
+      },
+      include: {
+        type: true,
+        atmosphere: true,
+        cone: true,
+        decorationLayers: {
+          include: {
+            testTile: true
+          }
+        }
+      }
+    }),
+    prisma.decorationType.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.cone.findMany({
+      orderBy: { name: 'asc' }
+    }),
+    prisma.atmosphere.findMany({
+      orderBy: { name: 'asc' }
+    })
+  ])
 
   if (!decoration) {
     return notFound()
   }
 
-  const formData: DecorationFormData & { id: string } = {
-    id: decoration.id,
-    name: decoration.name,
-    category: decoration.category,
-    type: decoration.type,
-    manufacturer: decoration.manufacturer || null,
-    cone: decoration.cone || null,
-    atmosphere: decoration.atmosphere || null,
-    colour: decoration.colour || null,
-    surface: decoration.surface || null,
-    transparency: decoration.transparency || null,
-    glazyUrl: decoration.glazyUrl || null,
-    imageUrl: decoration.imageUrl || null,
-    recipe: decoration.recipe || null,
-    notes: decoration.notes || null,
+  const decorationWithRelations: DecorationWithRelations = {
+    ...decoration,
+    createdAt: decoration.createdAt,
+    updatedAt: decoration.updatedAt,
+    decorationLayers: decoration.decorationLayers.map(layer => ({
+      id: layer.id,
+      testTile: layer.testTile ? {
+        id: layer.testTile.id,
+        name: layer.testTile.name
+      } : null
+    }))
   }
 
   return (
@@ -55,9 +72,12 @@ export default async function EditDecorationPage(
     >
       <DecorationForm 
         action={updateDecoration}
-        initialData={formData}
+        initialData={decorationWithRelations}
         submitButtonText="Update Decoration"
+        decorationTypes={decorationTypes}
+        cones={cones}
+        atmospheres={atmospheres}
       />
     </FormLayout>
   )
-} 
+}

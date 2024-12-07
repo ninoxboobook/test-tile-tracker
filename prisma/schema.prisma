@@ -42,9 +42,10 @@ model Collection {
 model ClayBody {
   id                String               @id @default(uuid()) @db.Uuid
   name              String               @db.VarChar(255)
-  type              String               @db.VarChar(255)
+  typeId            String               @db.Uuid
+  type              ClayBodyType         @relation(fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   manufacturer      String?              @db.VarChar(255)
-  cone              String?              @db.VarChar(255)
+  cone              Cone[]
   firingTemperature String?              @db.VarChar(255)
   texture           String?              @db.VarChar(255)
   plasticity        String?              @db.VarChar(255)
@@ -63,17 +64,17 @@ model ClayBody {
 
   @@map("clay_bodies")
   @@unique([userId, name], map: "clay_bodies_user_id_name")
-  @@index([userId, type], map: "clay_bodies_user_id_type")
 }
 
 model Decoration {
   id                String                    @id @default(uuid()) @db.Uuid
   name              String                    @db.VarChar(255)
-  category          String                    @db.VarChar(255)
-  type              String                    @db.VarChar(255)
+  typeId            String                    @db.Uuid
+  type              DecorationType            @relation(fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  source            String?                   @db.VarChar(255)
   manufacturer      String?                   @db.VarChar(255)
-  cone              String?                   @db.VarChar(255)
-  atmosphere        String?                   @db.VarChar(255)
+  cone              Cone[]
+  atmosphere        Atmosphere[]
   colour            String?                   @db.VarChar(255)
   surface           String?                   @db.VarChar(255)
   transparency      String?                   @db.VarChar(255)
@@ -85,29 +86,45 @@ model Decoration {
   createdAt         DateTime                  @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime                  @updatedAt @db.Timestamptz(6)
   user              User                     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  testTiles         TestTile[]
+  decorationLayers  DecorationLayer[]
 
   @@map("decorations")
   @@unique([userId, name], map: "decorations_user_id_name")
-  @@index([userId, type], map: "decorations_user_id_type")
 }
 
 model TestTile {
-  id           String        @id @default(uuid()) @db.Uuid
-  name         String        @db.VarChar(255)
-  stamp        String?       @db.VarChar(255)
-  notes        String?       @db.Text
-  imageUrl     String?       @db.VarChar(255)
-  createdAt    DateTime      @default(now()) @db.Timestamptz(6)
-  updatedAt    DateTime      @updatedAt @db.Timestamptz(6)
-  userId       String        @db.Uuid
-  clayBodyId   String        @db.Uuid
-  decorations  Decoration[]
-  collections  Collection[]
-  clayBody     ClayBody      @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user         User          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id               String            @id @default(uuid()) @db.Uuid
+  name             String            @db.VarChar(255)
+  stamp            String?           @db.VarChar(255)
+  notes            String?           @db.Text
+  imageUrl         String?           @db.VarChar(255)
+  createdAt        DateTime          @default(now()) @db.Timestamptz(6)
+  updatedAt        DateTime          @updatedAt @db.Timestamptz(6)
+  userId           String            @db.Uuid
+  clayBodyId       String            @db.Uuid
+  coneId           String            @db.Uuid
+  cone             Cone              @relation(fields: [coneId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  atmosphereId     String            @db.Uuid
+  atmosphere       Atmosphere        @relation(fields: [atmosphereId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  decorationLayers DecorationLayer[]
+  collections      Collection[]
+  clayBody         ClayBody          @relation(fields: [clayBodyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user             User              @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("test_tiles")
+}
+
+model DecorationLayer {
+  id          String      @id @default(uuid()) @db.Uuid
+  order       Int         // Layer number (1, 2, 3, etc.)
+  testTile    TestTile    @relation(fields: [testTileId], references: [id], onDelete: Cascade)
+  testTileId  String      @db.Uuid
+  decorations Decoration[]
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
+
+  @@unique([testTileId, order])
+  @@map("decoration_layers")
 }
 
 model Session {
@@ -127,4 +144,47 @@ model UserSession {
   updatedAt DateTime @updatedAt
 
   @@map("user_sessions")
+}
+
+model Cone {
+id          String        @id @default(uuid()) @db.Uuid
+name        String        @unique
+clayBodies  ClayBody[]
+decorations Decoration[]
+testTiles   TestTile[]
+createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+
+@@map("cones")
+}
+
+model Atmosphere {
+id          String        @id @default(uuid()) @db.Uuid
+name        String        @unique
+decorations Decoration[]
+testTiles   TestTile[]
+createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+
+@@map("atmospheres")
+}
+
+model DecorationType {
+id          String        @id @default(uuid()) @db.Uuid
+name        String        @unique
+decorations Decoration[]
+createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+
+@@map("decoration_types")
+}
+
+model ClayBodyType {
+id          String        @id @default(uuid()) @db.Uuid
+name        String        @unique
+clayBodies  ClayBody[]
+createdAt   DateTime      @default(now()) @db.Timestamptz(6)
+updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+
+@@map("clay_body_types")
 }

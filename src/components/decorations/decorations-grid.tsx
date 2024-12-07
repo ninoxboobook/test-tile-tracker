@@ -1,10 +1,10 @@
 'use client'
 
-import { Decoration } from '@prisma/client'
+import { DecorationWithRelations } from '@/lib/schemas/decoration'
 import { BaseGrid } from '@/components/ui/data-view/base-grid'
 
 interface DecorationsGridProps {
-  decorations: Decoration[]
+  decorations: DecorationWithRelations[]
 }
 
 export function DecorationsGrid({ decorations }: DecorationsGridProps) {
@@ -33,10 +33,24 @@ export function DecorationsGrid({ decorations }: DecorationsGridProps) {
             <div className="flex flex-1 flex-col space-y-2 p-4">
               <h3 className="text-sm font-medium text-gray-900">{decoration.name}</h3>
               <div className="space-y-1 text-sm text-gray-500">
-                {decoration.type && <div>Category: {decoration.type}</div>}
-                {decoration.manufacturer && <div>Manufacturer: {decoration.manufacturer}</div>}
-                {decoration.cone && <div>Cone: {decoration.cone}</div>}
-                {decoration.atmosphere && <div>Atmosphere: {decoration.atmosphere}</div>}
+                {decoration.type && (
+                  <div>Type: {decoration.type.name}</div>
+                )}
+                {decoration.source && (
+                  <div>Source: {decoration.source}</div>
+                )}
+                {decoration.manufacturer && (
+                  <div>Manufacturer: {decoration.manufacturer}</div>
+                )}
+                {decoration.cone.length > 0 && (
+                  <div>Cone: {decoration.cone.map(c => c.name).join(', ')}</div>
+                )}
+                {decoration.atmosphere.length > 0 && (
+                  <div>Atmosphere: {decoration.atmosphere.map(a => a.name).join(', ')}</div>
+                )}
+                {decoration.colour && (
+                  <div>Colour: {decoration.colour}</div>
+                )}
               </div>
             </div>
           </div>
@@ -44,4 +58,4 @@ export function DecorationsGrid({ decorations }: DecorationsGridProps) {
       })}
     />
   )
-} 
+}

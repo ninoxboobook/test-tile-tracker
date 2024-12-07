@@ -15,6 +15,10 @@ export default async function ClayBodiesPage() {
     where: {
       userId: session.user.id
     },
+    include: {
+      type: true,
+      cone: true
+    },
     orderBy: {
       createdAt: 'desc'
     }

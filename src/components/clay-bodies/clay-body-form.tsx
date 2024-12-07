@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { clayBodySchema, type ClayBodyFormData } from '@/lib/schemas/clay-body'
@@ -7,30 +8,88 @@ import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
+import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { ClayBodyType, Cone } from '@prisma/client'
 
 interface ClayBodyFormProps {
   initialData?: ClayBodyFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
+  clayBodyTypes: ClayBodyType[]
+  cones: Array<Cone>
 }
 
 export function ClayBodyForm({
   initialData,
   action,
-  submitButtonText = 'Create Clay Body'
+  submitButtonText = 'Create Clay Body',
+  clayBodyTypes,
+  cones
 }: ClayBodyFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const {
     register,
     control,
-    formState: { errors, isSubmitting }
+    watch,
+    formState: { errors }
   } = useForm<ClayBodyFormData>({
     resolver: zodResolver(clayBodySchema),
     defaultValues: initialData
   })
 
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      setIsSubmitting(true)
+
+      // Get the current form values
+      const values = watch()
+
+      // Ensure the ID is included in the form data for updates
+      if (initialData?.id) {
+        formData.set('id', initialData.id)
+      }
+
+      // Convert form data to a regular object while preserving arrays
+      const formDataObj = Array.from(formData.entries()).reduce((acc, [key, value]) => {
+        if (key === 'cone') {
+          if (!acc[key]) {
+            acc[key] = formData.getAll(key);
+          }
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      }, {} as Record<string, any>);
+
+      // Now add the cone values from the form state
+      if (values.cone?.length) {
+        formDataObj.cone = values.cone;
+      }
+
+      // Convert back to FormData
+      const newFormData = new FormData();
+      Object.entries(formDataObj).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach(v => newFormData.append(key, v));
+        } else if (value !== null && value !== undefined) {
+          newFormData.append(key, value);
+        }
+      });
+
+      await action(newFormData)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        return
+      }
+      console.error('Form submission error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <Form onSubmit={action}>
+    <Form onSubmit={handleSubmit}>
       {initialData?.id && (
         <input type="hidden" name="id" value={initialData.id} />
       )}
@@ -44,15 +103,13 @@ export function ClayBodyForm({
 
       <FormSelect
         label="Type"
-        name="type"
+        name="typeId"
         control={control}
-        options={[
-          { value: 'Stoneware', label: 'Stoneware' },
-          { value: 'Porcelain', label: 'Porcelain' },
-          { value: 'Earthenware', label: 'Earthenware' },
-          { value: 'Other', label: 'Other' }
-        ]}
-        error={errors.type}
+        options={clayBodyTypes.map(type => ({
+          value: type.id,
+          label: type.name
+        }))}
+        error={errors.typeId}
         required
       />
 
@@ -64,10 +121,14 @@ export function ClayBodyForm({
       />
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
+        <FormMultiSelect
           label="Cone"
           name="cone"
-          register={register}
+          control={control}
+          options={cones.map(cone => ({
+            value: cone.id,
+            label: cone.name
+          }))}
           error={errors.cone}
         />
 
@@ -142,15 +203,15 @@ export function ClayBodyForm({
           register={register}
           error={errors.absorption}
         />
-      </div>
 
-      <FormField
-        label="Mesh Size"
-        name="meshSize"
-        type="number"
-        register={register}
-        error={errors.meshSize}
-      />
+        <FormField
+          label="Mesh Size"
+          name="meshSize"
+          type="number"
+          register={register}
+          error={errors.meshSize}
+        />
+      </div>
 
       <FormField
         label="Image URL"
@@ -168,9 +229,14 @@ export function ClayBodyForm({
         placeholder="Add any additional notes about this clay body..."
       />
 
-      <ActionButton type="submit" isLoading={isSubmitting}>
-        {submitButtonText}
-      </ActionButton>
+      <div className="mt-6 flex justify-end">
+        <ActionButton
+          type="submit"
+          disabled={isSubmitting}
+        >
+          {submitButtonText}
+        </ActionButton>
+      </div>
     </Form>
   )
 }

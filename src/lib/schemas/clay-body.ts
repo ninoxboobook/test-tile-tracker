@@ -1,10 +1,11 @@
 import { z } from 'zod'
 
 export const clayBodySchema = z.object({
+  id: z.string().uuid().optional(),
   name: z.string().min(1, 'Name is required'),
-  type: z.string().min(1, 'Type is required'),
+  typeId: z.string().uuid('Clay body type is required'),
   manufacturer: z.string().optional().nullable(),
-  cone: z.string().optional().nullable(),
+  cone: z.array(z.string()).optional(),
   firingTemperature: z.string().optional().nullable(),
   texture: z.string().optional().nullable(),
   plasticity: z.string().optional().nullable(),

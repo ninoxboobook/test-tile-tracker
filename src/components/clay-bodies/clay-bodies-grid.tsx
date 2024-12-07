@@ -1,10 +1,13 @@
 'use client'
 
-import { ClayBody } from '@prisma/client'
+import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { BaseGrid } from '@/components/ui/data-view/base-grid'
 
 interface ClayBodiesGridProps {
-  clayBodies: ClayBody[]
+  clayBodies: (ClayBody & {
+    type: ClayBodyType | null
+    cone: Cone[]
+  })[]
 }
 
 export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
@@ -33,9 +36,11 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
             <div className="flex flex-1 flex-col space-y-2 p-4">
               <h3 className="text-sm font-medium text-gray-900">{clayBody.name}</h3>
               <div className="space-y-1 text-sm text-gray-500">
-                {clayBody.type && <div>Type: {clayBody.type}</div>}
+                {clayBody.type?.name && <div>Type: {clayBody.type.name}</div>}
                 {clayBody.manufacturer && <div>Manufacturer: {clayBody.manufacturer}</div>}
-                {clayBody.cone && <div>Cone: {clayBody.cone}</div>}
+                {clayBody.cone.length > 0 && (
+                  <div>Cone: {clayBody.cone.map(c => c.name).join(', ')}</div>
+                )}
                 {clayBody.firingTemperature && (
                   <div>Temperature: {clayBody.firingTemperature}°C</div>
                 )}

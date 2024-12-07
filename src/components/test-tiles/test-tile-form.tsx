@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useForm, FieldError, Merge } from 'react-hook-form'
+import { useState, useEffect, useMemo } from 'react'
+import { useForm, FieldError, Merge, Control, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { testTileSchema, type TestTileFormData } from '@/lib/schemas/test-tile'
@@ -14,14 +14,27 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { Modal } from '@/components/ui/modal'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { DecorationForm } from '@/components/decorations/decoration-form'
+import { ClayBody, Collection, Decoration, DecorationType } from '@prisma/client'
+import { ClayBodyType } from '@prisma/client'
+import { Atmosphere } from '@prisma/client'
+import { Cone } from '@prisma/client'
+
+interface DecorationLayer {
+  order: number
+  decorationIds: string[]
+}
 
 interface TestTileFormProps {
-  initialData?: TestTileFormData
+  initialData?: TestTileFormData & { id?: string }
   action: (formData: FormData) => Promise<void>
   submitButtonText?: string
-  clayBodies: Array<{ id: string; name: string }>
-  decorations: Array<{ id: string; name: string }>
-  collections: Array<{ id: string; name: string }>
+  clayBodies: Array<ClayBody>
+  decorations: Array<Decoration>
+  collections: Array<Collection>
+  cones: Array<Cone>
+  atmospheres: Array<Atmosphere>
+  clayBodyTypes: Array<ClayBodyType>
+  decorationTypes: Array<DecorationType>
 }
 
 export function TestTileForm({
@@ -30,27 +43,56 @@ export function TestTileForm({
   submitButtonText = 'Create Test Tile',
   clayBodies: initialClayBodies,
   decorations: initialDecorations,
-  collections
+  collections,
+  cones,
+  atmospheres,
+  clayBodyTypes,
+  decorationTypes
 }: TestTileFormProps) {
   const router = useRouter()
   const [isClayBodyModalOpen, setIsClayBodyModalOpen] = useState(false)
   const [isDecorationModalOpen, setIsDecorationModalOpen] = useState(false)
   const [clayBodies, setClayBodies] = useState(initialClayBodies)
   const [decorations, setDecorations] = useState(initialDecorations)
+  const [decorationLayers, setDecorationLayers] = useState<DecorationLayer[]>([
+    { order: 1, decorationIds: [] }
+  ])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const {
     register,
-    setValue,
-    watch,
     control,
+    watch,
+    setValue,
     formState: { errors }
   } = useForm<TestTileFormData>({
     resolver: zodResolver(testTileSchema),
-    defaultValues: initialData
+    defaultValues: {
+      ...initialData,
+      decorationLayers: initialData?.decorationLayers || [{
+        order: 1,
+        decorationIds: []
+      }]
+    }
   })
 
-  // Watch the clayBodyId to make the select controlled
-  const selectedClayBodyId = watch('clayBodyId')
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "decorationLayers"
+  });
+
+  const watchFieldArray = watch("decorationLayers");
+  const controlledFields = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchFieldArray[index]
+    };
+  });
+
+  const canAddLayer = controlledFields[controlledFields.length - 1]?.decorationIds?.length > 0;
+
+  const addLayer = () => {
+    append({ order: controlledFields.length + 1, decorationIds: [] });
+  };
 
   const handleClayBodySubmit = async (formData: FormData) => {
     const response = await fetch('/api/clay-bodies', {
@@ -64,10 +106,21 @@ export function TestTileForm({
 
     const clayBody = await response.json()
     // Update the clay bodies list with the new clay body
-    setClayBodies(prevBodies => [...prevBodies, { id: clayBody.id, name: clayBody.name }])
+    setClayBodies(prevBodies => [...prevBodies, clayBody])
     // Set the selected value to the new clay body
     setValue('clayBodyId', clayBody.id, { shouldValidate: true })
     setIsClayBodyModalOpen(false)
+  }
+
+  const handleLayerChange = (order: number, decorationIds: string[]) => {
+    setDecorationLayers(prevLayers => {
+      const layerIndex = prevLayers.findIndex(layer => layer.order === order)
+      if (layerIndex === -1) return prevLayers
+
+      const newLayers = [...prevLayers]
+      newLayers[layerIndex] = { order, decorationIds }
+      return newLayers
+    })
   }
 
   const handleDecorationSubmit = async (formData: FormData) => {
@@ -81,38 +134,60 @@ export function TestTileForm({
     }
 
     const decoration = await response.json()
-    // Update the decorations list with the new decoration
-    setDecorations(prevDecorations => [...prevDecorations, { id: decoration.id, name: decoration.name }])
-    // Get current selected decorations and add the new one
-    const currentDecorations = watch('decorationIds') || []
-    setValue('decorationIds', [...currentDecorations, decoration.id], { shouldValidate: true })
+    setDecorations(prevDecorations => [...prevDecorations, decoration])
+
+    // Add the new decoration to the current layer
+    const currentLayer = decorationLayers[decorationLayers.length - 1]
+    handleLayerChange(currentLayer.order, [...currentLayer.decorationIds, decoration.id])
+
     setIsDecorationModalOpen(false)
+  }
+
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      setIsSubmitting(true)
+
+      // Get the current form values
+      const values = watch()
+
+      // Ensure the ID is included in the form data for updates
+      if (initialData?.id) {
+        formData.set('id', initialData.id)
+      }
+
+      // Add decoration layers to form data
+      values.decorationLayers?.forEach((layer, index) => {
+        console.log(`Adding layer ${index + 1}:`, layer)
+        formData.append(`decorationLayers[${index}][order]`, (index + 1).toString())
+        layer.decorationIds?.forEach(id => {
+          formData.append(`decorationLayers[${index}][decorationIds][]`, id)
+        })
+      })
+      console.log(values.collectionIds)
+      // add collections to form data
+      values.collectionIds?.forEach(collection => {
+        formData.append('collectionIds', collection)
+      })
+      console.log(formData);
+      console.log('Form data before submission:', Object.fromEntries(formData.entries()))
+      await action(formData)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        return
+      }
+      console.error('Form submission error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <>
-      <Form onSubmit={async (formData) => {
-        try {
-          setIsSubmitting(true)
-          await action(formData)
-        } catch (error) {
-          // If it's a redirect error, we don't need to handle it
-          if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
-            return
-          }
-          console.error('Form submission error:', error)
-        } finally {
-          setIsSubmitting(false)
-        }
-      }}>
+      <Form onSubmit={handleSubmit}>
+        {initialData?.id && (
+          <input type="hidden" name="id" value={initialData.id} />
+        )}
         <div className="space-y-6">
-          {initialData?.id && (
-            <input 
-              type="hidden" 
-              name="id" 
-              value={initialData.id} 
-            />
-          )}
           <FormField
             label="Name"
             name="name"
@@ -147,27 +222,70 @@ export function TestTileForm({
               </ActionButton>
             </div>
           </div>
-
           <div className="space-y-2">
-            <FormMultiSelect
-              name="decorationIds"
-              label="Decorations"
-              control={control}
-              options={decorations.map(decoration => ({
-                value: decoration.id,
-                label: decoration.name
-              }))}
-              error={errors.decorationIds as FieldError | Merge<FieldError, (FieldError | undefined)[]>}
-            />
-            <div className="flex justify-end">
-              <ActionButton
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Decorations</h3>
+              <button
                 type="button"
                 onClick={() => setIsDecorationModalOpen(true)}
+                className="text-sm text-blue-600 hover:text-blue-800"
               >
-                Add Decoration
-              </ActionButton>
+                Add New Decoration
+              </button>
             </div>
+
+            {controlledFields.map((field, index) => (
+              <div key={field.id} className="flex items-start gap-2">
+                <FormMultiSelect
+                  label={`Layer ${index + 1}`}
+                  name={`decorationLayers.${index}.decorationIds`}
+                  control={control}
+                  options={decorations.map(d => ({
+                    label: d.name,
+                    value: d.id
+                  }))}
+                  error={errors.decorationLayers?.[index]?.decorationIds}
+                  onChange={(values) => handleLayerChange(index + 1, values)}
+                />
+                {index > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="mt-8 text-red-600 hover:text-red-800"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addLayer}
+              disabled={!canAddLayer}
+              className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400"
+            >
+              Add Layer
+            </button>
           </div>
+
+          <FormSelect
+            name="coneId"
+            label="Cone"
+            control={control}
+            options={cones.map(cone => ({ value: cone.id, label: cone.name }))}
+            error={errors.coneId}
+            required
+          />
+
+          <FormSelect
+            name="atmosphereId"
+            label="Atmosphere"
+            control={control}
+            options={atmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
+            error={errors.atmosphereId}
+            required
+          />
 
           <FormMultiSelect
             name="collectionIds"
@@ -210,6 +328,8 @@ export function TestTileForm({
         <ClayBodyForm
           action={handleClayBodySubmit}
           submitButtonText="Create Clay Body"
+          clayBodyTypes={clayBodyTypes}
+          cones={cones}
         />
       </Modal>
 
@@ -221,6 +341,9 @@ export function TestTileForm({
         <DecorationForm
           action={handleDecorationSubmit}
           submitButtonText="Create Decoration"
+          decorationTypes={decorationTypes}
+          cones={cones}
+          atmospheres={atmospheres}
         />
       </Modal>
     </>

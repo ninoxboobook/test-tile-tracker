@@ -20,16 +20,44 @@ export async function updateDecoration(formData: FormData) {
     throw new Error('Decoration ID is required')
   }
 
-  const rawData = Object.fromEntries(formData.entries())
-  const validatedData = decorationSchema.parse(rawData)
+  // Convert FormData to object while preserving arrays
+  const entries = Array.from(formData.entries());
+  const rawData = entries.reduce((acc, [key, value]) => {
+    if (key === 'coneIds') {
+      if (!acc[key]) {
+        const values = formData.getAll(key);
+        acc[key] = values.map(v => typeof v === 'string' ? v : '');
+      }
+    } else if (key === 'atmosphereIds') {
+      if (!acc[key]) {
+        const values = formData.getAll(key);
+        acc[key] = values.map(v => typeof v === 'string' ? v : '');
+      }
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
+  const validatedData = decorationSchema.parse({
+    ...rawData
+  })
 
   const updateData: Prisma.DecorationUpdateInput = {
     name: validatedData.name,
-    category: validatedData.category,
-    type: validatedData.type,
+    type: {
+      connect: { id: validatedData.typeId }
+    },
+    source: validatedData.source || null,
     manufacturer: validatedData.manufacturer || null,
-    cone: validatedData.cone || null,
-    atmosphere: validatedData.atmosphere || null,
+    cone: {
+      set: [], // Clear existing relationships
+      connect: validatedData.coneIds?.map(id => ({ id })) ?? []
+    },
+    atmosphere: {
+      set: [], // Clear existing relationships
+      connect: validatedData.atmosphereIds?.map(id => ({ id })) ?? []
+    },
     colour: validatedData.colour || null,
     surface: validatedData.surface || null,
     transparency: validatedData.transparency || null,
@@ -49,4 +77,42 @@ export async function updateDecoration(formData: FormData) {
 
   revalidatePath('/decorations')
   redirect(`/decorations/${id}`)
-} 
+}
+
+export async function getDecoration(id: string, userId: string) {
+  return prisma.decoration.findUnique({
+    where: {
+      id,
+      userId
+    },
+    include: {
+      type: true,
+      cone: true,
+      atmosphere: true
+    }
+  })
+}
+
+export async function getDecorationTypes() {
+  return prisma.decorationType.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
+}
+
+export async function getCones() {
+  return prisma.cone.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
+}
+
+export async function getAtmospheres() {
+  return prisma.atmosphere.findMany({
+    orderBy: {
+      name: 'asc'
+    }
+  })
+}
