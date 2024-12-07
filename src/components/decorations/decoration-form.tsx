@@ -85,6 +85,11 @@ export function DecorationForm({
         formDataObj.atmosphereIds = values.atmosphereIds;
       }
 
+      // Add imageUrl values from form state
+      if (values.imageUrl?.length) {
+        formDataObj.imageUrl = values.imageUrl;
+      }
+
       // Convert back to FormData
       const newFormData = new FormData();
       Object.entries(formDataObj).forEach(([key, value]) => {
@@ -94,6 +99,7 @@ export function DecorationForm({
           newFormData.append(key, value);
         }
       });
+
       setError('')
       await action(newFormData)
     } catch (e) {
