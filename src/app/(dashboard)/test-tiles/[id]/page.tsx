@@ -103,6 +103,20 @@ export default async function TestTilePage({ params }: PageProps) {
           </div>
         )}
 
+        {testTile.cone && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Cone</dt>
+            <dd className="mt-1 text-sm text-gray-900">{testTile.cone.name}</dd>
+          </div>
+        )}
+
+        {testTile.atmosphere && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Atmosphere</dt>
+            <dd className="mt-1 text-sm text-gray-900">{testTile.atmosphere.name}</dd>
+          </div>
+        )}
+
         {testTile.decorationLayers.length > 0 && (
           <div className="sm:col-span-2">
             <dt className="text-sm font-medium text-gray-500">Decorations</dt>

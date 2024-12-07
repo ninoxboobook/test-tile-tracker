@@ -75,9 +75,9 @@ export default async function CollectionPage(
                 href={`/test-tiles/${testTile.id}`}
                 className="group relative block w-full aspect-square rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 overflow-hidden"
               >
-                {testTile.imageUrl && (
+                {testTile.imageUrl?.[0] && (
                   <Image
-                    src={testTile.imageUrl}
+                    src={testTile.imageUrl[0]}
                     alt={testTile.name || ''}
                     fill
                     className="pointer-events-none object-cover group-hover:opacity-75"
