@@ -8,6 +8,29 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
 
+function DecorationImages({ imageUrl }: { imageUrl: string | null }) {
+  if (!imageUrl) return null
+
+  const images = imageUrl.startsWith('[') 
+    ? JSON.parse(imageUrl) 
+    : [imageUrl] // Handle both JSON array and legacy single URLs
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {images.map((url: string, index: number) => (
+        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
+          <Image
+            src={url}
+            alt={`Decoration image ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default async function DecorationPage(
   props: {
     params: Promise<{ id: string }>
@@ -69,13 +92,13 @@ export default async function DecorationPage(
       </div>
 
       {decorationWithRelations.imageUrl && (
-        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-          <Image
-            src={decorationWithRelations.imageUrl}
-            alt={decorationWithRelations.name}
-            fill
-            className="object-cover"
-          />
+        <div className="bg-white shadow sm:rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+              Images
+            </h3>
+            <DecorationImages imageUrl={decorationWithRelations.imageUrl} />
+          </div>
         </div>
       )}
 
