@@ -10,7 +10,7 @@ export const testTileSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   stamp: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
-  imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
+  imageUrl: z.array(z.string().url('Invalid URL format')).optional().nullable(),
   clayBodyId: z.string().uuid('Clay body is required'),
   coneId: z.string().uuid('Cone is required'),
   atmosphereId: z.string().uuid('Atmosphere is required'),

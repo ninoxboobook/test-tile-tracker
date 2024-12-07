@@ -14,7 +14,7 @@ export const clayBodySchema = z.object({
   shrinkage: z.number().optional().nullable(),
   absorption: z.number().optional().nullable(),
   meshSize: z.number().int().optional().nullable(),
-  imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
+  imageUrl: z.array(z.string().url('Invalid URL format')).optional().nullable(),
   notes: z.string().optional().nullable(),
 })
 
