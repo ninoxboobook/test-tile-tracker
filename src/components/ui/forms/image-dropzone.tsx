@@ -7,15 +7,15 @@ import { uploadBlob } from '@/lib/blob'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 interface ImageDropzoneProps {
-  currentImageUrl?: string | null
-  onImagesSelected: (urls: string) => void
+  currentImageUrl?: string[] | null
+  onImagesSelected: (urls: string[]) => void
 }
 
 export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzoneProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
- const [uploadedImages, setUploadedImages] = useState<string[]>(() => {
-    return currentImageUrl ? JSON.parse(currentImageUrl) : []
+  const [uploadedImages, setUploadedImages] = useState<string[]>(() => {
+    return currentImageUrl || []
   })
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -31,10 +31,9 @@ export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzo
         uploadedUrls.push(url)
       }
 
-      // Update local state and parent component
       const newImages = [...uploadedImages, ...uploadedUrls]
       setUploadedImages(newImages)
-      onImagesSelected(JSON.stringify(newImages))
+      onImagesSelected(newImages)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to upload images')
     } finally {
@@ -45,7 +44,7 @@ export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzo
   const removeImage = (indexToRemove: number) => {
     const newImages = uploadedImages.filter((_, index) => index !== indexToRemove)
     setUploadedImages(newImages)
-    onImagesSelected(JSON.stringify(newImages))
+    onImagesSelected(newImages)
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -85,10 +84,12 @@ export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzo
           {uploadedImages.map((url, index) => (
             <div key={url} className="relative group">
               <div className="aspect-square relative rounded-lg overflow-hidden">
-                <img
+                <Image
                   src={url}
                   alt={`Uploaded image ${index + 1}`}
-                  className="object-cover w-full h-full"
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  className="object-cover"
                 />
               </div>
               <button
@@ -96,9 +97,7 @@ export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzo
                 onClick={() => removeImage(index)}
                 className="absolute top-2 right-2 p-1 bg-red-600 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
+                <XMarkIcon className="h-4 w-4" />
               </button>
             </div>
           ))}

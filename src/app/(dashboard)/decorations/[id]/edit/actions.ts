@@ -36,12 +36,12 @@ export async function updateDecoration(formData: FormData) {
         const values = formData.getAll(key);
         acc[key] = values.map(v => typeof v === 'string' ? v : '');
       }
+    } else if (key === 'imageUrl') {
+      // Handle imageUrl as array directly
+      const values = formData.getAll(key);
+      acc[key] = values.filter(v => typeof v === 'string');
     } else {
-      if (key === 'imageUrl' && value && !value.toString().startsWith('[')) {
-        acc[key] = JSON.stringify([value]);
-      } else {
-        acc[key] = value;
-      }
+      acc[key] = value;
     }
     return acc;
   }, {} as Record<string, any>);
@@ -75,7 +75,7 @@ export async function updateDecoration(formData: FormData) {
     surface: validatedData.surface || null,
     transparency: validatedData.transparency || null,
     glazyUrl: validatedData.glazyUrl || null,
-    imageUrl: validatedData.imageUrl || null,
+    imageUrl: validatedData.imageUrl || [],
     recipe: validatedData.recipe || null,
     notes: validatedData.notes || null,
   }

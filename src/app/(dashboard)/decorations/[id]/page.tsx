@@ -8,16 +8,12 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
 
-function DecorationImages({ imageUrl }: { imageUrl: string | null }) {
-  if (!imageUrl) return null
-
-  const images = imageUrl.startsWith('[') 
-    ? JSON.parse(imageUrl) 
-    : [imageUrl] // Handle both JSON array and legacy single URLs
+function DecorationImages({ imageUrl }: { imageUrl: string[] | null }) {
+  if (!imageUrl?.length) return null
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {images.map((url: string, index: number) => (
+      {imageUrl.map((url: string, index: number) => (
         <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
           <Image
             src={url}
