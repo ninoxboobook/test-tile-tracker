@@ -7,6 +7,7 @@ import { profileUpdateSchema, type ProfileUpdateFormData } from '@/lib/schemas/u
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { ImageUpload } from '@/components/ui/forms/image-upload'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
 
 interface ProfileFormProps {
@@ -15,11 +16,14 @@ interface ProfileFormProps {
 
 export function ProfileForm({ initialData }: ProfileFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [imageUrl, setImageUrl] = useState(initialData?.imageUrl)
+
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm<ProfileUpdateFormData>({
     resolver: zodResolver(profileUpdateSchema),
     defaultValues: initialData,
@@ -37,6 +41,11 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         }
       })
 
+      // Add the image URL if it exists
+      if (imageUrl) {
+        formData.append('imageUrl', imageUrl)
+      }
+
       await updateProfile(formData)
       setMessage({ type: 'success', text: 'Profile updated successfully' })
     } catch (error) {
@@ -50,8 +59,15 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   }
 
   const handleFormSubmit = async (formData: FormData) => {
-    const handler = handleSubmit(onSubmit)
-    await handler()
+    // Extract form data and convert to object
+    const formDataObj = Object.fromEntries(formData.entries())
+    // Call react-hook-form's handleSubmit with the form data
+    await handleSubmit(onSubmit)(formDataObj as any)
+  }
+
+  const handleImageSelected = (url: string) => {
+    setImageUrl(url)
+    setValue('imageUrl', url)
   }
 
   return (
@@ -68,7 +84,17 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             {message.text}
           </div>
         )}
-        
+
+        <div className="border-b border-gray-900/10 pb-6">
+          <h3 className="text-lg font-medium leading-6 text-gray-900">Profile Picture</h3>
+          <div className="mt-4">
+            <ImageUpload
+              currentImageUrl={imageUrl}
+              onImageSelected={handleImageSelected}
+            />
+          </div>
+        </div>
+
         <FormField
           label="Email"
           name="email"
@@ -100,14 +126,6 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           register={register}
           error={errors.lastName}
           placeholder="Enter your last name"
-        />
-
-        <FormField
-          label="Profile Picture URL"
-          name="imageUrl"
-          register={register}
-          error={errors.imageUrl}
-          placeholder="Enter your profile picture URL"
         />
 
         <div className="border-t pt-6 space-y-6">
@@ -146,7 +164,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             type="submit"
             disabled={isSubmitting}
           >
-            Save Changes
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </ActionButton>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { getUserProfileById } from './actions'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString('en-US', {
@@ -30,11 +31,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
             <div className="flex items-center space-x-4">
-              <div className="h-12 w-12 rounded-full bg-clay-500 flex items-center justify-center">
-                <span className="text-xl text-white font-medium">
-                  {user.username[0].toUpperCase()}
-                </span>
-              </div>
+              {user.imageUrl ? (
+                <Image
+                  src={user.imageUrl}
+                  alt={`${user.username}'s profile picture`}
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+              ) : (
+                <div className="h-12 w-12 rounded-full bg-clay-500 flex items-center justify-center">
+                  <span className="text-xl text-white font-medium">
+                    {user.username[0].toUpperCase()}
+                  </span>
+                </div>
+              )}
               <div>
                 <h3 className="text-lg font-medium leading-6 text-gray-900">
                   {user.firstName && user.lastName

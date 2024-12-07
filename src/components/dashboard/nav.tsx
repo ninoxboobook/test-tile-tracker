@@ -5,6 +5,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const navigation = [
@@ -21,6 +22,24 @@ function classNames(...classes: string[]) {
 
 export function DashboardNav({ user }: { user: any }) {
   const pathname = usePathname()
+
+  const ProfileImage = () => (
+    user?.imageUrl ? (
+      <Image
+        src={user.imageUrl}
+        alt={`${user.username}'s profile picture`}
+        width={32}
+        height={32}
+        className="h-8 w-8 rounded-full object-cover"
+      />
+    ) : (
+      <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
+        <span className="text-white font-medium">
+          {user?.username?.[0]?.toUpperCase() || 'U'}
+        </span>
+      </div>
+    )
+  )
 
   return (
     <Disclosure as="nav" className="bg-white shadow">
@@ -56,11 +75,7 @@ export function DashboardNav({ user }: { user: any }) {
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-clay-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
-                        <span className="text-white font-medium">
-                          {user?.name?.[0]?.toUpperCase() || 'U'}
-                        </span>
-                      </div>
+                      <ProfileImage />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -136,13 +151,9 @@ export function DashboardNav({ user }: { user: any }) {
             </div>
             <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="flex items-center px-4">
-                <div className="h-8 w-8 rounded-full bg-clay-500 flex items-center justify-center">
-                  <span className="text-white font-medium">
-                    {user?.name?.[0]?.toUpperCase() || 'U'}
-                  </span>
-                </div>
+                <ProfileImage />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user?.name}</div>
+                  <div className="text-base font-medium text-gray-800">{user?.username}</div>
                   <div className="text-sm font-medium text-gray-500">{user?.email}</div>
                 </div>
               </div>
