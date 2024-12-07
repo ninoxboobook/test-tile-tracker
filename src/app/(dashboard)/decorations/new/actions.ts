@@ -28,7 +28,11 @@ export async function createDecoration(formData: FormData) {
         acc[key] = values.map(v => typeof v === 'string' ? v : '');
       }
      } else {
-      acc[key] = value;
+      if (key === 'imageUrl' && value && !value.toString().startsWith('[')) {
+        acc[key] = JSON.stringify([value]);
+      } else {
+        acc[key] = value;
+      }
     }
      return acc;
    }, {} as Record<string, any>);

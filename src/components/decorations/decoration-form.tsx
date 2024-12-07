@@ -11,6 +11,7 @@ import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { useState } from 'react'
+import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
@@ -43,7 +44,8 @@ export function DecorationForm({
     register,
     control,
     watch,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm<DecorationFormData>({
     resolver: zodResolver(decorationSchema),
     defaultValues
@@ -221,13 +223,18 @@ export function DecorationForm({
           error={errors.glazyUrl}
           placeholder="https://glazy.org/recipes/2468"
         />
-        <FormField
-          label="Image URL"
-          name="imageUrl"
-          register={register}
-          error={errors.imageUrl}
-          placeholder="https://example.com/image.jpg"
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Images</label>
+          <ImageDropzone
+            currentImageUrl={initialData?.imageUrl}
+            onImagesSelected={(urls) => {
+              setValue('imageUrl', urls, { shouldValidate: true });
+            }}
+          />
+          {errors.imageUrl && (
+            <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
+          )}
+        </div>
       </div>
 
       <FormTextarea

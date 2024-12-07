@@ -12,7 +12,18 @@ export const decorationSchema = z.object({
   surface: z.string().optional().nullable(),
   transparency: z.string().optional().nullable(),
   glazyUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
-  imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
+  imageUrl: z.union([
+    z.string().startsWith('[').refine(str => {
+      try {
+        JSON.parse(str);
+        return true;
+      } catch {
+        return false;
+      }
+    }, 'Invalid JSON format'),
+    z.string().url('Invalid URL format'),
+    z.string().length(0)
+  ]).optional().nullable(),
   recipe: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
 })
