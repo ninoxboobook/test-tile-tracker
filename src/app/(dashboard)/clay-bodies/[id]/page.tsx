@@ -7,6 +7,25 @@ import Image from 'next/image'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteClayBody } from './actions'
 
+function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
+  if (!imageUrl?.length) return null
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {imageUrl.map((url: string, index: number) => (
+        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
+          <Image
+            src={url}
+            alt={`Clay body image ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default async function ClayBodyPage(
   props: {
     params: Promise<{ id: string }>
@@ -56,16 +75,7 @@ export default async function ClayBodyPage(
         </div>
       </div>
 
-      {clayBody.imageUrl && (
-        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-          <Image
-            src={clayBody.imageUrl}
-            alt={clayBody.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
+      <ClayBodyImages imageUrl={clayBody.imageUrl} />
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
@@ -161,9 +171,9 @@ export default async function ClayBodyPage(
                 href={`/test-tiles/${testTile.id}`}
                 className="group relative block w-full aspect-square rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 overflow-hidden"
               >
-                {testTile.imageUrl && (
+                {testTile.imageUrl?.[0] && (
                   <Image
-                    src={testTile.imageUrl}
+                    src={testTile.imageUrl[0]}
                     alt={testTile.name || ''}
                     fill
                     className="pointer-events-none object-cover group-hover:opacity-75"

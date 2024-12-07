@@ -11,6 +11,7 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { ClayBodyType, Cone } from '@prisma/client'
+import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 
 interface ClayBodyFormProps {
   initialData?: ClayBodyFormData & { id?: string }
@@ -32,6 +33,7 @@ export function ClayBodyForm({
     register,
     control,
     watch,
+    setValue,
     formState: { errors }
   } = useForm<ClayBodyFormData>({
     resolver: zodResolver(clayBodySchema),
@@ -52,7 +54,7 @@ export function ClayBodyForm({
 
       // Convert form data to a regular object while preserving arrays
       const formDataObj = Array.from(formData.entries()).reduce((acc, [key, value]) => {
-        if (key === 'cone') {
+        if (key === 'cone' || key === 'imageUrl') {
           if (!acc[key]) {
             acc[key] = formData.getAll(key);
           }
@@ -62,9 +64,14 @@ export function ClayBodyForm({
         return acc;
       }, {} as Record<string, any>);
 
-      // Now add the cone values from the form state
+      // Add cone values from form state
       if (values.cone?.length) {
         formDataObj.cone = values.cone;
+      }
+
+      // Add imageUrl values from form state
+      if (values.imageUrl?.length) {
+        formDataObj.imageUrl = values.imageUrl;
       }
 
       // Convert back to FormData
@@ -213,13 +220,18 @@ export function ClayBodyForm({
         />
       </div>
 
-      <FormField
-        label="Image URL"
-        name="imageUrl"
-        register={register}
-        error={errors.imageUrl}
-        placeholder="https://example.com/image.jpg"
-      />
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Images</label>
+        <ImageDropzone
+          currentImageUrl={initialData?.imageUrl}
+          onImagesSelected={(urls) => {
+            setValue('imageUrl', urls, { shouldValidate: true });
+          }}
+        />
+        {errors.imageUrl && (
+          <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
+        )}
+      </div>
 
       <FormTextarea
         label="Notes"
