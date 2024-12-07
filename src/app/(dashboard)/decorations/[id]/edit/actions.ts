@@ -20,6 +20,9 @@ export async function updateDecoration(formData: FormData) {
     throw new Error('Decoration ID is required')
   }
 
+  // Log raw FormData entries
+  console.log('Raw FormData entries:', Array.from(formData.entries()))
+
   // Convert FormData to object while preserving arrays
   const entries = Array.from(formData.entries());
   const rawData = entries.reduce((acc, [key, value]) => {
@@ -43,9 +46,15 @@ export async function updateDecoration(formData: FormData) {
     return acc;
   }, {} as Record<string, any>);
 
+  // Log the processed rawData
+  console.log('Processed rawData:', rawData)
+
   const validatedData = decorationSchema.parse({
     ...rawData
   })
+
+  // Log the validated data
+  console.log('Validated data:', validatedData)
 
   const updateData: Prisma.DecorationUpdateInput = {
     name: validatedData.name,
@@ -70,6 +79,9 @@ export async function updateDecoration(formData: FormData) {
     recipe: validatedData.recipe || null,
     notes: validatedData.notes || null,
   }
+
+  // Log the update data being sent to the database
+ console.log('Update data:', updateData)
 
   await prisma.decoration.update({
     where: {
