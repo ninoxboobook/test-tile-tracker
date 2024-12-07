@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { ProfileForm } from '@/components/profile/profile-form'
 import { getUserProfile } from './actions'
 import { FormLayout } from '@/components/ui/layout/form-layout'
+import Link from 'next/link'
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
@@ -30,7 +31,17 @@ export default async function ProfilePage() {
       description="Manage your account settings and profile information"
       backHref="/dashboard"
     >
-      <ProfileForm initialData={profileData} />
+      <div className="space-y-6">
+        <div className="flex justify-end">
+          <Link
+            href={`/profile/${user.id}`}
+            className="text-sm text-clay-600 hover:text-clay-900"
+          >
+            View Public Profile
+          </Link>
+        </div>
+        <ProfileForm initialData={profileData} />
+      </div>
     </FormLayout>
   )
 }
