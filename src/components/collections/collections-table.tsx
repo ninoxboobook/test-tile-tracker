@@ -2,7 +2,7 @@
 
 import { Collection, TestTile } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
-import { DataTable } from '@/components/ui/data-table/data-table'
+import { DataTable } from '@/components/ui/data/data-table'
 import Link from 'next/link'
 
 type CollectionWithTestTiles = Collection & {

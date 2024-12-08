@@ -2,7 +2,7 @@
 
 import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
-import { BaseGrid } from '../ui/data-view/base-grid'
+import { DataGrid } from '../ui/data/data-grid'
 
 interface TestTilesGridProps {
   testTiles: TestTileWithRelations[]
@@ -10,7 +10,7 @@ interface TestTilesGridProps {
 
 export function TestTilesGrid({ testTiles }: TestTilesGridProps) {
   return (
-    <BaseGrid
+    <DataGrid
       items={testTiles}
       renderItem={(testTile) => ({
         id: testTile.id,

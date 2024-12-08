@@ -1,7 +1,7 @@
 'use client'
 
 import { Collection, TestTile } from '@prisma/client'
-import { BaseGrid } from '@/components/ui/data-view/base-grid'
+import { DataGrid } from '@/components/ui/data/data-grid'
 
 interface CollectionsGridProps {
   collections: (Collection & {
@@ -11,7 +11,7 @@ interface CollectionsGridProps {
 
 export function CollectionsGrid({ collections }: CollectionsGridProps) {
   return (
-    <BaseGrid
+    <DataGrid
       items={collections}
       renderItem={(collection) => ({
         id: collection.id,

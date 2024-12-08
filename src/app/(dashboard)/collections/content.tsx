@@ -8,7 +8,7 @@ import { CollectionsGrid } from '@/components/collections/collections-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/hooks/use-view-preference'
-import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
+import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import Link from 'next/link'
 
 type CollectionWithTiles = Collection & {

@@ -8,7 +8,7 @@ import { ClayBodiesGrid } from '@/components/clay-bodies/clay-bodies-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/hooks/use-view-preference'
-import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
+import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import Link from 'next/link'
 

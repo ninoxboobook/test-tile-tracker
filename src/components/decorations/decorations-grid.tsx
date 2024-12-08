@@ -1,7 +1,7 @@
 'use client'
 
 import { DecorationWithRelations } from '@/lib/schemas/decoration'
-import { BaseGrid } from '@/components/ui/data-view/base-grid'
+import { DataGrid } from '@/components/ui/data/data-grid'
 
 interface DecorationsGridProps {
   decorations: DecorationWithRelations[]
@@ -9,7 +9,7 @@ interface DecorationsGridProps {
 
 export function DecorationsGrid({ decorations }: DecorationsGridProps) {
   return (
-    <BaseGrid
+    <DataGrid
       items={decorations}
       renderItem={(decoration) => ({
         id: decoration.id,

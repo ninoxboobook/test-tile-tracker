@@ -1,7 +1,7 @@
 'use client'
 
 import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
-import { BaseGrid } from '@/components/ui/data-view/base-grid'
+import { DataGrid } from '@/components/ui/data/data-grid'
 import Image from 'next/image'
 
 interface ClayBodiesGridProps {
@@ -13,7 +13,7 @@ interface ClayBodiesGridProps {
 
 export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
   return (
-    <BaseGrid
+    <DataGrid
       items={clayBodies}
       renderItem={(clayBody) => ({
         id: clayBody.id,

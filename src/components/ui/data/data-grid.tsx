@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-interface BaseGridProps<T> {
+interface DataGridProps<T> {
   items: T[]
   renderItem: (item: T) => {
     id: string
@@ -12,7 +12,7 @@ interface BaseGridProps<T> {
   }
 }
 
-export function BaseGrid<T>({ items, renderItem }: BaseGridProps<T>) {
+export function DataGrid<T>({ items, renderItem }: DataGridProps<T>) {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((item) => {

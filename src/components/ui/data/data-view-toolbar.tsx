@@ -2,8 +2,8 @@
 
 import { Table } from '@tanstack/react-table'
 import { Input } from '@/components/ui/forms/input'
-import { ViewToggle } from './view-toggle'
-import { DataTableViewOptions } from '../data-table/data-table-view-options'
+import { ViewToggle } from './data-view-toggle'
+import { DataTableColumnOptions } from './data-table-column-options'
 import { Menu } from '@headlessui/react'
 
 export type FilterOption = {
@@ -98,7 +98,7 @@ export function DataViewToolbar<TData>({
         ))}
       </div>
       <div className="flex items-center space-x-2">
-        {view === 'table' && table && <DataTableViewOptions table={table} />}
+        {view === 'table' && table && <DataTableColumnOptions table={table} />}
         <ViewToggle view={view} onChange={onViewChange} />
       </div>
     </div>

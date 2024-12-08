@@ -4,13 +4,13 @@ import { Table } from '@tanstack/react-table'
 import { Menu } from '@headlessui/react'
 import { EyeIcon } from '@heroicons/react/24/outline'
 
-interface DataTableViewOptionsProps<TData> {
+interface DataTableColumnOptionsProps<TData> {
   table: Table<TData>
 }
 
-export function DataTableViewOptions<TData>({
+export function DataTableColumnOptions<TData>({
   table,
-}: DataTableViewOptionsProps<TData>) {
+}: DataTableColumnOptionsProps<TData>) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button className="flex items-center gap-2 rounded-md border bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
