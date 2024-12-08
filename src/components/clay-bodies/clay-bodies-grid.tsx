@@ -2,6 +2,7 @@
 
 import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { BaseGrid } from '@/components/ui/data-view/base-grid'
+import Image from 'next/image'
 
 interface ClayBodiesGridProps {
   clayBodies: (ClayBody & {
@@ -21,9 +22,9 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
         content: (
           <div className="flex flex-col">
             <div className="aspect-square bg-gray-50">
-              {clayBody.imageUrl ? (
+              {clayBody.imageUrl?.[0] ? (
                 <img
-                  src={clayBody.imageUrl}
+                  src={clayBody.imageUrl[0]}
                   alt={clayBody.name}
                   className="h-full w-full object-cover"
                 />

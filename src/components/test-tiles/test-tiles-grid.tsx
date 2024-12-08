@@ -19,9 +19,9 @@ export function TestTilesGrid({ testTiles }: TestTilesGridProps) {
         content: (
           <div className="flex flex-col">
             <div className="aspect-square bg-gray-50">
-              {testTile.imageUrl ? (
+            {testTile.imageUrl?.[0] ? (
                 <img
-                  src={testTile.imageUrl}
+                  src={testTile.imageUrl[0]}
                   alt={testTile.name}
                   className="h-full w-full object-cover"
                 />

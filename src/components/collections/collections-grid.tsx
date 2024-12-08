@@ -24,9 +24,9 @@ export function CollectionsGrid({ collections }: CollectionsGridProps) {
                 const tile = collection.testTiles[index]
                 return (
                   <div key={tile?.id ?? index} className="aspect-square bg-gray-50">
-                    {tile?.imageUrl ? (
+                    {tile?.imageUrl?.[0] ? (
                       <img
-                        src={tile.imageUrl}
+                        src={tile.imageUrl[0]}
                         alt=""
                         className="h-full w-full object-cover"
                       />

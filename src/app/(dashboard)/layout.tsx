@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { DashboardNav } from '@/components/dashboard/nav'
+import { DashboardNav } from '@/components/navigation/nav-menu'
 import { prisma } from '@/lib/prisma'
 
 export default async function DashboardLayout({

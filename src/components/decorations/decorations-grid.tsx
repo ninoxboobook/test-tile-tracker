@@ -18,9 +18,9 @@ export function DecorationsGrid({ decorations }: DecorationsGridProps) {
         content: (
           <div className="flex flex-col">
             <div className="aspect-square bg-gray-50">
-              {decoration.imageUrl ? (
+            {decoration.imageUrl?.[0] ? (
                 <img
-                  src={decoration.imageUrl}
+                  src={decoration.imageUrl[0]}
                   alt={decoration.name}
                   className="h-full w-full object-cover"
                 />
