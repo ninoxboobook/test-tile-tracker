@@ -1,7 +1,7 @@
 'use client'
 
 import { Table } from '@tanstack/react-table'
-import { Input } from '@/components/ui/forms/input'
+import { Input } from './data-input'
 import { ViewToggle } from './data-view-toggle'
 import { DataTableColumnOptions } from './data-table-column-options'
 import { Menu } from '@headlessui/react'
