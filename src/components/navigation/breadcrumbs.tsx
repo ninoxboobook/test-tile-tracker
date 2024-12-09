@@ -8,6 +8,8 @@ interface BreadcrumbsProps {
   title?: string;
 }
 
+const mainRoutes = ['/test-tiles', '/collections', '/clay-bodies', '/decorations']
+
 function generateBreadcrumbs(pathname: string, currentTitle?: string) {
   const paths = pathname.split('/').filter(Boolean)
   const breadcrumbs = paths.map((path, index) => {
@@ -38,19 +40,25 @@ function generateBreadcrumbs(pathname: string, currentTitle?: string) {
 
 export function Breadcrumbs({ title }: BreadcrumbsProps) {
   const pathname = usePathname()
+  
+  // Don't show breadcrumbs on dashboard
+  if (pathname === '/dashboard' || pathname === '/') return null
+  
   const breadcrumbs = generateBreadcrumbs(pathname, title)
 
-  if (breadcrumbs.length <= 1) return null
+  // Show breadcrumbs on main routes even if there's only one level
+  if (breadcrumbs.length === 0 && !mainRoutes.includes(pathname)) return null
 
   return (
-    <nav className="flex text-sm text-gray-500" aria-label="Breadcrumb">
+    <nav className="flex text-gray-500 mb-1" aria-label="Breadcrumb">
       <ol role="list" className="flex items-center space-x-2">
-        <li>
+        <li className="translate-y-[-2px]">
           <Link
             href="/"
             className="text-gray-400 hover:text-gray-500"
           >
-            <HomeIcon className="h-4 w-4" aria-hidden="true" />
+            {/* <HomeIcon className="h-4 w-4" aria-hidden="true" /> */}
+            Home
           </Link>
         </li>
         {breadcrumbs.map((breadcrumb, index) => (
@@ -58,7 +66,7 @@ export function Breadcrumbs({ title }: BreadcrumbsProps) {
             <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
             <Link
               href={breadcrumb.href}
-              className="ml-2 hover:text-gray-700"
+              className="ml-2 hover:text-gray-700 translate-y-[-2px]"
               aria-current={index === breadcrumbs.length - 1 ? 'page' : undefined}
             >
               {breadcrumb.label}

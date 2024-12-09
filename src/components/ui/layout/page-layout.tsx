@@ -11,12 +11,13 @@ export function PageLayout({ title, action, children, description }: PageLayoutP
   return (
     <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <Breadcrumbs title={title} />
+
         <div className="flex justify-between items-center pb-10 mt-4">
           <div>
+            <Breadcrumbs title={title} />
             <h1 className="text-3xl font-display font-semibold text-gray-900">{title}</h1>
             {description && (
-              <p className="mt-2 text-lg text-gray-600">{description}</p>
+              <p className="mt-4 text-lg text-gray-600">{description}</p>
             )}
           </div>
           {action}
