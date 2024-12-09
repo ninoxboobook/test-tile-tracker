@@ -15,12 +15,10 @@ export function TestTilesGrid({ testTiles }: TestTilesGridProps) {
       renderItem={(testTile) => ({
         id: testTile.id,
         href: `/test-tiles/${testTile.id}`,
-        title: testTile.name,
         content: (
           <DataGridTile
             title={testTile.name}
-            href={`/test-tiles/${testTile.id}`}
-            images={testTile.imageUrl}
+            images={testTile.imageUrl ?? undefined}
             metadata={[
               ...(testTile.clayBody ? [{ label: 'Clay Body', value: testTile.clayBody.name }] : []),
               ...(testTile.atmosphere ? [{ label: 'Atmosphere', value: testTile.atmosphere.name }] : []),

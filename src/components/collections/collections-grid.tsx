@@ -17,12 +17,10 @@ export function CollectionsGrid({ collections }: CollectionsGridProps) {
       renderItem={(collection) => ({
         id: collection.id,
         href: `/collections/${collection.id}`,
-        title: collection.name,
         content: (
           <DataGridTile
             variant="quad"
             title={collection.name}
-            href={`/collections/${collection.id}`}
             images={collection.testTiles.map(tile => tile?.imageUrl?.[0])}
             description={collection.description ?? undefined}
           />

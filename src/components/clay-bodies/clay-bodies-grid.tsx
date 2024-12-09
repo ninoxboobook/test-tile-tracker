@@ -18,11 +18,9 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
       renderItem={(clayBody) => ({
         id: clayBody.id,
         href: `/clay-bodies/${clayBody.id}`,
-        title: clayBody.name,
         content: (
           <DataGridTile
             title={clayBody.name}
-            href={`/clay-bodies/${clayBody.id}`}
             images={clayBody.imageUrl ?? undefined}
             metadata={[
               ...(clayBody.type?.name ? [{ label: 'Type', value: clayBody.type.name }] : []),

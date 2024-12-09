@@ -15,11 +15,9 @@ export function DecorationsGrid({ decorations }: DecorationsGridProps) {
       renderItem={(decoration) => ({
         id: decoration.id,
         href: `/decorations/${decoration.id}`,
-        title: decoration.name,
         content: (
           <DataGridTile
             title={decoration.name}
-            href={`/decorations/${decoration.id}`}
             images={decoration.imageUrl ?? undefined}
             metadata={[
               ...(decoration.type ? [{ label: 'Type', value: decoration.type.name }] : []),

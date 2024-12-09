@@ -1,7 +1,6 @@
 interface DataGridTileProps {
   variant?: 'single' | 'quad'
   title: string
-  href: string
   images?: string[]
   metadata?: Array<{
     label?: string
@@ -13,7 +12,6 @@ interface DataGridTileProps {
 export function DataGridTile({
   variant = 'single',
   title,
-  href,
   images = [],
   metadata = [],
   description,
@@ -53,7 +51,7 @@ export function DataGridTile({
       )}
       <div className="flex flex-1 flex-col space-y-2 p-4">
         <h3 className="text-sm font-medium text-gray-900">{title}</h3>
-        {metadata.length > 0 && (
+        {metadata && metadata.length > 0 && (
           <div className="space-y-1 text-sm text-gray-500">
             {metadata.map((item, index) => (
               <div key={index}>

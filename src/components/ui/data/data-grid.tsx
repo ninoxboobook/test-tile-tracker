@@ -7,7 +7,6 @@ interface DataGridProps<T> {
   renderItem: (item: T) => {
     id: string
     href: string
-    title: string
     content: React.ReactNode
   }
 }
@@ -16,7 +15,7 @@ export function DataGrid<T>({ items, renderItem }: DataGridProps<T>) {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {items.map((item) => {
-        const { id, href, title, content } = renderItem(item)
+        const { id, href, content } = renderItem(item)
         return (
           <Link
             key={id}
@@ -29,4 +28,4 @@ export function DataGrid<T>({ items, renderItem }: DataGridProps<T>) {
       })}
     </div>
   )
-} 
+}
