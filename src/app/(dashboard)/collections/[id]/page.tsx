@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { PageLayout } from '@/components/ui/layout/page-layout'
 import { deleteCollection } from './actions'
 
 export default async function CollectionPage(
@@ -35,11 +36,9 @@ export default async function CollectionPage(
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold leading-6 text-gray-900">
-          {collection.name}
-        </h3>
+    <PageLayout
+      title={collection.name}
+      action={
         <div className="flex space-x-3">
           <Link href={`/collections/${collection.id}/edit`}>
             <ActionButton>Edit Collection</ActionButton>
@@ -52,8 +51,8 @@ export default async function CollectionPage(
             itemName="Collection"
           />
         </div>
-      </div>
-
+      }
+    >
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         {collection.description && (
           <div className="sm:col-span-2">
@@ -89,6 +88,6 @@ export default async function CollectionPage(
           </div>
         </div>
       )}
-    </div>
+    </PageLayout>
   )
 }

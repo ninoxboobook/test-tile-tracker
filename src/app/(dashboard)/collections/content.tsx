@@ -45,10 +45,10 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
   return (
     <PageLayout 
       title="Collections"
-      description="Organize your test tiles into collections"
+      description="Organise your test tiles into collections"
       action={
         <Link href="/collections/new">
-          <ActionButton>Add New Collection</ActionButton>
+          <ActionButton>Add new collection</ActionButton>
         </Link>
       }
     >

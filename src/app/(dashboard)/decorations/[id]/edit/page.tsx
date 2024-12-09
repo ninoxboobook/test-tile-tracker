@@ -66,8 +66,7 @@ export default async function EditDecorationPage(
 
   return (
     <FormLayout 
-      title="Edit Decoration"
-      description={`Editing ${decoration.name}`}
+      title={`Edit ${decoration.name}`}
       backHref={`/decorations/${params.id}`}
     >
       <DecorationForm 

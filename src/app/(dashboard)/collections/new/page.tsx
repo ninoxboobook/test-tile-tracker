@@ -22,8 +22,7 @@ export default async function NewCollectionPage() {
 
   return (
     <FormLayout 
-      title="New Collection"
-      description="Create a new collection of tiles"
+      title="Add new collection"
       backHref="/collections"
     >
       <CollectionForm 

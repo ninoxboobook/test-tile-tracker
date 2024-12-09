@@ -147,10 +147,10 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
   return (
     <PageLayout 
       title="Decorations"
-      description="Manage your surface decorations and techniques"
+      description="Manage your catalogue of glazes, oxides, slips and other decorations"
       action={
         <Link href="/decorations/new">
-          <ActionButton>Add New Decoration</ActionButton>
+          <ActionButton>Add new decoration</ActionButton>
         </Link>
       }
     >

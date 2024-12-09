@@ -48,8 +48,7 @@ export default async function EditCollectionPage(
 
   return (
     <FormLayout 
-      title="Edit Collection"
-      description={`Editing ${collection.name}`}
+      title={`Edit ${collection.name}`}
       backHref={`/collections/${params.id}`}
     >
       <CollectionForm 

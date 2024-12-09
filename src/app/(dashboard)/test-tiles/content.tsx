@@ -152,10 +152,10 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
   return (
     <PageLayout 
       title="Test Tiles"
-      description="Document and track your ceramic test tiles"
+      description="Document and track your test tiles"
       action={
         <Link href="/test-tiles/new">
-          <ActionButton>Add New Test Tile</ActionButton>
+          <ActionButton>Add new test tile</ActionButton>
         </Link>
       }
     >

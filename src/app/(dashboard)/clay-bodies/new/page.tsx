@@ -24,8 +24,7 @@ export default async function NewClayBodyPage() {
 
   return (
     <FormLayout 
-      title="New Clay Body"
-      description="Add a new clay body to your database"
+      title="Add new clay body"
       backHref="/clay-bodies"
     >
       <ClayBodyForm 

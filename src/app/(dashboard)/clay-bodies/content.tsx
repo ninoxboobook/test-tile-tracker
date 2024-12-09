@@ -134,10 +134,10 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
   return (
     <PageLayout 
       title="Clay Bodies"
-      description="Manage your clay body recipes and specifications"
+      description="Manage your catalogue of clay bodies"
       action={
         <Link href="/clay-bodies/new">
-          <ActionButton>Add New Clay Body</ActionButton>
+          <ActionButton>Add new clay body</ActionButton>
         </Link>
       }
     >

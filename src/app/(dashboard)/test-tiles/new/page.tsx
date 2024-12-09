@@ -51,8 +51,7 @@ export default async function NewTestTilePage() {
 
   return (
     <FormLayout 
-      title="New Test Tile"
-      description="Document a new test tile"
+      title="Add new test tile"
       backHref="/test-tiles"
     >
       <TestTileForm 

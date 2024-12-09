@@ -49,8 +49,7 @@ export default async function EditClayBodyPage(
 
   return (
     <FormLayout 
-      title="Edit Clay Body"
-      description={`Editing ${clayBody.name}`}
+      title={`Edit ${clayBody.name}`}
       backHref={`/clay-bodies/${clayBody.id}`}
     >
       <ClayBodyForm 

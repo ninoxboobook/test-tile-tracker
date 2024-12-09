@@ -88,8 +88,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
 
   return (
     <FormLayout 
-      title="Edit Test Tile"
-      description={`Editing ${testTile.name}`}
+      title={`Edit ${testTile.name}`}
       backHref={`/test-tiles/${id}`}
     >
       <TestTileForm 

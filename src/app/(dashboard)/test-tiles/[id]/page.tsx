@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { PageLayout } from '@/components/ui/layout/page-layout'
 import { deleteTestTile } from './actions'
 
 interface PageProps {
@@ -65,9 +66,10 @@ export default async function TestTilePage({ params }: PageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold leading-6 text-gray-900">{testTile.name}</h3>
+
+    <PageLayout
+      title={testTile.name}
+      action={
         <div className="flex space-x-3">
           <Link href={`/test-tiles/${testTile.id}/edit`}>
             <ActionButton>Edit Test Tile</ActionButton>
@@ -80,8 +82,8 @@ export default async function TestTilePage({ params }: PageProps) {
             itemName="Test Tile"
           />
         </div>
-      </div>
-
+      }
+    >
       <TestTileImages imageUrl={testTile.imageUrl} />
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
@@ -156,6 +158,6 @@ export default async function TestTilePage({ params }: PageProps) {
           </div>
         )}
       </dl>
-    </div>
+    </PageLayout>
   )
 }
