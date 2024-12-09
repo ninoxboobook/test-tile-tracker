@@ -2,7 +2,7 @@
 
 import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { DataGrid } from '@/components/ui/data/data-grid'
-import Image from 'next/image'
+import { DataGridTile } from '@/components/ui/data/data-grid-tile'
 
 interface ClayBodiesGridProps {
   clayBodies: (ClayBody & {
@@ -20,36 +20,19 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
         href: `/clay-bodies/${clayBody.id}`,
         title: clayBody.name,
         content: (
-          <div className="flex flex-col">
-            <div className="aspect-square bg-gray-50">
-              {clayBody.imageUrl?.[0] ? (
-                <img
-                  src={clayBody.imageUrl[0]}
-                  alt={clayBody.name}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center">
-                  <div className="h-full w-full border-2 border-dashed border-gray-200" />
-                </div>
-              )}
-            </div>
-            <div className="flex flex-1 flex-col space-y-2 p-4">
-              <h3 className="text-sm font-medium text-gray-900">{clayBody.name}</h3>
-              <div className="space-y-1 text-sm text-gray-500">
-                {clayBody.type?.name && <div>Type: {clayBody.type.name}</div>}
-                {clayBody.manufacturer && <div>Manufacturer: {clayBody.manufacturer}</div>}
-                {clayBody.cone.length > 0 && (
-                  <div>Cone: {clayBody.cone.map(c => c.name).join(', ')}</div>
-                )}
-                {clayBody.firingTemperature && (
-                  <div>Temperature: {clayBody.firingTemperature}°C</div>
-                )}
-              </div>
-            </div>
-          </div>
+          <DataGridTile
+            title={clayBody.name}
+            href={`/clay-bodies/${clayBody.id}`}
+            images={clayBody.imageUrl ?? undefined}
+            metadata={[
+              ...(clayBody.type?.name ? [{ label: 'Type', value: clayBody.type.name }] : []),
+              ...(clayBody.manufacturer ? [{ label: 'Manufacturer', value: clayBody.manufacturer }] : []),
+              ...(clayBody.cone.length > 0 ? [{ label: 'Cone', value: clayBody.cone.map(c => c.name).join(', ') }] : []),
+              ...(clayBody.firingTemperature ? [{ label: 'Temperature', value: `${clayBody.firingTemperature}°C` }] : []),
+            ]}
+          />
         ),
       })}
     />
   )
-} 
+}
