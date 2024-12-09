@@ -1,11 +1,8 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { SessionProvider } from '@/components/providers/session-provider'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Test Tile Tracker',
@@ -21,7 +18,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/zmu6flc.css"></link>
+      </head>
+      <body>
         <SessionProvider session={session}>
           {children}
         </SessionProvider>

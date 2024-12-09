@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteCollection } from './actions'
 
@@ -40,11 +41,8 @@ export default async function CollectionPage(
           {collection.name}
         </h3>
         <div className="flex space-x-3">
-          <Link
-            href={`/collections/${collection.id}/edit`}
-            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
-          >
-            Edit Collection
+          <Link href={`/collections/${collection.id}/edit`}>
+            <ActionButton>Edit Collection</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {

@@ -11,9 +11,9 @@ export function PageLayout({ title, action, children, description }: PageLayoutP
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
+            <h1 className="text-3xl font-display font-semibold text-gray-900">{title}</h1>
             {description && (
-              <p className="mt-2 text-sm text-gray-600">{description}</p>
+              <p className="mt-3 text-lg text-gray-600">{description}</p>
             )}
           </div>
           {action}

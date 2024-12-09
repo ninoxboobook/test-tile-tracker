@@ -10,7 +10,7 @@ export function ActionButton({
   className,
   ...props 
 }: ActionButtonProps) {
-  const baseStyles = "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
+  const baseStyles = "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
   
   const variants = {
     primary: "text-white bg-clay-600 hover:bg-clay-700 focus:ring-clay-500",

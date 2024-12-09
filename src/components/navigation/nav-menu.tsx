@@ -62,7 +62,7 @@ export function DashboardNav({ user }: { user: any }) {
                         pathname === item.href
                           ? 'border-clay-500 text-gray-900'
                           : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                        'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium'
+                        'inline-flex items-center border-b-2 px-1 pt-1 text-base font-medium'
                       )}
                     >
                       {item.name}
@@ -73,7 +73,7 @@ export function DashboardNav({ user }: { user: any }) {
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-clay-500 focus:ring-offset-2">
+                    <Menu.Button className="flex rounded-full bg-white text-base focus:outline-none focus:ring-2 focus:ring-clay-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
                       <ProfileImage />
                     </Menu.Button>
@@ -94,7 +94,7 @@ export function DashboardNav({ user }: { user: any }) {
                             href="/profile"
                             className={classNames(
                               active ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm text-gray-700'
+                              'block px-4 py-2 text-base text-gray-700'
                             )}
                           >
                             Profile Settings
@@ -107,7 +107,7 @@ export function DashboardNav({ user }: { user: any }) {
                             onClick={() => signOut({ callbackUrl: '/' })}
                             className={classNames(
                               active ? 'bg-gray-100' : '',
-                              'block w-full px-4 py-2 text-left text-sm text-gray-700'
+                              'block w-full px-4 py-2 text-left text-base text-gray-700'
                             )}
                           >
                             Sign out
@@ -154,7 +154,7 @@ export function DashboardNav({ user }: { user: any }) {
                 <ProfileImage />
                 <div className="ml-3">
                   <div className="text-base font-medium text-gray-800">{user?.username}</div>
-                  <div className="text-sm font-medium text-gray-500">{user?.email}</div>
+                  <div className="text-base font-medium text-gray-500">{user?.email}</div>
                 </div>
               </div>
               <div className="mt-3 space-y-1">
