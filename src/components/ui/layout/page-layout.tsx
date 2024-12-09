@@ -1,3 +1,5 @@
+import { Breadcrumbs } from '@/components/navigation/breadcrumbs'
+
 interface PageLayoutProps {
   title: string;
   action?: React.ReactNode;
@@ -9,7 +11,8 @@ export function PageLayout({ title, action, children, description }: PageLayoutP
   return (
     <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center pb-10">
+        <Breadcrumbs title={title} />
+        <div className="flex justify-between items-center pb-10 mt-4">
           <div>
             <h1 className="text-3xl font-display font-semibold text-gray-900">{title}</h1>
             {description && (
