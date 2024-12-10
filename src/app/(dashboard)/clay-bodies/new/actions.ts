@@ -45,12 +45,9 @@ export async function createClayBody(formData: FormData) {
       connect: { id: validatedData.typeId }
     },
     manufacturer: validatedData.manufacturer,
-    cone: {
-      connectOrCreate: validatedData.cone?.map(cone => ({
-        where: { name: cone },
-        create: { name: cone }
-      })) ?? []
-    },
+    cone: validatedData.cone?.length ? {
+      connect: validatedData.cone.map(id => ({ id }))
+    } : undefined,
     firingTemperature: validatedData.firingTemperature,
     texture: validatedData.texture,
     plasticity: validatedData.plasticity,

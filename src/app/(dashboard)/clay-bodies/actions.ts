@@ -66,7 +66,7 @@ export async function createClayBody(data: ClayBodyFormData) {
       shrinkage: validatedData.shrinkage,
       absorption: validatedData.absorption,
       meshSize: validatedData.meshSize,
-      imageUrl: validatedData.imageUrl,
+      imageUrl: validatedData.imageUrl || [],
       notes: validatedData.notes,
       user: {
         connect: {
@@ -119,7 +119,7 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
       shrinkage: validatedData.shrinkage,
       absorption: validatedData.absorption,
       meshSize: validatedData.meshSize,
-      imageUrl: validatedData.imageUrl,
+      imageUrl: validatedData.imageUrl || [],
       notes: validatedData.notes,
     },
   })

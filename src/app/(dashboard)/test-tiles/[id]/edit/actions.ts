@@ -95,9 +95,7 @@ export async function updateTestTile(formData: FormData) {
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },
-    cone: {
-      connect: { id: validatedData.coneId }
-    },
+    cone: validatedData.coneId ? { connect: { id: validatedData.coneId } } : undefined,
     atmosphere: {
       connect: { id: validatedData.atmosphereId }
     },
