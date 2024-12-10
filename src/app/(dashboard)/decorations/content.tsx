@@ -7,7 +7,7 @@ import { DecorationsTable, columns } from '@/components/decorations/decorations-
 import { DecorationsGrid } from '@/components/decorations/decorations-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { useViewPreference } from '@/hooks/use-view-preference'
+import { useViewPreference } from '@/lib/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { DecorationWithRelations } from '@/lib/schemas/decoration'

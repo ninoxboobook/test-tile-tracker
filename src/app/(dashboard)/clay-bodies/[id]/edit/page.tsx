@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'

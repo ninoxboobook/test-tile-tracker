@@ -3,10 +3,10 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { compare } from 'bcryptjs'
-import { loginSchema } from './validations/auth'
+import { loginSchema } from './schemas/auth'
 
-// 15 minutes
-const REFRESH_TOKEN_EXPIRY = 15 * 60
+
+const REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60 
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
