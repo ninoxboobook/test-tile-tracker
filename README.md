@@ -1,66 +1,38 @@
 # Test Tile Tracker
 
-A web application for potters to track and manage their test tiles, glazes, and clay bodies.
+A comprehensive web application for ceramicists to document, organise, and track their pottery experiments. This application helps potters maintain detailed records of their test tiles, clay bodies, decorations (glazes, slips, oxides), and collections.
 
 ## Features
 
-- User authentication and private databases
-- Track test tiles with photos and detailed information
-- Manage glaze and clay body databases
-- Automatic and custom ID generation for test tiles
-- Group test tiles into series
-- Track relationships between test tiles
-- Cloud-based photo storage
-- Responsive design with Tailwind CSS
+- **Test Tiles**: Document and track pottery experiments with detailed metadata
+  - Photo documentation with cloud storage
+  - Track firing conditions (cone, atmosphere)
+  - Link to related clay bodies and decorations
+  - Organise tiles into collections
 
-## Prerequisites
+- **Clay Bodies**: Maintain a database of clay body formulations
+  - Track properties like firing temperature, shrinkage, and absorption
+  - Document color in oxidation and reduction
+  - Record texture and plasticity characteristics
+  - Link to test tiles using the clay body
 
-- Node.js (v14 or higher)
-- PostgreSQL (v13 or higher)
-- AWS account for S3 photo storage
+- **Decorations**: Catalogue all types of ceramic decorations
+  - Support for glazes, slips, oxides, and other decoration types
+  - Record recipes and application methods
+  - Track firing requirements (cone, atmosphere)
+  - Document visual properties (color, surface, transparency)
+  - Link to test tiles showcasing the decoration
 
-## Environment Variables
+- **Collections**: Group related test tiles
+  - Organise experiments by series or projects
+  - Add descriptions and notes
+  - View all related test tiles in one place
 
-Create a `.env` file in the root directory with the following variables:
+### User Experience
+- Modern, responsive UI built with Tailwind CSS
+- Grid and table views for flexible data visualisation
+- Advanced filtering and search capabilities
+- Comprehensive metadata tracking
+- Image upload and management
+- Intuitive navigation with breadcrumbs
 
-```
-# Database
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=test_tile_tracker
-DB_USER=your_username
-DB_PASSWORD=your_password
-
-# AWS S3
-AWS_BUCKET_NAME=your_bucket_name
-AWS_REGION=your_region
-AWS_ACCESS_KEY_ID=your_access_key
-AWS_SECRET_ACCESS_KEY=your_secret_key
-
-# Session
-SESSION_SECRET=your_session_secret
-```
-
-## Setup
-
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-2. Create PostgreSQL database:
-   ```bash
-   createdb test_tile_tracker
-   ```
-
-3. Run database migrations:
-   ```bash
-   npm run migrate
-   ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-The application will be available at `http://localhost:3000`.
