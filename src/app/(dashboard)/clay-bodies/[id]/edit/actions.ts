@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { clayBodySchema } from '@/lib/schemas/clay-body'
 import { revalidatePath } from 'next/cache'
@@ -23,9 +23,10 @@ export async function updateClayBody(formData: FormData) {
   // Convert FormData to object while preserving arrays
   const entries = Array.from(formData.entries());
   const rawData = entries.reduce((acc, [key, value]) => {
-    if (key === 'cone') {
+    if (key === 'cone' || key === 'imageUrl') {
       if (!acc[key]) {
-        acc[key] = formData.getAll(key);
+        const values = formData.getAll(key);
+        acc[key] = values.filter(v => typeof v === 'string');
       }
     } else {
       acc[key] = value;
@@ -39,6 +40,7 @@ export async function updateClayBody(formData: FormData) {
     shrinkage: rawData.shrinkage ? parseFloat(rawData.shrinkage as string) : null,
     absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
     meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
+    imageUrl: rawData.imageUrl || []
   }
 
   const validatedData = clayBodySchema.parse(processedData)
@@ -49,9 +51,10 @@ export async function updateClayBody(formData: FormData) {
       connect: { id: validatedData.typeId }
     },
     manufacturer: validatedData.manufacturer,
-    cone: validatedData.cone?.length ? {
-      connect: validatedData.cone.map(id => ({ id }))
-    } : undefined,
+    cone: {
+      set: [], // First clear existing connections
+      connect: validatedData.cone?.map(id => ({ id })) || [] // Then connect new ones
+    },
     firingTemperature: validatedData.firingTemperature,
     texture: validatedData.texture,
     plasticity: validatedData.plasticity,
@@ -60,7 +63,7 @@ export async function updateClayBody(formData: FormData) {
     shrinkage: validatedData.shrinkage,
     absorption: validatedData.absorption,
     meshSize: validatedData.meshSize,
-    imageUrl: validatedData.imageUrl,
+    imageUrl: validatedData.imageUrl || [],
     notes: validatedData.notes,
   }
 
@@ -74,4 +77,29 @@ export async function updateClayBody(formData: FormData) {
 
   revalidatePath('/clay-bodies')
   redirect(`/clay-bodies/${id}`)
+}
+
+export async function getClayBody(id: string) {
+ const session = await getServerSession(authOptions)
+
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized')
+  }
+
+  const clayBody = await prisma.clayBody.findUnique({
+    where: { 
+      id,
+      userId: session.user.id 
+    },
+    include: {
+      type: true,
+      cone: true,     // Including cone data
+    }
+  })
+
+  if (!clayBody) {
+    throw new Error('Clay body not found')
+  }
+
+  return clayBody
 }

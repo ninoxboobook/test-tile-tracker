@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import { TestTileForm } from '@/components/test-tiles/test-tile-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
@@ -88,8 +88,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
 
   return (
     <FormLayout 
-      title="Edit Test Tile"
-      description={`Editing ${testTile.name}`}
+      title={`Edit ${testTile.name}`}
       backHref={`/test-tiles/${id}`}
     >
       <TestTileForm 

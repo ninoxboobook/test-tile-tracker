@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { clayBodySchema, type ClayBodyFormData } from '@/lib/schemas/clay-body'
@@ -66,7 +66,7 @@ export async function createClayBody(data: ClayBodyFormData) {
       shrinkage: validatedData.shrinkage,
       absorption: validatedData.absorption,
       meshSize: validatedData.meshSize,
-      imageUrl: validatedData.imageUrl,
+      imageUrl: validatedData.imageUrl || [],
       notes: validatedData.notes,
       user: {
         connect: {
@@ -119,7 +119,7 @@ export async function updateClayBody(id: string, data: ClayBodyFormData) {
       shrinkage: validatedData.shrinkage,
       absorption: validatedData.absorption,
       meshSize: validatedData.meshSize,
-      imageUrl: validatedData.imageUrl,
+      imageUrl: validatedData.imageUrl || [],
       notes: validatedData.notes,
     },
   })

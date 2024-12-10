@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { TestTileForm } from '@/components/test-tiles/test-tile-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
@@ -51,8 +51,7 @@ export default async function NewTestTilePage() {
 
   return (
     <FormLayout 
-      title="New Test Tile"
-      description="Document a new test tile"
+      title="Add new test tile"
       backHref="/test-tiles"
     >
       <TestTileForm 

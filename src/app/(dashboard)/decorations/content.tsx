@@ -7,11 +7,12 @@ import { DecorationsTable, columns } from '@/components/decorations/decorations-
 import { DecorationsGrid } from '@/components/decorations/decorations-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { useViewPreference } from '@/hooks/use-view-preference'
-import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
+import { useViewPreference } from '@/lib/hooks/use-view-preference'
+import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { DecorationWithRelations } from '@/lib/schemas/decoration'
 import Link from 'next/link'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface DecorationsContentProps {
   decorations: DecorationWithRelations[]
@@ -72,13 +73,23 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
       decorations.flatMap(item => 
         item.cone.map(c => c.name)
       )
-    )).sort()
-
+    ))
+    
     if (uniqueCones.length > 0) {
+      // Sort the cone values using the sortCones utility
+      const sortedCones = sortCones(
+        uniqueCones.map(name => ({ 
+          id: '', 
+          name,
+          createdAt: new Date('2024-12-10T23:58:50+11:00'),
+          updatedAt: new Date('2024-12-10T23:58:50+11:00')
+        }))
+      ).map(cone => cone.name)
+
       generatedFilters.push({
         id: 'cone' as FilterableColumn,
         label: 'Cone',
-        options: uniqueCones.map(value => ({
+        options: sortedCones.map(value => ({
           value,
           label: value,
         }))
@@ -147,10 +158,10 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
   return (
     <PageLayout 
       title="Decorations"
-      description="Manage your surface decorations and techniques"
+      description="Manage your catalogue of glazes, oxides, slips and other decorations"
       action={
         <Link href="/decorations/new">
-          <ActionButton>Add New Decoration</ActionButton>
+          <ActionButton>Add new decoration</ActionButton>
         </Link>
       }
     >

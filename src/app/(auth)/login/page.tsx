@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/forms/login-form'
+import { LoginForm } from '@/components/login/login-form'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'

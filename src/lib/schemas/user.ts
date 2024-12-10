@@ -9,34 +9,38 @@ export const userSchema = z.object({
   imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
 })
 
-export const profileUpdateSchema = userSchema
-  .extend({
-    currentPassword: z.string().optional(),
-    newPassword: z.string().min(6, 'Password must be at least 6 characters').optional(),
-    confirmNewPassword: z.string().optional(),
+export const profileUpdateSchema = z
+  .object({
+    email: z.string().email(),
+    username: z.string().min(3),
+    firstName: z.string().optional().nullable(),
+    lastName: z.string().optional().nullable(),
+    imageUrl: z.string().optional().nullable(),
+    currentPassword: z.string().optional().nullable(),
+    newPassword: z.string().optional().nullable()
+      .refine((val) => !val || val.length >= 6, {
+        message: "Password must be at least 6 characters long"
+      }),
+    confirmNewPassword: z.string().optional().nullable(),
   })
-  .omit({ id: true })
-  .refine((data) => {
-    // If newPassword is provided, confirmNewPassword must match
-    if (data.newPassword) {
-      return data.newPassword === data.confirmNewPassword
+  .refine(
+    (data) => {
+      // Only validate passwords if any password field has a value
+      if (data.currentPassword || data.newPassword || data.confirmNewPassword) {
+        return (
+          data.currentPassword &&
+          data.newPassword &&
+          data.confirmNewPassword &&
+          data.newPassword === data.confirmNewPassword
+        )
+      }
+      return true
+    },
+    {
+      message: 'New passwords must match and current password is required to change password',
+      path: ['confirmNewPassword'],
     }
-    // If newPassword is not provided, confirmNewPassword should also not be provided
-    return !data.confirmNewPassword
-  }, {
-    message: "Passwords don't match",
-    path: ['confirmNewPassword']
-  })
-  .refine((data) => {
-    // If newPassword is provided, currentPassword must also be provided
-    if (data.newPassword) {
-      return !!data.currentPassword
-    }
-    return true
-  }, {
-    message: "Current password is required to set a new password",
-    path: ['currentPassword']
-  })
+  )
 
 export type UserFormData = z.infer<typeof userSchema>
 export type ProfileUpdateFormData = z.infer<typeof profileUpdateSchema>

@@ -10,7 +10,9 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DecorationType, Cone, Atmosphere } from '@prisma/client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
@@ -39,11 +41,14 @@ export function DecorationForm({
       }
     : {}
 
+  const sortedCones = useMemo(() => sortCones(cones), [cones])
+
   const {
     register,
     control,
     watch,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm<DecorationFormData>({
     resolver: zodResolver(decorationSchema),
     defaultValues
@@ -83,6 +88,11 @@ export function DecorationForm({
         formDataObj.atmosphereIds = values.atmosphereIds;
       }
 
+      // Add imageUrl values from form state
+      if (values.imageUrl?.length) {
+        formDataObj.imageUrl = values.imageUrl;
+      }
+
       // Convert back to FormData
       const newFormData = new FormData();
       Object.entries(formDataObj).forEach(([key, value]) => {
@@ -92,6 +102,7 @@ export function DecorationForm({
           newFormData.append(key, value);
         }
       });
+
       setError('')
       await action(newFormData)
     } catch (e) {
@@ -158,7 +169,7 @@ export function DecorationForm({
           label="Cone"
           name="coneIds"
           control={control}
-          options={cones.map(cone => ({
+          options={sortedCones.map(cone => ({
             value: cone.id,
             label: cone.name
           }))}
@@ -221,13 +232,18 @@ export function DecorationForm({
           error={errors.glazyUrl}
           placeholder="https://glazy.org/recipes/2468"
         />
-        <FormField
-          label="Image URL"
-          name="imageUrl"
-          register={register}
-          error={errors.imageUrl}
-          placeholder="https://example.com/image.jpg"
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Images</label>
+          <ImageDropzone
+            currentImageUrl={initialData?.imageUrl}
+            onImagesSelected={(urls) => {
+              setValue('imageUrl', urls, { shouldValidate: true });
+            }}
+          />
+          {errors.imageUrl && (
+            <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
+          )}
+        </div>
       </div>
 
       <FormTextarea

@@ -1,14 +1,35 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { PageLayout } from '@/components/ui/layout/page-layout'
 import { deleteTestTile } from './actions'
 
 interface PageProps {
   params: Promise<{ id: string }>
+}
+
+function TestTileImages({ imageUrl }: { imageUrl: string[] | null }) {
+  if (!imageUrl?.length) return null
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {imageUrl.map((url: string, index: number) => (
+        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
+          <Image
+            src={url}
+            alt={`Test tile image ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default async function TestTilePage({ params }: PageProps) {
@@ -45,15 +66,13 @@ export default async function TestTilePage({ params }: PageProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold leading-6 text-gray-900">{testTile.name}</h3>
+
+    <PageLayout
+      title={testTile.name}
+      action={
         <div className="flex space-x-3">
-          <Link
-            href={`/test-tiles/${testTile.id}/edit`}
-            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
-          >
-            Edit Test Tile
+          <Link href={`/test-tiles/${testTile.id}/edit`}>
+            <ActionButton>Edit Test Tile</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {
@@ -63,18 +82,9 @@ export default async function TestTilePage({ params }: PageProps) {
             itemName="Test Tile"
           />
         </div>
-      </div>
-
-      {testTile.imageUrl && (
-        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-          <Image
-            src={testTile.imageUrl}
-            alt={testTile.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
+      }
+    >
+      <TestTileImages imageUrl={testTile.imageUrl} />
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
@@ -90,6 +100,20 @@ export default async function TestTilePage({ params }: PageProps) {
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Stamp</dt>
             <dd className="mt-1 text-sm text-gray-900">{testTile.stamp}</dd>
+          </div>
+        )}
+
+        {testTile.cone && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Cone</dt>
+            <dd className="mt-1 text-sm text-gray-900">{testTile.cone.name}</dd>
+          </div>
+        )}
+
+        {testTile.atmosphere && (
+          <div className="sm:col-span-1">
+            <dt className="text-sm font-medium text-gray-500">Atmosphere</dt>
+            <dd className="mt-1 text-sm text-gray-900">{testTile.atmosphere.name}</dd>
           </div>
         )}
 
@@ -134,6 +158,6 @@ export default async function TestTilePage({ params }: PageProps) {
           </div>
         )}
       </dl>
-    </div>
+    </PageLayout>
   )
 }

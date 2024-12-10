@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { testTileSchema } from '@/lib/schemas/test-tile'
 import { revalidatePath } from 'next/cache'
@@ -82,6 +82,7 @@ export async function updateTestTile(formData: FormData) {
     ...Object.fromEntries(formData.entries()),
     decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
+    imageUrl: formData.getAll('imageUrl').filter(url => typeof url === 'string')
   }
 
   const validatedData = testTileSchema.parse(processedData)
@@ -90,13 +91,11 @@ export async function updateTestTile(formData: FormData) {
     name: validatedData.name,
     stamp: validatedData.stamp || null,
     notes: validatedData.notes || null,
-    imageUrl: validatedData.imageUrl || null,
+    imageUrl: validatedData.imageUrl || [],
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },
-    cone: {
-      connect: { id: validatedData.coneId }
-    },
+    cone: validatedData.coneId ? { connect: { id: validatedData.coneId } } : undefined,
     atmosphere: {
       connect: { id: validatedData.atmosphereId }
     },
@@ -129,7 +128,7 @@ export async function updateTestTile(formData: FormData) {
       },
       collections: true,
       cone: true,
-      atmosphere: true
+      atmosphere: true,
     }
   })
 

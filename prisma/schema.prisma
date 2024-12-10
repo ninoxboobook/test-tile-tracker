@@ -54,7 +54,7 @@ model ClayBody {
   shrinkage         Float?               @db.Real
   absorption        Float?               @db.Real
   meshSize          Int?                 @db.Integer
-  imageUrl          String?              @db.VarChar(255)
+  imageUrl          String[]             @default([])
   notes             String?              @db.Text
   userId            String               @db.Uuid
   createdAt         DateTime             @default(now()) @db.Timestamptz(6)
@@ -79,7 +79,7 @@ model Decoration {
   surface           String?                   @db.VarChar(255)
   transparency      String?                   @db.VarChar(255)
   glazyUrl          String?                   @db.VarChar(255)
-  imageUrl          String?                   @db.VarChar(255)
+  imageUrl          String[]                  @default([])
   recipe            String?                   @db.Text
   notes             String?                   @db.Text
   userId            String                    @db.Uuid
@@ -97,7 +97,7 @@ model TestTile {
   name             String            @db.VarChar(255)
   stamp            String?           @db.VarChar(255)
   notes            String?           @db.Text
-  imageUrl         String?           @db.VarChar(255)
+  imageUrl         String[]          @default([])
   createdAt        DateTime          @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime          @updatedAt @db.Timestamptz(6)
   userId           String            @db.Uuid

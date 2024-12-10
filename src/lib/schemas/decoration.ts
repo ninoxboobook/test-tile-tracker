@@ -12,7 +12,7 @@ export const decorationSchema = z.object({
   surface: z.string().optional().nullable(),
   transparency: z.string().optional().nullable(),
   glazyUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
-  imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
+  imageUrl: z.array(z.string().url('Invalid URL format')).optional().nullable(),
   recipe: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
 })
@@ -42,7 +42,7 @@ export type DecorationWithRelations = {
   surface?: string | null
   transparency?: string | null
   glazyUrl?: string | null
-  imageUrl?: string | null
+  imageUrl?: string[] | null
   recipe?: string | null
   notes?: string | null
   userId: string

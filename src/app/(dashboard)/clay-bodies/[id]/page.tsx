@@ -1,11 +1,32 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteClayBody } from './actions'
+import { PageLayout } from '@/components/ui/layout/page-layout'
+
+function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
+  if (!imageUrl?.length) return null
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {imageUrl.map((url: string, index: number) => (
+        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
+          <Image
+            src={url}
+            alt={`Clay body image ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export default async function ClayBodyPage(
   props: {
@@ -36,15 +57,12 @@ export default async function ClayBodyPage(
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold leading-6 text-gray-900">{clayBody.name}</h3>
+    <PageLayout
+      title={clayBody.name}
+      action={
         <div className="flex space-x-3">
-          <Link
-            href={`/clay-bodies/${clayBody.id}/edit`}
-            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
-          >
-            Edit Clay Body
+          <Link href={`/clay-bodies/${clayBody.id}/edit`}>
+            <ActionButton>Edit Clay Body</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {
@@ -54,18 +72,9 @@ export default async function ClayBodyPage(
             itemName="Clay Body"
           />
         </div>
-      </div>
-
-      {clayBody.imageUrl && (
-        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-          <Image
-            src={clayBody.imageUrl}
-            alt={clayBody.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )}
+      }
+    >
+      <ClayBodyImages imageUrl={clayBody.imageUrl} />
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
@@ -161,9 +170,9 @@ export default async function ClayBodyPage(
                 href={`/test-tiles/${testTile.id}`}
                 className="group relative block w-full aspect-square rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 overflow-hidden"
               >
-                {testTile.imageUrl && (
+                {testTile.imageUrl?.[0] && (
                   <Image
-                    src={testTile.imageUrl}
+                    src={testTile.imageUrl[0]}
                     alt={testTile.name || ''}
                     fill
                     className="pointer-events-none object-cover group-hover:opacity-75"
@@ -177,6 +186,6 @@ export default async function ClayBodyPage(
           </div>
         </div>
       )}
-    </div>
+    </PageLayout>
   )
 }

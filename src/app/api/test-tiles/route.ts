@@ -1,6 +1,6 @@
 import { createApiHandler } from '@/lib/api/baseHandler';
 import { prisma } from '@/lib/prisma';
-import { testTileSchema } from '@/types';
+import { testTileSchema } from '@/lib/schemas/test-tile';
 import { NextResponse } from 'next/server';
 
 export const GET = createApiHandler(async (req, { session }) => {

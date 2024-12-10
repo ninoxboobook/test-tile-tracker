@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
@@ -42,7 +42,15 @@ export async function updateProfile(formData: FormData) {
   const newPassword = formData.get('newPassword') as string
   const imageUrl = formData.get('imageUrl') as string
 
-  // Verify current password if trying to change password
+  const updateData: any = {
+    email,
+    username,
+    firstName: firstName || null,
+    lastName: lastName || null,
+    imageUrl: imageUrl || null,
+  }
+
+  // Only update password if both current and new password are provided
   if (currentPassword && newPassword) {
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
@@ -57,18 +65,9 @@ export async function updateProfile(formData: FormData) {
     if (!isValid) {
       throw new Error('Current password is incorrect')
     }
-  }
 
-  const updateData: any = {
-    email,
-    username,
-    firstName: firstName || null,
-    lastName: lastName || null,
-    imageUrl: imageUrl || null,
-  }
-
-  if (newPassword) {
-    updateData.password = await bcrypt.hash(newPassword, 12)
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    updateData.password = hashedPassword
   }
 
   await prisma.user.update({
@@ -77,4 +76,5 @@ export async function updateProfile(formData: FormData) {
   })
 
   revalidatePath('/profile')
+  revalidatePath(`/profile/${session.user.id}`)
 }

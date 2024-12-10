@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { TestTilesContent } from './content'
 
@@ -27,7 +27,7 @@ export default async function TestTilesPage() {
       },
       collections: true,
       cone: true,
-      atmosphere: true
+      atmosphere: true,
     },
     orderBy: {
       updatedAt: 'desc'

@@ -7,10 +7,11 @@ import { ClayBodiesTable, columns } from '@/components/clay-bodies/clay-bodies-t
 import { ClayBodiesGrid } from '@/components/clay-bodies/clay-bodies-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { useViewPreference } from '@/hooks/use-view-preference'
-import { DataViewToolbar } from '@/components/ui/data-view/data-view-toolbar'
+import { useViewPreference } from '@/lib/hooks/use-view-preference'
+import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import Link from 'next/link'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface ClayBodiesContentProps {
   clayBodies: (ClayBody & {
@@ -55,7 +56,16 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
             clayBodies.flatMap(item => 
               item.cone.map(c => c.name)
             ).filter(value => value.trim() !== '')
-          )).sort();
+          ))
+          // Sort the cone values using the sortCones utility
+          uniqueValues = sortCones(
+            uniqueValues.map(name => ({ 
+              id: '', 
+              name,
+              createdAt: new Date('2024-12-10T23:56:52+11:00'),
+              updatedAt: new Date('2024-12-10T23:56:52+11:00')
+            }))
+          ).map(cone => cone.name)
           break;
         
         case 'manufacturer':
@@ -88,56 +98,48 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
     return generatedFilters.filter((filter): filter is PotentialFilter<FilterableColumn> => filter !== null)
   }, [clayBodies])
 
+  const filteredClayBodies = useMemo(() => {
+    return clayBodies
+      .filter(clayBody => 
+        clayBody.name.toLowerCase().includes(search.toLowerCase())
+      )
+      .filter(clayBody => {
+        return Object.entries(activeFilters).every(([filterId, values]) => {
+          if (values.length === 0) return true
+          
+          switch (filterId as FilterableColumn) {
+            case 'type':
+              return clayBody.type && values.includes(clayBody.type.name)
+            case 'cone':
+              return clayBody.cone.some(c => values.includes(c.name))
+            case 'manufacturer':
+              return clayBody.manufacturer && values.includes(clayBody.manufacturer)
+            default:
+              return true
+          }
+        })
+      })
+  }, [clayBodies, search, activeFilters])
+
   const table = useReactTable({
-    data: clayBodies,
+    data: filteredClayBodies,
     columns,
     state: {
       columnVisibility,
-      globalFilter: search,
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    globalFilterFn: (row, columnId, filterValue) => {
-      const value = row.getValue(columnId)
-      if (typeof value === 'string') {
-        return value.toLowerCase().includes(filterValue.toLowerCase())
-      }
-      return false
-    },
-    filterFns: {
-      customFilter: (row, columnId, values) => {
-        const value = row.getValue(columnId)
-        if (!values.length) return true
-
-        switch (columnId) {
-          case 'type':
-            const typeValue = (row.original as typeof clayBodies[number]).type?.name
-            return typeValue !== null && values.includes(typeValue)
-          
-          case 'cone':
-            const coneNames = (row.original as typeof clayBodies[number]).cone.map(c => c.name)
-            return coneNames.some(name => values.includes(name))
-          
-          case 'manufacturer':
-            const manufacturerValue = (row.original as typeof clayBodies[number]).manufacturer
-            return manufacturerValue !== null && values.includes(manufacturerValue)
-          
-          default:
-            return false
-        }
-      }
-    }
   })
 
   return (
     <PageLayout 
       title="Clay Bodies"
-      description="Manage your clay body recipes and specifications"
+      description="Manage your catalogue of clay bodies"
       action={
         <Link href="/clay-bodies/new">
-          <ActionButton>Add New Clay Body</ActionButton>
+          <ActionButton>Add new clay body</ActionButton>
         </Link>
       }
     >
@@ -160,11 +162,11 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
         />
         {view === 'table' ? (
           <ClayBodiesTable 
-            clayBodies={clayBodies}
+            clayBodies={filteredClayBodies}
             table={table}
           />
         ) : (
-          <ClayBodiesGrid clayBodies={clayBodies} />
+          <ClayBodiesGrid clayBodies={filteredClayBodies} />
         )}
       </div>
     </PageLayout>

@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        display: ['degular-display', 'sans-serif'],
+        sans: ['degular', 'sans-serif'],
+      },
       colors: {
         clay: {
           50: '#f8f6f4',

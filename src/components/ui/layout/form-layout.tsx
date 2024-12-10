@@ -16,7 +16,7 @@ export function FormLayout({ title, description, children, backHref }: FormLayou
       description={description}
       action={
         <Link href={backHref}>
-          <ActionButton variant="secondary">Back</ActionButton>
+          <ActionButton>Back</ActionButton>
         </Link>
       }
     >

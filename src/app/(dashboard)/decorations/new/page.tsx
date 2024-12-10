@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { DecorationForm } from '@/components/decorations/decoration-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
@@ -27,8 +27,7 @@ export default async function NewDecorationPage() {
 
   return (
     <FormLayout 
-      title="New Decoration"
-      description="Add a new decoration to your database"
+      title="Add new decoration"
       backHref="/decorations"
     >
       <DecorationForm 

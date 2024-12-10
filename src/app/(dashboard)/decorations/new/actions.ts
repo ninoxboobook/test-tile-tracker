@@ -2,7 +2,7 @@
 
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { decorationSchema } from '@/lib/schemas/decoration'
 import { revalidatePath } from 'next/cache'
@@ -27,7 +27,11 @@ export async function createDecoration(formData: FormData) {
         const values = formData.getAll(key);
         acc[key] = values.map(v => typeof v === 'string' ? v : '');
       }
-     } else {
+    } else if (key === 'imageUrl') {
+      // Handle imageUrl as array directly
+      const values = formData.getAll(key);
+      acc[key] = values.filter(v => typeof v === 'string');
+    }else {
       acc[key] = value;
     }
      return acc;
@@ -54,7 +58,7 @@ export async function createDecoration(formData: FormData) {
     surface: validatedData.surface || null,
     transparency: validatedData.transparency || null,
     glazyUrl: validatedData.glazyUrl || null,
-    imageUrl: validatedData.imageUrl || null,
+    imageUrl: validatedData.imageUrl || [],
     recipe: validatedData.recipe || null,
     notes: validatedData.notes || null,
     user: {

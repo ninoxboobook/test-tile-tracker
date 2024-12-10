@@ -1,11 +1,10 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateClayBody } from './actions'
-import type { ClayBodyFormData } from '@/lib/schemas/clay-body'
 
 export default async function EditClayBodyPage(
   props: {
@@ -42,32 +41,19 @@ export default async function EditClayBodyPage(
     return notFound()
   }
 
-  const formData: ClayBodyFormData & { id: string } = {
-    id: clayBody.id,
-    name: clayBody.name,
-    typeId: clayBody.typeId,
-    manufacturer: clayBody.manufacturer || null,
-    cone: clayBody.cone.map(c => c.name),
-    firingTemperature: clayBody.firingTemperature || null,
-    texture: clayBody.texture || null,
-    plasticity: clayBody.plasticity || null,
-    colourOxidation: clayBody.colourOxidation || null,
-    colourReduction: clayBody.colourReduction || null,
-    shrinkage: clayBody.shrinkage,
-    absorption: clayBody.absorption,
-    meshSize: clayBody.meshSize,
-    imageUrl: clayBody.imageUrl || null,
-    notes: clayBody.notes || null,
+  // Transform data to match form expectations
+  const formData = {
+    ...clayBody,
+    coneIds: clayBody.cone.map(c => c.id), // Transform cone array to array of IDs
   }
 
   return (
     <FormLayout 
-      title="Edit Clay Body"
-      description="Update your clay body details"
+      title={`Edit ${clayBody.name}`}
       backHref={`/clay-bodies/${clayBody.id}`}
     >
       <ClayBodyForm 
-        action={updateClayBody} 
+        action={updateClayBody}
         initialData={formData}
         submitButtonText="Update Clay Body"
         clayBodyTypes={clayBodyTypes}

@@ -2,7 +2,7 @@
 
 import { ClayBody, Collection, Decoration, Cone, Atmosphere } from '@prisma/client'
 import { ColumnDef, Table } from '@tanstack/react-table'
-import { DataTable } from '@/components/ui/data-table/data-table'
+import { DataTable } from '@/components/ui/data/data-table'
 import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
 

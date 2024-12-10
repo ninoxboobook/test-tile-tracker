@@ -1,12 +1,33 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { PageLayout } from '@/components/ui/layout/page-layout'
 import { deleteDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
+
+function DecorationImages({ imageUrl }: { imageUrl: string[] | null }) {
+  if (!imageUrl?.length) return null
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      {imageUrl.map((url: string, index: number) => (
+        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
+          <Image
+            src={url}
+            alt={`Decoration image ${index + 1}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export default async function DecorationPage(
   props: {
@@ -48,15 +69,12 @@ export default async function DecorationPage(
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-gray-200 pb-5 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold leading-6 text-gray-900">{decorationWithRelations.name}</h3>
+    <PageLayout
+      title={decorationWithRelations.name}
+      action={
         <div className="flex space-x-3">
-          <Link
-            href={`/decorations/${decorationWithRelations.id}/edit`}
-            className="inline-flex items-center rounded-md bg-clay-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-clay-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-clay-600"
-          >
-            Edit Decoration
+          <Link href={`/decorations/${decorationWithRelations.id}/edit`}>
+            <ActionButton>Edit Decoration</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {
@@ -66,16 +84,16 @@ export default async function DecorationPage(
             itemName="Decoration"
           />
         </div>
-      </div>
-
+      }
+    >
       {decorationWithRelations.imageUrl && (
-        <div className="relative h-64 w-full overflow-hidden rounded-lg">
-          <Image
-            src={decorationWithRelations.imageUrl}
-            alt={decorationWithRelations.name}
-            fill
-            className="object-cover"
-          />
+        <div className="bg-white shadow sm:rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+              Images
+            </h3>
+            <DecorationImages imageUrl={decorationWithRelations.imageUrl} />
+          </div>
         </div>
       )}
 
@@ -135,7 +153,7 @@ export default async function DecorationPage(
           <div className="sm:col-span-1">
             <dt className="text-sm font-medium text-gray-500">Glazy URL</dt>
             <dd className="mt-1 text-sm text-gray-900">
-              <a 
+              <a
                 href={decorationWithRelations.glazyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -168,6 +186,6 @@ export default async function DecorationPage(
           {/* Add your test tiles list component here */}
         </div>
       )}
-    </div>
+    </PageLayout>
   )
 }

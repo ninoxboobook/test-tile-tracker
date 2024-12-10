@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { CollectionForm } from '@/components/collections/collection-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
@@ -22,8 +22,7 @@ export default async function NewCollectionPage() {
 
   return (
     <FormLayout 
-      title="New Collection"
-      description="Create a new collection of tiles"
+      title="Add new collection"
       backHref="/collections"
     >
       <CollectionForm 
