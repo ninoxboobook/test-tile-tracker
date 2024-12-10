@@ -11,6 +11,7 @@ import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]
@@ -81,7 +82,16 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
           uniqueValues = Array.from(new Set(
             testTiles.map(item => item.cone.name)
               .filter(value => value.trim() !== '')
-          )).sort()
+          ))
+          // Sort the cone values using the sortCones utility
+          uniqueValues = sortCones(
+            uniqueValues.map(name => ({ 
+              id: '', 
+              name,
+              createdAt: new Date('2024-12-10T23:56:52+11:00'),
+              updatedAt: new Date('2024-12-10T23:56:52+11:00')
+            }))
+          ).map(cone => cone.name)
           break
         case 'atmosphere':
           uniqueValues = Array.from(new Set(
