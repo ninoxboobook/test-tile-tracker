@@ -52,14 +52,14 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       <div className="rounded-md border">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full">
             <thead className="border-b bg-gray-50">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
                     >
                       {header.isPlaceholder ? null : (
                         <div
