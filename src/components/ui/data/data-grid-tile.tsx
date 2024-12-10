@@ -50,7 +50,7 @@ export function DataGridTile({
         </div>
       )}
       <div className="flex flex-1 flex-col space-y-2 p-4">
-        <h3 className="font-medium text-gray-900">{title}</h3>
+        <h2 className="font-medium text-lg text-gray-900">{title}</h2>
         {metadata && metadata.length > 0 && (
           <div className="space-y-1 text-gray-500">
             {metadata.map((item, index) => (
