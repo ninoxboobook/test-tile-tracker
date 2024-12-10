@@ -19,6 +19,7 @@ import { ClayBodyType } from '@prisma/client'
 import { Atmosphere } from '@prisma/client'
 import { Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface DecorationLayer {
   order: number
@@ -59,6 +60,7 @@ export function TestTileForm({
     { order: 1, decorationIds: [] }
   ])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const sortedCones = useMemo(() => sortCones(cones), [cones])
   const {
     register,
     control,
@@ -281,7 +283,7 @@ export function TestTileForm({
             name="coneId"
             label="Cone"
             control={control}
-            options={cones.map(cone => ({ value: cone.id, label: cone.name }))}
+            options={sortedCones.map(cone => ({ value: cone.id, label: cone.name }))}
             error={errors.coneId}
             required
           />

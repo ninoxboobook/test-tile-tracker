@@ -10,8 +10,9 @@ import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DecorationType, Cone, Atmosphere } from '@prisma/client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
@@ -39,6 +40,8 @@ export function DecorationForm({
         atmosphereIds: initialData.atmosphere.map(a => a.id)
       }
     : {}
+
+  const sortedCones = useMemo(() => sortCones(cones), [cones])
 
   const {
     register,
@@ -166,7 +169,7 @@ export function DecorationForm({
           label="Cone"
           name="coneIds"
           control={control}
-          options={cones.map(cone => ({
+          options={sortedCones.map(cone => ({
             value: cone.id,
             label: cone.name
           }))}

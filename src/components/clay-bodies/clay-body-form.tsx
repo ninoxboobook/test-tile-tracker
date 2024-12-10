@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { clayBodySchema, type ClayBodyFormData } from '@/lib/schemas/clay-body'
@@ -12,6 +12,7 @@ import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { ClayBodyType, Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
+import { sortCones } from '@/lib/utils/sort-cones'
 
 interface ClayBodyFormProps {
   initialData?: any
@@ -29,6 +30,7 @@ export function ClayBodyForm({
   cones
 }: ClayBodyFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const sortedCones = useMemo(() => sortCones(cones), [cones])
   const {
     register,
     control,
@@ -135,7 +137,7 @@ export function ClayBodyForm({
           label="Cone"
           name="cone"
           control={control}
-          options={cones.map(cone => ({
+          options={sortedCones.map(cone => ({
             value: cone.id,
             label: cone.name
           }))}
