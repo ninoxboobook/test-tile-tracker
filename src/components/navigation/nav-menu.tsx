@@ -41,33 +41,34 @@ export function DashboardNav({ user }: { user: any }) {
   )
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="mx-auto max-w-7xl px-4 mt-6 rounded-2xl border border-solid border-clay-400 sm:px-6">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div>
             <div className="flex h-16 justify-between">
-              <div className="flex">
-                <div className="flex flex-shrink-0 items-center">
-                  <Link href="/dashboard" className="text-xl font-bold text-clay-600">
-                    Test Tile Tracker
+
+              <div className="flex flex-shrink-0 items-center">
+                <Link href="/dashboard" className="text-xl font-bold text-brand">
+                  <Image src="/ttt-logo.svg" alt="Test Tile Tracker" width={40} height={28} />
+                </Link>
+              </div>
+              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={classNames(
+                      pathname === item.href
+                        ? 'text-brand relative'
+                        : 'text-clay-800 hover:text-clay-900',
+                      'inline-flex items-center px-1 py-1 text-base font-medium'
+                    )}
+                  >
+                    {item.name}
+                    {pathname === item.href ? <div className="h-2 w-4 bg-brand absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-full"></div> : null}
                   </Link>
-                </div>
-                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={classNames(
-                        pathname === item.href
-                          ? 'border-clay-500 text-gray-900'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                        'inline-flex items-center border-b-2 px-1 pt-1 text-base font-medium'
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
+                ))}
+
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 <Menu as="div" className="relative ml-3">
@@ -92,8 +93,8 @@ export function DashboardNav({ user }: { user: any }) {
                           <Link
                             href="/profile"
                             className={classNames(
-                              active ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-base text-gray-700'
+                              active ? 'bg-clay-100' : '',
+                              'block px-4 py-2 text-base text-clay-700'
                             )}
                           >
                             Profile Settings
@@ -105,8 +106,8 @@ export function DashboardNav({ user }: { user: any }) {
                           <button
                             onClick={() => signOut({ callbackUrl: '/' })}
                             className={classNames(
-                              active ? 'bg-gray-100' : '',
-                              'block w-full px-4 py-2 text-left text-base text-gray-700'
+                              active ? 'bg-clay-100' : '',
+                              'block w-full px-4 py-2 text-left text-base text-clay-700'
                             )}
                           >
                             Sign out
@@ -118,7 +119,7 @@ export function DashboardNav({ user }: { user: any }) {
                 </Menu>
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-clay-500">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-clay-400 hover:bg-clay-100 hover:text-clay-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-clay-500">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -140,7 +141,7 @@ export function DashboardNav({ user }: { user: any }) {
                   className={classNames(
                     pathname === item.href
                       ? 'bg-clay-50 border-clay-500 text-clay-700'
-                      : 'border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700',
+                      : 'border-transparent text-clay-500 hover:bg-clay-50 hover:text-clay-700',
                     'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
                   )}
                 >
@@ -148,26 +149,26 @@ export function DashboardNav({ user }: { user: any }) {
                 </Disclosure.Button>
               ))}
             </div>
-            <div className="border-t border-gray-200 pb-3 pt-4">
+            <div className="border-t border-clay-200 pb-3 pt-4">
               <div className="flex items-center px-4">
                 <ProfileImage />
                 <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">{user?.username}</div>
-                  <div className="text-base font-medium text-gray-500">{user?.email}</div>
+                  <div className="text-base font-medium text-clay-800">{user?.username}</div>
+                  <div className="text-base font-medium text-clay-500">{user?.email}</div>
                 </div>
               </div>
               <div className="mt-3 space-y-1">
                 <Disclosure.Button
                   as={Link}
                   href="/profile"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                  className="block px-4 py-2 text-base font-medium text-clay-500 hover:bg-clay-100 hover:text-clay-800"
                 >
                   Profile Settings
                 </Disclosure.Button>
                 <Disclosure.Button
                   as="button"
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                  className="block w-full px-4 py-2 text-left text-base font-medium text-clay-500 hover:bg-clay-100 hover:text-clay-800"
                 >
                   Sign out
                 </Disclosure.Button>

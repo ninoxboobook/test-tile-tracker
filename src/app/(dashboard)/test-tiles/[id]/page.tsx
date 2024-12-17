@@ -88,8 +88,8 @@ export default async function TestTilePage({ params }: PageProps) {
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
-          <dt className="text-sm font-medium text-gray-500">Clay Body</dt>
-          <dd className="mt-1 text-sm text-gray-900">
+          <dt className="text-sm font-medium text-clay-500">Clay Body</dt>
+          <dd className="mt-1 text-sm text-clay-900">
             <Link href={`/clay-bodies/${testTile.clayBody.id}`} className="text-indigo-600 hover:text-indigo-500">
               {testTile.clayBody.name}
             </Link>
@@ -98,29 +98,29 @@ export default async function TestTilePage({ params }: PageProps) {
 
         {testTile.stamp && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Stamp</dt>
-            <dd className="mt-1 text-sm text-gray-900">{testTile.stamp}</dd>
+            <dt className="text-sm font-medium text-clay-500">Stamp</dt>
+            <dd className="mt-1 text-sm text-clay-900">{testTile.stamp}</dd>
           </div>
         )}
 
         {testTile.cone && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Cone</dt>
-            <dd className="mt-1 text-sm text-gray-900">{testTile.cone.name}</dd>
+            <dt className="text-sm font-medium text-clay-500">Cone</dt>
+            <dd className="mt-1 text-sm text-clay-900">{testTile.cone.name}</dd>
           </div>
         )}
 
         {testTile.atmosphere && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Atmosphere</dt>
-            <dd className="mt-1 text-sm text-gray-900">{testTile.atmosphere.name}</dd>
+            <dt className="text-sm font-medium text-clay-500">Atmosphere</dt>
+            <dd className="mt-1 text-sm text-clay-900">{testTile.atmosphere.name}</dd>
           </div>
         )}
 
         {testTile.decorationLayers.length > 0 && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Decorations</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+            <dt className="text-sm font-medium text-clay-500">Decorations</dt>
+            <dd className="mt-1 text-sm text-clay-900">
               <ul className="space-y-1">
                 {testTile.decorationLayers.map(layer => (
                   <li key={layer.id}>
@@ -136,8 +136,8 @@ export default async function TestTilePage({ params }: PageProps) {
 
         {testTile.collections.length > 0 && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Collections</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+            <dt className="text-sm font-medium text-clay-500">Collections</dt>
+            <dd className="mt-1 text-sm text-clay-900">
               <ul className="space-y-1">
                 {testTile.collections.map(collection => (
                   <li key={collection.id}>
@@ -153,8 +153,8 @@ export default async function TestTilePage({ params }: PageProps) {
 
         {testTile.notes && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Notes</dt>
-            <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{testTile.notes}</dd>
+            <dt className="text-sm font-medium text-clay-500">Notes</dt>
+            <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">{testTile.notes}</dd>
           </div>
         )}
       </dl>

@@ -56,21 +56,21 @@ export default async function CollectionPage(
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         {collection.description && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Description</dt>
-            <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{collection.description}</dd>
+            <dt className="text-sm font-medium text-clay-500">Description</dt>
+            <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">{collection.description}</dd>
           </div>
         )}
       </dl>
 
       {collection.testTiles.length > 0 && (
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="text-lg font-medium text-gray-900">Test Tiles</h3>
+        <div className="border-t border-clay-200 pt-6">
+          <h3 className="text-lg font-medium text-clay-900">Test Tiles</h3>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {collection.testTiles.map((testTile) => (
               <Link
                 key={testTile.id}
                 href={`/test-tiles/${testTile.id}`}
-                className="group relative block w-full aspect-square rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 overflow-hidden"
+                className="group relative block w-full aspect-square rounded-lg bg-clay-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-clay-100 overflow-hidden"
               >
                 {testTile.imageUrl?.[0] && (
                   <Image

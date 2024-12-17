@@ -53,7 +53,7 @@ export function DataViewToolbar<TData>({
               className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium ${
                 activeFilters[filter.id]?.length 
                   ? 'bg-clay-100 text-clay-900 border-clay-200 hover:bg-clay-200' 
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                  : 'bg-white text-clay-700 hover:bg-clay-50'
               }`}
             >
               Filter by {filter.label}
@@ -70,7 +70,7 @@ export function DataViewToolbar<TData>({
                     <label key={option.value} className="flex items-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 text-clay-600 focus:ring-clay-500"
+                        className="rounded border-clay-300 text-clay-600 focus:ring-clay-500"
                         checked={activeFilters[filter.id]?.includes(option.value) ?? false}
                         onChange={(e) => {
                           const currentValues = activeFilters[filter.id] || []
@@ -80,14 +80,14 @@ export function DataViewToolbar<TData>({
                           onFilterChange(filter.id, newValues)
                         }}
                       />
-                      <span className="ml-2 text-sm text-gray-700">{option.label}</span>
+                      <span className="ml-2 text-sm text-clay-700">{option.label}</span>
                     </label>
                   ))}
                 </div>
                 {activeFilters[filter.id]?.length > 0 && (
                   <button
                     onClick={() => onFilterChange(filter.id, [])}
-                    className="mt-2 w-full rounded-md border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+                    className="mt-2 w-full rounded-md border border-clay-300 px-2 py-1 text-xs text-clay-700 hover:bg-clay-50"
                   >
                     Clear filter
                   </button>

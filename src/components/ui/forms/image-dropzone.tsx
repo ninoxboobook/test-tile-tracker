@@ -60,16 +60,16 @@ export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzo
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer
-          ${isDragActive ? 'border-clay-500 bg-clay-50' : 'border-gray-300 hover:border-clay-400'}
+          ${isDragActive ? 'border-clay-500 bg-clay-50' : 'border-clay-300 hover:border-clay-400'}
           ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         <input {...getInputProps()} />
         {isUploading ? (
-          <p className="text-sm text-gray-500">Uploading...</p>
+          <p className="text-sm text-clay-500">Uploading...</p>
         ) : isDragActive ? (
-          <p className="text-sm text-gray-500">Drop the files here...</p>
+          <p className="text-sm text-clay-500">Drop the files here...</p>
         ) : (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-clay-500">
             Drag and drop images here, or click to select files
           </p>
         )}

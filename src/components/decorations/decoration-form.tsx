@@ -233,7 +233,7 @@ export function DecorationForm({
           placeholder="https://glazy.org/recipes/2468"
         />
         <div>
-          <label className="block text-sm font-medium text-gray-700">Images</label>
+          <label className="block text-sm font-medium text-clay-700">Images</label>
           <ImageDropzone
             currentImageUrl={initialData?.imageUrl}
             onImagesSelected={(urls) => {

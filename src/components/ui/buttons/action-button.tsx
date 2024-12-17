@@ -13,8 +13,8 @@ export function ActionButton({
   const baseStyles = "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
   
   const variants = {
-    primary: "text-white bg-clay-600 hover:bg-clay-700 focus:ring-clay-500",
-    secondary: "text-gray-700 bg-white border-gray-300 hover:bg-gray-50 focus:ring-clay-500",
+    primary: "text-clay-50 bg-brand hover:bg-clay-700 focus:ring-clay-500",
+    secondary: "text-brand bg-clay-50 border-brand hover:bg-clay-50 focus:ring-clay-500",
     danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500"
   };
 

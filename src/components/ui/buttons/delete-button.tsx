@@ -44,7 +44,7 @@ export function DeleteButton({ onDelete, itemName }: DeleteButtonProps) {
         title={`Delete ${itemName}`}
       >
         <div className="mt-2">
-          <p className="text-base text-gray-500">
+          <p className="text-base text-clay-500">
             Are you sure you want to delete this {itemName.toLowerCase()}? This action cannot be undone.
           </p>
         </div>
@@ -52,7 +52,7 @@ export function DeleteButton({ onDelete, itemName }: DeleteButtonProps) {
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
-            className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-clay-500 focus-visible:ring-offset-2"
+            className="inline-flex justify-center rounded-md border border-clay-300 bg-white px-4 py-2 text-base font-medium text-clay-700 hover:bg-clay-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-clay-500 focus-visible:ring-offset-2"
             onClick={() => setIsOpen(false)}
           >
             Cancel

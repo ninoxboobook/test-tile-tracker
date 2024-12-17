@@ -20,7 +20,7 @@ export function DataGrid<T>({ items, renderItem }: DataGridProps<T>) {
           <Link
             key={id}
             href={href}
-            className="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white hover:border-gray-300"
+            className="group relative flex flex-col overflow-hidden rounded-lg border border-clay-200 bg-white hover:border-clay-300"
           >
             {content}
           </Link>

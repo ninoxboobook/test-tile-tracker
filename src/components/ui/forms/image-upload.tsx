@@ -59,7 +59,7 @@ export function ImageUpload({ currentImageUrl, onImageSelected }: ImageUploadPro
                 disabled:opacity-50 disabled:cursor-not-allowed"
             />
           </label>
-          {isUploading && <p className="mt-2 text-sm text-gray-500">Uploading...</p>}
+          {isUploading && <p className="mt-2 text-sm text-clay-500">Uploading...</p>}
           {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
         </div>
       </div>

@@ -89,7 +89,7 @@ export default async function DecorationPage(
       {decorationWithRelations.imageUrl && (
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
+            <h3 className="text-lg font-medium leading-6 text-clay-900 mb-4">
               Images
             </h3>
             <DecorationImages imageUrl={decorationWithRelations.imageUrl} />
@@ -99,21 +99,21 @@ export default async function DecorationPage(
 
       <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
         <div className="sm:col-span-1">
-          <dt className="text-sm font-medium text-gray-500">Type</dt>
-          <dd className="mt-1 text-sm text-gray-900">{decorationWithRelations.type.name}</dd>
+          <dt className="text-sm font-medium text-clay-500">Type</dt>
+          <dd className="mt-1 text-sm text-clay-900">{decorationWithRelations.type.name}</dd>
         </div>
 
         {decorationWithRelations.manufacturer && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Manufacturer</dt>
-            <dd className="mt-1 text-sm text-gray-900">{decorationWithRelations.manufacturer}</dd>
+            <dt className="text-sm font-medium text-clay-500">Manufacturer</dt>
+            <dd className="mt-1 text-sm text-clay-900">{decorationWithRelations.manufacturer}</dd>
           </div>
         )}
 
         {decorationWithRelations.cone.length > 0 && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Cones</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+            <dt className="text-sm font-medium text-clay-500">Cones</dt>
+            <dd className="mt-1 text-sm text-clay-900">
               {decorationWithRelations.cone.map(c => c.name).join(', ')}
             </dd>
           </div>
@@ -121,8 +121,8 @@ export default async function DecorationPage(
 
         {decorationWithRelations.atmosphere.length > 0 && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Atmospheres</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+            <dt className="text-sm font-medium text-clay-500">Atmospheres</dt>
+            <dd className="mt-1 text-sm text-clay-900">
               {decorationWithRelations.atmosphere.map(a => a.name).join(', ')}
             </dd>
           </div>
@@ -130,29 +130,29 @@ export default async function DecorationPage(
 
         {decorationWithRelations.colour && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Colour</dt>
-            <dd className="mt-1 text-sm text-gray-900">{decorationWithRelations.colour}</dd>
+            <dt className="text-sm font-medium text-clay-500">Colour</dt>
+            <dd className="mt-1 text-sm text-clay-900">{decorationWithRelations.colour}</dd>
           </div>
         )}
 
         {decorationWithRelations.surface && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Surface</dt>
-            <dd className="mt-1 text-sm text-gray-900">{decorationWithRelations.surface}</dd>
+            <dt className="text-sm font-medium text-clay-500">Surface</dt>
+            <dd className="mt-1 text-sm text-clay-900">{decorationWithRelations.surface}</dd>
           </div>
         )}
 
         {decorationWithRelations.transparency && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Transparency</dt>
-            <dd className="mt-1 text-sm text-gray-900">{decorationWithRelations.transparency}</dd>
+            <dt className="text-sm font-medium text-clay-500">Transparency</dt>
+            <dd className="mt-1 text-sm text-clay-900">{decorationWithRelations.transparency}</dd>
           </div>
         )}
 
         {decorationWithRelations.glazyUrl && (
           <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-gray-500">Glazy URL</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+            <dt className="text-sm font-medium text-clay-500">Glazy URL</dt>
+            <dd className="mt-1 text-sm text-clay-900">
               <a
                 href={decorationWithRelations.glazyUrl}
                 target="_blank"
@@ -167,22 +167,22 @@ export default async function DecorationPage(
 
         {decorationWithRelations.recipe && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Recipe</dt>
-            <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{decorationWithRelations.recipe}</dd>
+            <dt className="text-sm font-medium text-clay-500">Recipe</dt>
+            <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">{decorationWithRelations.recipe}</dd>
           </div>
         )}
 
         {decorationWithRelations.notes && (
           <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-gray-500">Notes</dt>
-            <dd className="mt-1 text-sm text-gray-900 whitespace-pre-wrap">{decorationWithRelations.notes}</dd>
+            <dt className="text-sm font-medium text-clay-500">Notes</dt>
+            <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">{decorationWithRelations.notes}</dd>
           </div>
         )}
       </dl>
 
       {decorationWithRelations.decorationLayers.length > 0 && (
         <div className="mt-8">
-          <h4 className="text-lg font-medium text-gray-900 mb-4">Test Tiles</h4>
+          <h4 className="text-lg font-medium text-clay-900 mb-4">Test Tiles</h4>
           {/* Add your test tiles list component here */}
         </div>
       )}

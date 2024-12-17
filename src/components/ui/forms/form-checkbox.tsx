@@ -23,12 +23,12 @@ export function FormCheckbox({
         <input
           type="checkbox"
           id={name}
-          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+          className="h-4 w-4 rounded border-clay-300 text-primary focus:ring-primary"
           {...register(name)}
         />
         <label 
           htmlFor={name}
-          className="text-sm font-medium text-gray-700"
+          className="text-sm font-medium text-clay-700"
         >
           {label}
         </label>

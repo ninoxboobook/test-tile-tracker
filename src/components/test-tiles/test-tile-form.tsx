@@ -273,7 +273,7 @@ export function TestTileForm({
               type="button"
               onClick={addLayer}
               disabled={!canAddLayer}
-              className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-gray-400"
+              className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-clay-400"
             >
               Add Layer
             </button>
@@ -309,7 +309,7 @@ export function TestTileForm({
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Images</label>
+            <label className="block text-sm font-medium text-clay-700">Images</label>
             <ImageDropzone
               currentImageUrl={initialData?.imageUrl}
               onImagesSelected={(urls) => {

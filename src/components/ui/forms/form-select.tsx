@@ -47,14 +47,14 @@ export function FormSelect({
       <Listbox value={value} onChange={onChange}>
         {({ open }) => (
           <>
-            <Listbox.Label className="block text-sm font-medium text-gray-700">
+            <Listbox.Label className="block text-sm font-medium text-clay-700">
               {label} {required && <span className="text-red-500">*</span>}
             </Listbox.Label>
             <div className="relative mt-1">
-              <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-clay-500 focus:outline-none focus:ring-1 focus:ring-clay-500 sm:text-sm">
+              <Listbox.Button className="relative w-full cursor-default rounded-md border border-clay-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-clay-500 focus:outline-none focus:ring-1 focus:ring-clay-500 sm:text-sm">
                 <span className="block truncate">{selectedOption.label}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                  <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <ChevronUpDownIcon className="h-5 w-5 text-clay-400" aria-hidden="true" />
                 </span>
               </Listbox.Button>
 
@@ -70,7 +70,7 @@ export function FormSelect({
                     key=""
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-3 pr-9 ${
-                        active ? 'bg-clay-100 text-clay-900' : 'text-gray-900'
+                        active ? 'bg-clay-100 text-clay-900' : 'text-clay-900'
                       }`
                     }
                     value=""
@@ -86,7 +86,7 @@ export function FormSelect({
                       key={option.value}
                       className={({ active }) =>
                         `relative cursor-default select-none py-2 pl-3 pr-9 ${
-                          active ? 'bg-clay-100 text-clay-900' : 'text-gray-900'
+                          active ? 'bg-clay-100 text-clay-900' : 'text-clay-900'
                         }`
                       }
                       value={option.value}

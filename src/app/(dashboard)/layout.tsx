@@ -32,12 +32,10 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-full">
+    <div className="min-h-full px-4 sm:px-6">
       <DashboardNav user={user} />
-      <div className="py-10">
-        <div className="max-w-7xl mx-auto sm:px-6">
+      <div className="py-6">
           {children}
-        </div>
       </div>
     </div>
   )

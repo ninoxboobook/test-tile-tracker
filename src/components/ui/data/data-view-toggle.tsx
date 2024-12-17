@@ -15,8 +15,8 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
         onClick={() => onChange('table')}
         className={`rounded-sm p-1.5 ${
           view === 'table'
-            ? 'bg-gray-100 text-gray-900'
-            : 'text-gray-500 hover:text-gray-900'
+            ? 'bg-clay-100 text-clay-900'
+            : 'text-clay-500 hover:text-clay-900'
         }`}
       >
         <TableCellsIcon className="h-5 w-5" />
@@ -25,8 +25,8 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
         onClick={() => onChange('grid')}
         className={`rounded-sm p-1.5 ${
           view === 'grid'
-            ? 'bg-gray-100 text-gray-900'
-            : 'text-gray-500 hover:text-gray-900'
+            ? 'bg-clay-100 text-clay-900'
+            : 'text-clay-500 hover:text-clay-900'
         }`}
       >
         <Squares2X2Icon className="h-5 w-5" />

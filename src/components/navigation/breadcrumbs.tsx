@@ -50,12 +50,12 @@ export function Breadcrumbs({ title }: BreadcrumbsProps) {
   if (breadcrumbs.length === 0 && !mainRoutes.includes(pathname)) return null
 
   return (
-    <nav className="flex text-gray-500 mb-1" aria-label="Breadcrumb">
+    <nav className="flex text-clay-500 mb-2" aria-label="Breadcrumb">
       <ol role="list" className="flex items-center space-x-2">
         <li className="translate-y-[-2px]">
           <Link
             href="/"
-            className="text-gray-400 hover:text-gray-500"
+            className="text-clay-500 hover:text-clay-600"
           >
             {/* <HomeIcon className="h-4 w-4" aria-hidden="true" /> */}
             Home
@@ -63,10 +63,10 @@ export function Breadcrumbs({ title }: BreadcrumbsProps) {
         </li>
         {breadcrumbs.map((breadcrumb, index) => (
           <li key={breadcrumb.href} className="flex items-center">
-            <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-gray-400" aria-hidden="true" />
+            <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-clay-500" aria-hidden="true" />
             <Link
               href={breadcrumb.href}
-              className="ml-2 hover:text-gray-700 translate-y-[-2px]"
+              className="ml-2 text-clay-700 hover:text-clay-800 translate-y-[-2px]"
               aria-current={index === breadcrumbs.length - 1 ? 'page' : undefined}
             >
               {breadcrumb.label}

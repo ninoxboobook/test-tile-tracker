@@ -85,8 +85,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           </div>
         )}
 
-        <div className="border-b border-gray-900/10 pb-6">
-          <h3 className="text-lg font-medium leading-6 text-gray-900">Profile Picture</h3>
+        <div className="border-b border-clay-900/10 pb-6">
+          <h3 className="text-lg font-medium leading-6 text-clay-900">Profile Picture</h3>
           <div className="mt-4">
             <ImageUpload
               currentImageUrl={imageUrl}

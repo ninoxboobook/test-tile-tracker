@@ -69,14 +69,14 @@ export function RegisterForm() {
       )}
       
       <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="username" className="block text-sm font-medium text-clay-700">
           Username
         </label>
         <div className="mt-1">
           <input
             {...register('username')}
             type="text"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
+            className="block w-full rounded-md border-clay-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
           />
           {errors.username && (
             <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
@@ -85,14 +85,14 @@ export function RegisterForm() {
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-medium text-clay-700">
           Email
         </label>
         <div className="mt-1">
           <input
             {...register('email')}
             type="email"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
+            className="block w-full rounded-md border-clay-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
           />
           {errors.email && (
             <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -101,14 +101,14 @@ export function RegisterForm() {
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-medium text-clay-700">
           Password
         </label>
         <div className="mt-1">
           <input
             {...register('password')}
             type="password"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
+            className="block w-full rounded-md border-clay-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
           />
           {errors.password && (
             <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
@@ -117,14 +117,14 @@ export function RegisterForm() {
       </div>
 
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="confirmPassword" className="block text-sm font-medium text-clay-700">
           Confirm Password
         </label>
         <div className="mt-1">
           <input
             {...register('confirmPassword')}
             type="password"
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
+            className="block w-full rounded-md border-clay-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
           />
           {errors.confirmPassword && (
             <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
