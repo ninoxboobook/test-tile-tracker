@@ -21,7 +21,7 @@ export default async function RootLayout({
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/zmu6flc.css"></link>
       </head>
-      <body className="bg-sand">
+      <body className="bg-sand antialiased">
         <SessionProvider session={session}>
           {children}
         </SessionProvider>

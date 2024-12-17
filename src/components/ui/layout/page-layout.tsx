@@ -16,7 +16,7 @@ export function PageLayout({ title, action, children, description, variant = 'de
           <Breadcrumbs title={title} />
           <h1 className="text-3xl font-display font-semibold text-clay-800">{title}</h1>
           {description && (
-            <p className="mt-4 text-lg text-clay-900">{description}</p>
+            <p className="mt-4 text-lg text-clay-900">{description}</p>            
           )}
         </div>
         {action}

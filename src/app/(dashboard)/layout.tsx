@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { DashboardNav } from '@/components/navigation/nav-menu'
+import { Footer } from '@/components/navigation/footer'
 import { prisma } from '@/lib/prisma'
 
 export default async function DashboardLayout({
@@ -37,6 +38,7 @@ export default async function DashboardLayout({
       <div className="py-6">
           {children}
       </div>
+      <Footer />
     </div>
   )
 }

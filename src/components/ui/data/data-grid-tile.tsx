@@ -1,7 +1,13 @@
+import { Lozenge, LozengeVariant } from "../lozenge"
+
 interface DataGridTileProps {
   variant?: 'single' | 'quad'
   title: string
   images?: string[]
+  lozenges?: Array<{
+    label?: string
+    lozengeVariant?: LozengeVariant
+  }>
   metadata?: Array<{
     label?: string
     value: string
@@ -12,6 +18,7 @@ interface DataGridTileProps {
 export function DataGridTile({
   variant = 'single',
   title,
+  lozenges = [],
   images = [],
   metadata = [],
   description,
@@ -20,6 +27,9 @@ export function DataGridTile({
     <div className="flex flex-col">
       {variant === 'single' ? (
         <div className="aspect-square bg-clay-50">
+          {lozenges.map((lozenge) => (
+            <Lozenge key={lozenge.label} variant={lozenge.lozengeVariant} className="absolute top-2 right-2 z-10">{lozenge.label}</Lozenge>
+          ))}
           {images[0] ? (
             <img
               src={images[0]}
