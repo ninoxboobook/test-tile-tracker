@@ -27,9 +27,11 @@ export function DataGridTile({
     <div className="flex flex-col">
       {variant === 'single' ? (
         <div className="aspect-square bg-clay-50">
-          {lozenges.map((lozenge) => (
-            <Lozenge key={lozenge.label} variant={lozenge.lozengeVariant} className="absolute top-2 right-2 z-10">{lozenge.label}</Lozenge>
-          ))}
+          <div className="absolute top-3 right-3 z-10 flex flex-wrap justify-end gap-1">
+            {lozenges.map((lozenge) => (
+              <Lozenge key={lozenge.label} variant={lozenge.lozengeVariant}>{lozenge.label}</Lozenge>
+            ))}
+          </div>
           {images[0] ? (
             <img
               src={images[0]}
@@ -59,19 +61,22 @@ export function DataGridTile({
           ))}
         </div>
       )}
-      <div className="flex flex-1 flex-col space-y-2 p-4">
-        <h2 className="font-medium text-lg text-clay-900">{title}</h2>
+      <div className="flex flex-1 flex-col p-4">
+        <h2 className="font-display font-semibold text-lg text-clay-800">{title}</h2>
         {metadata && metadata.length > 0 && (
-          <div className="space-y-1 text-clay-500">
+          <div className="space-y-1 text-clay-800">
             {metadata.map((item, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                className={index === 0 ? 'italic mb-3' : undefined}
+              >
                 {item.label ? `${item.label}: ${item.value}` : item.value}
               </div>
             ))}
           </div>
         )}
         {description && (
-          <div className="line-clamp-2 text-clay-500">{description}</div>
+          <div className="line-clamp-2 text-clay-800 mt-3">{description}</div>
         )}
       </div>
     </div>

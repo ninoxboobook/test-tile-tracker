@@ -3,6 +3,7 @@
 import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { DataGrid } from '@/components/ui/data/data-grid'
 import { DataGridTile } from '@/components/ui/data/data-grid-tile'
+import { LozengeVariant } from '../ui/lozenge'
 
 interface ClayBodiesGridProps {
   clayBodies: (ClayBody & {
@@ -22,11 +23,17 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
           <DataGridTile
             title={clayBody.name}
             images={clayBody.imageUrl ?? undefined}
+            lozenges={
+              [
+                ...clayBody.cone.map(cone => ({
+                  label: /^(Low|Mid|High)/.test(cone.name) ? cone.name : `Cone ${cone.name}`,
+                  lozengeVariant: 'brand' as LozengeVariant
+                })),
+              ]
+            }
             metadata={[
-              ...(clayBody.type?.name ? [{ label: 'Type', value: clayBody.type.name }] : []),
-              ...(clayBody.manufacturer ? [{ label: 'Manufacturer', value: clayBody.manufacturer }] : []),
-              ...(clayBody.cone.length > 0 ? [{ label: 'Cone', value: clayBody.cone.map(c => c.name).join(', ') }] : []),
-              ...(clayBody.firingTemperature ? [{ label: 'Temperature', value: `${clayBody.firingTemperature}°C` }] : []),
+              ...(clayBody.manufacturer ? [{ value: clayBody.manufacturer }] : []),
+              ...(clayBody.type?.name ? [{ value: clayBody.type.name }] : []),
             ]}
           />
         ),
