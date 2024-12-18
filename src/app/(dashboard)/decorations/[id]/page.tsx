@@ -9,6 +9,8 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { deleteDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
+import { DecorationTestTiles } from '@/components/decorations/decoration-test-tiles'
+import { TestTileWithRelations } from '@/types/test-tile'
 
 export default async function DecorationPage(
   props: {
@@ -33,7 +35,22 @@ export default async function DecorationPage(
       atmosphere: true,
       decorationLayers: {
         include: {
-          testTile: true
+          testTile: {
+            include: {
+              clayBody: true,
+              decorationLayers: {
+                include: {
+                  decorations: true
+                },
+                orderBy: {
+                  order: 'asc'
+                }
+              },
+              collections: true,
+              cone: true,
+              atmosphere: true
+            }
+          }
         }
       }
     }
@@ -86,13 +103,26 @@ export default async function DecorationPage(
         items={detailItems}
         images={decorationWithRelations.imageUrl || undefined}
       />
-
-      {decorationWithRelations.decorationLayers.length > 0 && (
-        <div className="mt-8">
-          <h4 className="text-lg font-medium text-clay-900 mb-4">Test Tiles</h4>
-          {/* Add your test tiles list component here */}
+      <div className="mt-6 bg-sand-light rounded-2xl p-8">
+        <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles featuring this decoration</h2>
+        <div className="mt-4">
+          <DecorationTestTiles 
+            testTiles={Array.from(
+              new Map(
+                decorationWithRelations.decorationLayers
+                  .map(layer => layer.testTile)
+                  .filter((testTile): testTile is TestTileWithRelations => 
+                    testTile !== null && 
+                    typeof testTile === 'object' &&
+                    'id' in testTile
+                  )
+                  .map(testTile => [testTile.id, testTile])
+              ).values()
+            )}
+            decorationId={decorationWithRelations.id} 
+          />
         </div>
-      )}
+      </div>
     </PageLayout>
   )
 }

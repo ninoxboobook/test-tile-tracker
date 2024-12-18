@@ -38,6 +38,7 @@ export default async function CollectionPage(
   return (
     <PageLayout
       title={collection.name}
+      description={collection.description ?? undefined}
       action={
         <div className="flex space-x-3">
           <Link href={`/collections/${collection.id}/edit`}>
