@@ -3,11 +3,11 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteClayBody } from './actions'
 import { PageLayout } from '@/components/ui/layout/page-layout'
+import { DetailLayout } from '@/components/ui/layout/detail-layout'
 
 function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
   if (!imageUrl?.length) return null
@@ -16,10 +16,9 @@ function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {imageUrl.map((url: string, index: number) => (
         <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
-          <Image
+          <img
             src={url}
             alt={`Clay body image ${index + 1}`}
-            fill
             className="object-cover"
           />
         </div>
@@ -56,6 +55,21 @@ export default async function ClayBodyPage(
     return notFound()
   }
 
+  const detailItems = [
+    { label: 'Type', value: clayBody.type?.name },
+    { label: 'Manufacturer', value: clayBody.manufacturer },
+    { label: 'Cone', value: clayBody.cone.length > 0 ? clayBody.cone.map(c => c.name).join(', ') : undefined },
+    { label: 'Firing Temperature (°C)', value: clayBody.firingTemperature?.toString() },
+    { label: 'Colour (Oxidation)', value: clayBody.colourOxidation },
+    { label: 'Colour (Reduction)', value: clayBody.colourReduction },
+    { label: 'Texture', value: clayBody.texture },
+    { label: 'Plasticity', value: clayBody.plasticity },
+    { label: 'Shrinkage (%)', value: clayBody.shrinkage?.toString() },
+    { label: 'Absorption (%)', value: clayBody.absorption?.toString() },
+    { label: 'Mesh Size', value: clayBody.meshSize?.toString() },
+    { label: 'Notes', value: clayBody.notes },
+  ]
+
   return (
     <PageLayout
       title={clayBody.name}
@@ -73,93 +87,13 @@ export default async function ClayBodyPage(
           />
         </div>
       }
+      variant="detail"
     >
-      <ClayBodyImages imageUrl={clayBody.imageUrl} />
-
-      <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-        <div className="sm:col-span-1">
-          <dt className="text-sm font-medium text-clay-500">Type</dt>
-          <dd className="mt-1 text-sm text-clay-900">{clayBody.type?.name}</dd>
-        </div>
-
-        {clayBody.manufacturer && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Manufacturer</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.manufacturer}</dd>
-          </div>
-        )}
-
-        {clayBody.cone.length > 0 && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Cone</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.cone.map(c => c.name).join(', ')}</dd>
-          </div>
-        )}
-
-        {clayBody.firingTemperature && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Firing Temperature (°C)</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.firingTemperature}</dd>
-          </div>
-        )}
-
-        {clayBody.colourOxidation && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Colour (Oxidation)</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.colourOxidation}</dd>
-          </div>
-        )}
-
-        {clayBody.colourReduction && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Colour (Reduction)</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.colourReduction}</dd>
-          </div>
-        )}
-
-        {clayBody.texture && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Texture</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.texture}</dd>
-          </div>
-        )}
-
-        {clayBody.plasticity && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Plasticity</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.plasticity}</dd>
-          </div>
-        )}
-
-        {clayBody.shrinkage !== null && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Shrinkage (%)</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.shrinkage}</dd>
-          </div>
-        )}
-
-        {clayBody.absorption !== null && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Absorption (%)</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.absorption}</dd>
-          </div>
-        )}
-
-        {clayBody.meshSize !== null && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Mesh Size</dt>
-            <dd className="mt-1 text-sm text-clay-900">{clayBody.meshSize}</dd>
-          </div>
-        )}
-
-        {clayBody.notes && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-clay-500">Notes</dt>
-            <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">{clayBody.notes}</dd>
-          </div>
-        )}
-      </dl>
-
+      <DetailLayout
+        title="Clay Body Details"
+        items={detailItems}
+        images={clayBody.imageUrl}
+      />
       {clayBody.testTiles.length > 0 && (
         <div className="border-t border-clay-200 pt-6">
           <h3 className="text-lg font-medium text-clay-900">Test Tiles</h3>
@@ -171,10 +105,9 @@ export default async function ClayBodyPage(
                 className="group relative block w-full aspect-square rounded-lg bg-clay-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-clay-100 overflow-hidden"
               >
                 {testTile.imageUrl?.[0] && (
-                  <Image
+                  <img
                     src={testTile.imageUrl[0]}
                     alt={testTile.name || ''}
-                    fill
                     className="pointer-events-none object-cover group-hover:opacity-75"
                   />
                 )}
