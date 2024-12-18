@@ -8,6 +8,7 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteClayBody } from './actions'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
+import { ClayBodyTestTiles } from '@/components/clay-bodies/clay-body-test-tiles'
 
 function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
   if (!imageUrl?.length) return null
@@ -45,7 +46,22 @@ export default async function ClayBodyPage(
       userId: session.user.id,
     },
     include: {
-      testTiles: true,
+      testTiles: {
+        include: {
+          clayBody: true,
+          decorationLayers: {
+            include: {
+              decorations: true
+            },
+            orderBy: {
+              order: 'asc'
+            }
+          },
+          collections: true,
+          cone: true,
+          atmosphere: true
+        }
+      },
       type: true,
       cone: true
     },
@@ -94,31 +110,12 @@ export default async function ClayBodyPage(
         items={detailItems}
         images={clayBody.imageUrl}
       />
-      {clayBody.testTiles.length > 0 && (
-        <div className="border-t border-clay-200 pt-6">
-          <h3 className="text-lg font-medium text-clay-900">Test Tiles</h3>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {clayBody.testTiles.map((testTile) => (
-              <Link
-                key={testTile.id}
-                href={`/test-tiles/${testTile.id}`}
-                className="group relative block w-full aspect-square rounded-lg bg-clay-100 focus-within:ring-2 focus-within:ring-clay-500 focus-within:ring-offset-2 focus-within:ring-offset-clay-100 overflow-hidden"
-              >
-                {testTile.imageUrl?.[0] && (
-                  <img
-                    src={testTile.imageUrl[0]}
-                    alt={testTile.name || ''}
-                    className="pointer-events-none object-cover group-hover:opacity-75"
-                  />
-                )}
-                <div className="absolute inset-0 flex items-end p-4 bg-gradient-to-t from-black/50 to-transparent">
-                  <p className="text-sm font-medium text-white">{testTile.name}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+      <div className="mt-6 bg-sand-light rounded-2xl p-8">
+        <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles featuring this clay body</h2>
+        <div className="mt-4">
+          <ClayBodyTestTiles testTiles={clayBody.testTiles} clayBodyId={clayBody.id} />
         </div>
-      )}
+      </div>
     </PageLayout>
   )
 }
