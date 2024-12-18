@@ -23,6 +23,7 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
           <DataGridTile
             title={clayBody.name}
             images={clayBody.imageUrl ?? undefined}
+            subtitle={clayBody.manufacturer ?? undefined}
             lozenges={
               [
                 ...clayBody.cone.map(cone => ({
@@ -32,7 +33,6 @@ export function ClayBodiesGrid({ clayBodies }: ClayBodiesGridProps) {
               ]
             }
             metadata={[
-              ...(clayBody.manufacturer ? [{ value: clayBody.manufacturer }] : []),
               ...(clayBody.type?.name ? [{ value: clayBody.type.name }] : []),
             ]}
           />

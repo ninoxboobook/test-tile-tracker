@@ -3,6 +3,7 @@ import { Lozenge, LozengeVariant } from "../lozenge"
 interface DataGridTileProps {
   variant?: 'single' | 'quad'
   title: string
+  subtitle?: string
   images?: string[]
   lozenges?: Array<{
     label?: string
@@ -18,6 +19,7 @@ interface DataGridTileProps {
 export function DataGridTile({
   variant = 'single',
   title,
+  subtitle,
   lozenges = [],
   images = [],
   metadata = [],
@@ -63,13 +65,11 @@ export function DataGridTile({
       )}
       <div className="flex flex-1 flex-col p-4">
         <h2 className="font-display font-semibold text-lg text-clay-800">{title}</h2>
+        {subtitle && ( <div className="italic text-clay-800">{subtitle}</div>)}
         {metadata && metadata.length > 0 && (
-          <div className="space-y-1 text-clay-800">
+          <div className="space-y-1 text-clay-800 mt-3">
             {metadata.map((item, index) => (
-              <div
-                key={index}
-                className={index === 0 ? 'italic mb-3' : undefined}
-              >
+              <div key={index}>
                 {item.label ? `${item.label}: ${item.value}` : item.value}
               </div>
             ))}
