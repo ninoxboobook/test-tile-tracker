@@ -49,28 +49,25 @@ export default async function TestTilePage({ params }: PageProps) {
   const detailItems = [
     { 
       label: 'Clay Body', 
-      value: `/clay-bodies/${testTile.clayBody.id}|${testTile.clayBody.name}` 
+      value: [{ 
+        href: `/clay-bodies/${testTile.clayBody.id}`,
+        text: testTile.clayBody.name
+      }]
     },
     { label: 'Stamp', value: testTile.stamp },
     { label: 'Cone', value: testTile.cone?.name },
     { label: 'Atmosphere', value: testTile.atmosphere?.name },
     { 
       label: 'Decorations', 
-      value: testTile.decorationLayers.length > 0 
-        ? testTile.decorationLayers.flatMap(layer => 
-            layer.decorations.map(decoration => 
-              `/decorations/${decoration.id}|${decoration.name}`
-            )
-          ).join('\n')
-        : undefined
-    },
-    { 
-      label: 'Collections', 
-      value: testTile.collections.length > 0
-        ? testTile.collections
-            .map(collection => `/collections/${collection.id}|${collection.name}`)
-            .join('\n')
-        : undefined
+      value: testTile.decorationLayers.flatMap((layer, index) =>
+        [
+          { href: '#', text: `Layer ${index + 1}:` },
+          ...layer.decorations.map(d => ({
+            href: `/decorations/${d.id}`,
+            text: d.name
+          }))
+        ]
+      )
     },
     { label: 'Notes', value: testTile.notes },
   ]

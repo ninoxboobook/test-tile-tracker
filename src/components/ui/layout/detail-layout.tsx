@@ -1,9 +1,10 @@
 import { DetailImage } from '../detail-image'
 import Link from 'next/link'
+import { ReactNode } from 'react'
 
 interface DetailItem {
   label: string
-  value: string | null | undefined
+  value: string | null | undefined | { href: string; text: string }[]
 }
 
 interface DetailLayoutProps {
@@ -13,39 +14,86 @@ interface DetailLayoutProps {
 }
 
 export function DetailLayout({ title, items, images }: DetailLayoutProps) {
-  const renderValue = (value: string | null | undefined) => {
+  const renderValue = (value: DetailItem['value']) => {
     if (!value) return null
     
-    // Handle internal links with format "/path|text"
-    if (value.startsWith('/')) {
-      return value.split('\n').map((line, i) => {
-        const [href, text] = line.split('|')
-        return (
-          <div key={i}>
-            <Link href={href} className="text-indigo-600 hover:text-indigo-500">
-              {text}
-            </Link>
-          </div>
-        )
-      })
+    // Handle array of links
+    if (Array.isArray(value)) {
+      // Check if this is a layer-based structure (for decorations)
+      const hasLayers = value.some(item => item.text.startsWith('Layer'))
+      
+      if (hasLayers) {
+        let currentLinks: ReactNode[] = []
+        let currentLabel: ReactNode | null = null
+        const result: ReactNode[] = []
+        
+        value.forEach((item, i) => {
+          if (item.text.startsWith('Layer')) {
+            if (currentLabel && currentLinks.length > 0) {
+              result.push(
+                <div key={result.length} className="mb-2">
+                  {currentLabel}
+                  {currentLinks.reduce<ReactNode[]>((acc, curr, idx) => {
+                    if (idx === 0) return [curr]
+                    return [...acc, ', ', curr]
+                  }, [])}
+                </div>
+              )
+            }
+            currentLabel = <span className="font-medium text-clay-700">{item.text} </span>
+            currentLinks = []
+          } else {
+            currentLinks.push(
+              <Link key={i} href={item.href} className="text-indigo-600 hover:text-indigo-500">
+                {item.text}
+              </Link>
+            )
+          }
+        })
+        
+        if (currentLabel && currentLinks.length > 0) {
+          result.push(
+            <div key={result.length} className="mb-2">
+              {currentLabel}
+              {currentLinks.reduce<ReactNode[]>((acc, curr, idx) => {
+                if (idx === 0) return [curr]
+                return [...acc, ', ', curr]
+              }, [])}
+            </div>
+          )
+        }
+        
+        return result
+      } else {
+        // Handle regular links (clay body, collections)
+        return value.map((item, i) => (
+          <Link key={i} href={item.href} className="text-indigo-600 hover:text-indigo-500">
+            {item.text}
+          </Link>
+        ))
+      }
     }
     
-    // Check if the value is an external URL
-    try {
-      const url = new URL(value)
-      return (
-        <a
-          href={value}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-indigo-600 hover:text-indigo-500"
-        >
-          View on {url.hostname.replace('www.', '')}
-        </a>
-      )
-    } catch {
-      return value
+    // Handle external URLs
+    if (typeof value === 'string') {
+      try {
+        const url = new URL(value)
+        return (
+          <a
+            href={value}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-600 hover:text-indigo-500"
+          >
+            View on {url.hostname.replace('www.', '')}
+          </a>
+        )
+      } catch {
+        return value
+      }
     }
+    
+    return null
   }
 
   return (
