@@ -8,6 +8,7 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { deleteTestTile } from './actions'
+import { TestTileCollections } from '@/components/test-tiles/test-tile-collections'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -36,7 +37,16 @@ export default async function TestTilePage({ params }: PageProps) {
           order: 'asc'
         }
       },
-      collections: true,
+      collections: {
+        include: {
+          testTiles: {
+            select: {
+              id: true,
+              imageUrl: true
+            }
+          }
+        }
+      },
       cone: true,
       atmosphere: true
     },
@@ -96,6 +106,12 @@ export default async function TestTilePage({ params }: PageProps) {
         items={detailItems}
         images={testTile.imageUrl || undefined}
       />
+      <div className="mt-8">
+        <h2 className="text-base font-semibold leading-7 text-gray-900">Collections this tile appears in</h2>
+        <div className="mt-4">
+          <TestTileCollections collections={testTile.collections} testTileId={testTile.id} />
+        </div>
+      </div>
     </PageLayout>
   )
 }
