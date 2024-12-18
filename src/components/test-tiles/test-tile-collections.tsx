@@ -1,7 +1,7 @@
 'use client'
 
 import { Collection, TestTile } from '@prisma/client'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
 import { CollectionsTable, columns } from '@/components/collections/collections-table'
 import { CollectionsGrid } from '@/components/collections/collections-grid'
@@ -24,11 +24,13 @@ export function TestTileCollections({ collections, testTileId }: TestTileCollect
   const [search, setSearch] = useState('')
   const [activeFilters, setActiveFilters] = useState<Record<string, (string | number)[]>>({})
 
-  const filteredCollections = collections.filter(collection => 
-    collection.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filteredCollections = useMemo(() => {
+    return collections.filter(collection => 
+      collection.name.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [collections, search])
 
-  const table = useReactTable({
+  const tableOptions = useMemo(() => ({
     data: filteredCollections,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -38,7 +40,9 @@ export function TestTileCollections({ collections, testTileId }: TestTileCollect
       columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
-  })
+  }), [filteredCollections, columnVisibility])
+
+  const table = useReactTable(tableOptions)
 
   if (collections.length === 0) {
     return (
