@@ -16,8 +16,8 @@ export function DetailImage({ images = [] }: DetailImageProps) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="aspect-square bg-clay-50 rounded-xl overflow-hidden">
+    <div className="bg-sand-light rounded-2xl">
+      <div className={`aspect-square bg-clay-50 ${images.length > 1 ? 'rounded-t-xl' : 'rounded-xl'} overflow-hidden`}>
         <img
           src={images[selectedIndex]}
           alt="Selected image"
@@ -25,13 +25,13 @@ export function DetailImage({ images = [] }: DetailImageProps) {
         />
       </div>
       {images.length > 1 && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 p-8">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => setSelectedIndex(index)}
-              className={`aspect-square bg-clay-50 rounded-lg overflow-hidden ${
-                index === selectedIndex ? 'ring-2 ring-clay-500' : ''
+              className={`aspect-square bg-clay-50 rounded overflow-hidden ${
+                index === selectedIndex ? 'ring-2 ring-brand ring-offset-2' : ''
               }`}
             >
               <img
