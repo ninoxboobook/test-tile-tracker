@@ -1,4 +1,5 @@
 import { DetailImage } from '../detail-image'
+import Link from 'next/link'
 
 interface DetailItem {
   label: string
@@ -15,7 +16,21 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
   const renderValue = (value: string | null | undefined) => {
     if (!value) return null
     
-    // Check if the value is a URL
+    // Handle internal links with format "/path|text"
+    if (value.startsWith('/')) {
+      return value.split('\n').map((line, i) => {
+        const [href, text] = line.split('|')
+        return (
+          <div key={i}>
+            <Link href={href} className="text-indigo-600 hover:text-indigo-500">
+              {text}
+            </Link>
+          </div>
+        )
+      })
+    }
+    
+    // Check if the value is an external URL
     try {
       const url = new URL(value)
       return (

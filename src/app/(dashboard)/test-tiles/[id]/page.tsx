@@ -3,33 +3,14 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
+import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { deleteTestTile } from './actions'
 
 interface PageProps {
   params: Promise<{ id: string }>
-}
-
-function TestTileImages({ imageUrl }: { imageUrl: string[] | null }) {
-  if (!imageUrl?.length) return null
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      {imageUrl.map((url: string, index: number) => (
-        <div key={url} className="relative aspect-square overflow-hidden rounded-lg">
-          <Image
-            src={url}
-            alt={`Test tile image ${index + 1}`}
-            fill
-            className="object-cover"
-          />
-        </div>
-      ))}
-    </div>
-  )
 }
 
 export default async function TestTilePage({ params }: PageProps) {
@@ -65,8 +46,36 @@ export default async function TestTilePage({ params }: PageProps) {
     return notFound()
   }
 
-  return (
+  const detailItems = [
+    { 
+      label: 'Clay Body', 
+      value: `/clay-bodies/${testTile.clayBody.id}|${testTile.clayBody.name}` 
+    },
+    { label: 'Stamp', value: testTile.stamp },
+    { label: 'Cone', value: testTile.cone?.name },
+    { label: 'Atmosphere', value: testTile.atmosphere?.name },
+    { 
+      label: 'Decorations', 
+      value: testTile.decorationLayers.length > 0 
+        ? testTile.decorationLayers.flatMap(layer => 
+            layer.decorations.map(decoration => 
+              `/decorations/${decoration.id}|${decoration.name}`
+            )
+          ).join('\n')
+        : undefined
+    },
+    { 
+      label: 'Collections', 
+      value: testTile.collections.length > 0
+        ? testTile.collections
+            .map(collection => `/collections/${collection.id}|${collection.name}`)
+            .join('\n')
+        : undefined
+    },
+    { label: 'Notes', value: testTile.notes },
+  ]
 
+  return (
     <PageLayout
       title={testTile.name}
       action={
@@ -83,81 +92,13 @@ export default async function TestTilePage({ params }: PageProps) {
           />
         </div>
       }
+      variant="detail"
     >
-      <TestTileImages imageUrl={testTile.imageUrl} />
-
-      <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
-        <div className="sm:col-span-1">
-          <dt className="text-sm font-medium text-clay-500">Clay Body</dt>
-          <dd className="mt-1 text-sm text-clay-900">
-            <Link href={`/clay-bodies/${testTile.clayBody.id}`} className="text-indigo-600 hover:text-indigo-500">
-              {testTile.clayBody.name}
-            </Link>
-          </dd>
-        </div>
-
-        {testTile.stamp && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Stamp</dt>
-            <dd className="mt-1 text-sm text-clay-900">{testTile.stamp}</dd>
-          </div>
-        )}
-
-        {testTile.cone && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Cone</dt>
-            <dd className="mt-1 text-sm text-clay-900">{testTile.cone.name}</dd>
-          </div>
-        )}
-
-        {testTile.atmosphere && (
-          <div className="sm:col-span-1">
-            <dt className="text-sm font-medium text-clay-500">Atmosphere</dt>
-            <dd className="mt-1 text-sm text-clay-900">{testTile.atmosphere.name}</dd>
-          </div>
-        )}
-
-        {testTile.decorationLayers.length > 0 && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-clay-500">Decorations</dt>
-            <dd className="mt-1 text-sm text-clay-900">
-              <ul className="space-y-1">
-                {testTile.decorationLayers.map(layer => (
-                  <li key={layer.id}>
-                    <Link href={`/decorations/${layer.id}`} className="text-indigo-600 hover:text-indigo-500">
-                      {layer.decorations.map(d => d.name).join(', ')}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        )}
-
-        {testTile.collections.length > 0 && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-clay-500">Collections</dt>
-            <dd className="mt-1 text-sm text-clay-900">
-              <ul className="space-y-1">
-                {testTile.collections.map(collection => (
-                  <li key={collection.id}>
-                    <Link href={`/collections/${collection.id}`} className="text-indigo-600 hover:text-indigo-500">
-                      {collection.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-        )}
-
-        {testTile.notes && (
-          <div className="sm:col-span-2">
-            <dt className="text-sm font-medium text-clay-500">Notes</dt>
-            <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">{testTile.notes}</dd>
-          </div>
-        )}
-      </dl>
+      <DetailLayout
+        title="Test Tile Details"
+        items={detailItems}
+        images={testTile.imageUrl || undefined}
+      />
     </PageLayout>
   )
 }
