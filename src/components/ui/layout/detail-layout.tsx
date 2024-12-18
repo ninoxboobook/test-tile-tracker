@@ -44,7 +44,7 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
             currentLinks = []
           } else {
             currentLinks.push(
-              <Link key={i} href={item.href} className="text-indigo-600 hover:text-indigo-500">
+              <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
                 {item.text}
               </Link>
             )
@@ -67,7 +67,7 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
       } else {
         // Handle regular links (clay body, collections)
         return value.map((item, i) => (
-          <Link key={i} href={item.href} className="text-indigo-600 hover:text-indigo-500">
+          <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
             {item.text}
           </Link>
         ))
@@ -83,7 +83,7 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
             href={value}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-600 hover:text-indigo-500"
+            className="text-brand underline hover:text-clay-700"
           >
             View on {url.hostname.replace('www.', '')}
           </a>
@@ -100,13 +100,13 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
     <div className="grid grid-cols-12 gap-8">
       <div className="col-span-7">
         <div className="bg-sand-light rounded-2xl p-8">
-          <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">{title}</h2>
-          <dl className="space-y-4">
+          <h2 className="text-2xl font-display font-semibold text-clay-800 mb-10">{title}</h2>
+          <dl className="space-y-8">
             {items.map((item, index) => (
               item.value && (
                 <div key={index}>
-                  <dt className="text-sm font-medium text-clay-500">{item.label}</dt>
-                  <dd className="mt-1 text-sm text-clay-900 whitespace-pre-wrap">
+                  <dt className="text-lg font-medium text-clay-700">{item.label}</dt>
+                  <dd className="mt-1 text-clay-900 whitespace-pre-wrap">
                     {renderValue(item.value)}
                   </dd>
                 </div>

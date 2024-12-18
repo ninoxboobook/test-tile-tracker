@@ -106,8 +106,8 @@ export default async function TestTilePage({ params }: PageProps) {
         items={detailItems}
         images={testTile.imageUrl || undefined}
       />
-      <div className="mt-8">
-        <h2 className="text-base font-semibold leading-7 text-gray-900">Collections this tile appears in</h2>
+      <div className="mt-6 bg-sand-light rounded-2xl p-8">
+        <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Collections this tile appears in</h2>
         <div className="mt-4">
           <TestTileCollections collections={testTile.collections} testTileId={testTile.id} />
         </div>
