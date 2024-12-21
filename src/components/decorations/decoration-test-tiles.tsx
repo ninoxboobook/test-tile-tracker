@@ -11,6 +11,7 @@ import { TestTileWithRelations } from '@/types/test-tile'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 interface DecorationTestTilesProps {
   testTiles: TestTileWithRelations[]
@@ -146,15 +147,17 @@ export function DecorationTestTiles({ testTiles, decorationId }: DecorationTestT
 
   const table = useReactTable(tableOptions)
 
-  if (testTiles.length === 0) {
+  if (filteredTestTiles.length === 0) {
     return (
-      <div className="text-center py-8">
-        <h3 className="text-lg font-medium text-clay-700 mb-2">No test tiles yet</h3>
-        <p className="text-sm text-clay-500 mb-4">Create a test tile using this decoration to start exploring its properties.</p>
-        <Link href={`/test-tiles/new?decorationId=${decorationId}`}>
-          <ActionButton>Create Test Tile</ActionButton>
-        </Link>
-      </div>
+      <EmptyState
+        title="No test tiles"
+        description="Create a test tile using this decoration to start exploring its properties."
+        action={
+          <Link href={`/test-tiles/new?decorationId=${decorationId}`}>
+            <ActionButton>Create Test Tile</ActionButton>
+          </Link>
+        }
+      />
     )
   }
 

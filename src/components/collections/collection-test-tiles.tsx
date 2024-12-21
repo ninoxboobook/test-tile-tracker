@@ -11,6 +11,7 @@ import { TestTileWithRelations } from '@/types/test-tile'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 interface CollectionTestTilesProps {
   testTiles: TestTileWithRelations[]
@@ -150,15 +151,17 @@ export function CollectionTestTiles({ testTiles, collectionId }: CollectionTestT
 
   const table = useReactTable(tableOptions)
 
-  if (testTiles.length === 0) {
+  if (filteredTestTiles.length === 0) {
     return (
-      <div className="text-center py-8">
-        <h3 className="text-lg font-medium text-clay-700 mb-2">No test tiles yet</h3>
-        <p className="text-sm text-clay-500 mb-4">Add test tiles to this collection to start organizing your work.</p>
-        <Link href={`/test-tiles/new?collectionId=${collectionId}`}>
-          <ActionButton>Create Test Tile</ActionButton>
-        </Link>
-      </div>
+      <EmptyState
+        title="No test tiles"
+        description="Add test tiles to this collection to start organizing your experiments"
+        action={
+          <Link href={`/test-tiles/new?collectionId=${collectionId}`}>
+            <ActionButton>Create test tile</ActionButton>
+          </Link>
+        }
+      />
     )
   }
 

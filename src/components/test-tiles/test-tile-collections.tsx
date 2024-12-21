@@ -9,6 +9,7 @@ import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { useViewPreference } from '@/lib/hooks/use-view-preference'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import Link from 'next/link'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 type CollectionWithTiles = Collection & {
   testTiles: Pick<TestTile, 'id' | 'imageUrl'>[]
@@ -46,13 +47,15 @@ export function TestTileCollections({ collections, testTileId }: TestTileCollect
 
   if (collections.length === 0) {
     return (
-      <div className="text-center py-8">
-        <h3 className="text-lg font-medium text-clay-700 mb-2">No collections yet</h3>
-        <p className="text-sm text-clay-500 mb-4">Add this test tile to a collection to organize your work.</p>
-        <Link href={`/test-tiles/${testTileId}/add-to-collection`}>
-          <ActionButton>Add to Collection</ActionButton>
-        </Link>
-      </div>
+      <EmptyState
+        title="No collections"
+        description="Create a collection to start organizing your test tiles"
+        action={
+          <Link href={`/test-tiles/${testTileId}/add-to-collection`}>
+            <ActionButton>Create collection</ActionButton>
+          </Link>
+        }
+      />
     )
   }
 
