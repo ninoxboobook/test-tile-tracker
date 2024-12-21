@@ -49,7 +49,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-8">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>

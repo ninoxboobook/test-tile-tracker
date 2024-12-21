@@ -95,7 +95,7 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
     accessorKey: 'collections',
     header: 'Collections',
     cell: ({ row }) => (
-      <div className="space-x-1">
+      <div className="space-x-1 whitespace-normal">
         {row.original.collections.map((collection, index) => (
           <span key={collection.id}>
             <Link
