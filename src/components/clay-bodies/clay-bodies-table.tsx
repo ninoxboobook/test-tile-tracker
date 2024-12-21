@@ -26,7 +26,7 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
         : row.original.imageUrl;
       
       return (
-        <div className="relative h-10 w-10">
+        <div className="relative h-14 w-14">
           {imageUrl && imageUrl.length > 0 ? (
             <Image
               src={imageUrl}
