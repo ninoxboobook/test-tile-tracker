@@ -10,6 +10,7 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/lib/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import Link from 'next/link'
+import { SearchConfig } from '@/types/search'
 
 type CollectionWithTiles = Collection & {
   testTiles: Pick<TestTile, 'id' | 'imageUrl'>[]
@@ -24,10 +25,26 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
   const [search, setSearch] = useState('')
   const [activeFilters, setActiveFilters] = useState<Record<string, (string | number)[]>>({})
 
+  // Define searchable columns configuration
+  const searchConfig: SearchConfig = {
+    columns: [
+      { id: 'name', accessorPath: ['name'] },
+      { id: 'description', accessorPath: ['description'] }
+    ]
+  }
+
   const filteredCollections = useMemo(() => {
-    return collections.filter(collection => 
-      collection.name.toLowerCase().includes(search.toLowerCase())
-    )
+    return collections
+      .filter(collection => {
+        if (!search) return true
+        const searchLower = search.toLowerCase()
+        
+        return searchConfig.columns.some(column => {
+          // Handle direct properties
+          const value = collection[column.id as keyof typeof collection]
+          return typeof value === 'string' && value.toLowerCase().includes(searchLower)
+        })
+      })
   }, [collections, search])
 
   const table = useReactTable({

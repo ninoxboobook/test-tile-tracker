@@ -13,6 +13,7 @@ import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { DecorationWithRelations } from '@/lib/schemas/decoration'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { SearchConfig } from '@/types/search'
 
 interface DecorationsContentProps {
   decorations: DecorationWithRelations[]
@@ -26,6 +27,19 @@ const filterConfig: FilterableColumnConfig<'source' | 'type'> = {
 }
 
 type FilterableColumn = typeof filterConfig.columns[number]
+
+// Define searchable columns configuration
+const searchConfig: SearchConfig = {
+  columns: [
+    { id: 'name', accessorPath: ['name'] },
+    { id: 'source', accessorPath: ['source'] },
+    { id: 'manufacturer', accessorPath: ['manufacturer'] },
+    { id: 'colour', accessorPath: ['colour'] },
+    { id: 'type', accessorPath: ['type', 'name'] },
+    { id: 'cone', accessorPath: ['cone', 'name'] },
+    { id: 'atmosphere', accessorPath: ['atmosphere', 'name'] }
+  ]
+}
 
 export function DecorationsContent({ decorations }: DecorationsContentProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('decorations')
@@ -120,6 +134,34 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
   const filteredDecorations = useMemo(() => {
     return decorations
       .filter(decoration => {
+        if (!search) return true
+        const searchLower = search.toLowerCase()
+        
+        return searchConfig.columns.some(column => {
+          // Handle array paths (like cone and atmosphere)
+          if (column.id === 'cone') {
+            return decoration.cone.some(c =>
+              c.name.toLowerCase().includes(searchLower)
+            )
+          }
+          
+          if (column.id === 'atmosphere') {
+            return decoration.atmosphere.some(a =>
+              a.name.toLowerCase().includes(searchLower)
+            )
+          }
+          
+          // Handle nested object paths (like type)
+          if (column.id === 'type') {
+            return decoration.type.name.toLowerCase().includes(searchLower)
+          }
+          
+          // Handle direct properties
+          const value = decoration[column.id as keyof typeof decoration]
+          return typeof value === 'string' && value.toLowerCase().includes(searchLower)
+        })
+      })
+      .filter(decoration => {
         return Object.entries(activeFilters).every(([filterId, values]) => {
           if (values.length === 0) return true
           
@@ -138,9 +180,6 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
           return typeof value === 'string' && values.includes(value)
         })
       })
-      .filter(decoration => 
-        decoration.name.toLowerCase().includes(search.toLowerCase())
-      )
   }, [decorations, search, activeFilters])
 
   const table = useReactTable({

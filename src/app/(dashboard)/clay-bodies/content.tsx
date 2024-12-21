@@ -10,6 +10,7 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/lib/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
+import { SearchConfig } from '@/types/search'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 
@@ -28,6 +29,16 @@ const filterConfig: FilterableColumnConfig<'type' | 'cone' | 'manufacturer'> = {
 }
 
 type FilterableColumn = typeof filterConfig.columns[number]
+
+// Define searchable columns configuration
+const searchConfig: SearchConfig = {
+  columns: [
+    { id: 'name', accessorPath: ['name'] },
+    { id: 'manufacturer', accessorPath: ['manufacturer'] },
+    { id: 'type', accessorPath: ['type', 'name'] },
+    { id: 'cone', accessorPath: ['cone', 'name'] }
+  ]
+}
 
 export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('clay-bodies')
@@ -100,9 +111,28 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
 
   const filteredClayBodies = useMemo(() => {
     return clayBodies
-      .filter(clayBody => 
-        clayBody.name.toLowerCase().includes(search.toLowerCase())
-      )
+      .filter(clayBody => {
+        if (!search) return true
+        const searchLower = search.toLowerCase()
+        
+        return searchConfig.columns.some(column => {
+          // Handle array paths (like cone)
+          if (column.id === 'cone') {
+            return clayBody.cone.some(c =>
+              c.name.toLowerCase().includes(searchLower)
+            )
+          }
+          
+          // Handle nested object paths (like type)
+          if (column.id === 'type') {
+            return clayBody.type?.name.toLowerCase().includes(searchLower) ?? false
+          }
+          
+          // Handle direct properties
+          const value = clayBody[column.id as keyof typeof clayBody]
+          return typeof value === 'string' && value.toLowerCase().includes(searchLower)
+        })
+      })
       .filter(clayBody => {
         return Object.entries(activeFilters).every(([filterId, values]) => {
           if (values.length === 0) return true

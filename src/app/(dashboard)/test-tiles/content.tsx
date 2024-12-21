@@ -12,6 +12,7 @@ import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { SearchConfig } from '@/types/search'
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]
@@ -39,6 +40,17 @@ const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'collect
 }
 
 type FilterableColumn = typeof filterConfig.columns[number]
+
+// Define searchable columns configuration
+const searchConfig: SearchConfig = {
+  columns: [
+    { id: 'name', accessorPath: ['name'] },
+    { id: 'stamp', accessorPath: ['stamp'] },
+    { id: 'clayBody', accessorPath: ['clayBody', 'name'] },
+    { id: 'decorations', accessorPath: ['decorationLayers', 'decorations', 'name'] },
+    { id: 'collections', accessorPath: ['collections', 'name'] }
+  ]
+}
 
 export function TestTilesContent({ testTiles }: TestTilesContentProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('test-tiles')
@@ -120,9 +132,36 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
 
   const filteredTestTiles = useMemo(() => {
     return testTiles
-      .filter(testTile => 
-        testTile.name.toLowerCase().includes(search.toLowerCase())
-      )
+      .filter(testTile => {
+        if (!search) return true
+        const searchLower = search.toLowerCase()
+        
+        return searchConfig.columns.some(column => {
+          // Handle array paths (like decorations and collections)
+          if (column.id === 'decorations') {
+            return testTile.decorationLayers.some(layer =>
+              layer.decorations.some(d =>
+                d.name.toLowerCase().includes(searchLower)
+              )
+            )
+          }
+          
+          if (column.id === 'collections') {
+            return testTile.collections.some(c =>
+              c.name.toLowerCase().includes(searchLower)
+            )
+          }
+          
+          // Handle nested object paths (like clayBody)
+          if (column.id === 'clayBody') {
+            return testTile.clayBody.name.toLowerCase().includes(searchLower)
+          }
+          
+          // Handle direct properties
+          const value = testTile[column.id as keyof typeof testTile]
+          return typeof value === 'string' && value.toLowerCase().includes(searchLower)
+        })
+      })
       .filter(testTile => {
         return Object.entries(activeFilters).every(([filterId, values]) => {
           if (values.length === 0) return true
