@@ -5,6 +5,7 @@ import { Input } from './data-input'
 import { ViewToggle } from './data-view-toggle'
 import { DataTableColumnOptions } from './data-table-column-options'
 import { Menu } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/16/solid'
 
 export type FilterOption = {
   id: string
@@ -45,23 +46,27 @@ export function DataViewToolbar<TData>({
           placeholder={searchPlaceholder}
           value={search ?? ''}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="h-8 w-[200px]"
+          className="w-[200px]"
         />
+        {filters.length > 0 && (
+          <div className="text-sm font-semibold uppercase text-clay-700 pl-7 pr-1">Filter by</div>
+        )}
         {filters.map(filter => (
           <Menu as="div" key={filter.id} className="relative">
             <Menu.Button 
-              className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium ${
+              className={`flex items-center gap-1 rounded-md border bg-sand-light border-clay-400 text-clay-700 pl-3 pr-2 py-2 text-sm font-medium ${
                 activeFilters[filter.id]?.length 
-                  ? 'bg-clay-100 text-clay-900 border-clay-200 hover:bg-clay-200' 
-                  : 'bg-white text-clay-700 hover:bg-clay-50'
+                  ? 'bg-sand border-brand text-clay-900 hover:bg-clay-100' 
+                  : 'bg-sand-light text-clay-700 hover:bg-sand'
               }`}
             >
-              Filter by {filter.label}
+              <span className="translate-y-[-1px]">{filter.label}</span>
               {activeFilters[filter.id]?.length > 0 && (
-                <span className="ml-1 rounded-full bg-clay-200 px-2 py-0.5 text-xs font-medium text-clay-900">
+                <span className="ml-1 rounded-full bg-clay-200 px-2 pb-0.5 text-xs font-medium text-clay-900">
                   {activeFilters[filter.id].length}
                 </span>
               )}
+              <ChevronDownIcon className="h-4 w-4 pt-[1px]" aria-hidden="true" />
             </Menu.Button>
             <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
               <div className="p-2">
@@ -70,7 +75,7 @@ export function DataViewToolbar<TData>({
                     <label key={option.value} className="flex items-center">
                       <input
                         type="checkbox"
-                        className="rounded border-clay-300 text-clay-600 focus:ring-clay-500"
+                        className="rounded border-clay-400 text-clay-600 focus:ring-brand"
                         checked={activeFilters[filter.id]?.includes(option.value) ?? false}
                         onChange={(e) => {
                           const currentValues = activeFilters[filter.id] || []
@@ -80,7 +85,7 @@ export function DataViewToolbar<TData>({
                           onFilterChange(filter.id, newValues)
                         }}
                       />
-                      <span className="ml-2 text-sm text-clay-700">{option.label}</span>
+                      <span className="ml-2 text-sm text-clay-700 translate-y-[-1px]">{option.label}</span>
                     </label>
                   ))}
                 </div>

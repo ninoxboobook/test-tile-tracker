@@ -143,7 +143,7 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
         </Link>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-8">
         <DataViewToolbar
           view={view}
           onViewChange={setView}

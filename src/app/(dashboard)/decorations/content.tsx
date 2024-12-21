@@ -165,7 +165,7 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
         </Link>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-8">
         <DataViewToolbar
           view={view}
           onViewChange={setView}

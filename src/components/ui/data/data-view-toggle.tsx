@@ -10,26 +10,26 @@ interface ViewToggleProps {
 
 export function ViewToggle({ view, onChange }: ViewToggleProps) {
   return (
-    <div className="flex items-center space-x-2 rounded-md border bg-white p-1">
+    <div className="flex items-center space-x-1 rounded-md border border-clay-400 bg-sand-light  p-1">
       <button
         onClick={() => onChange('table')}
-        className={`rounded-sm p-1.5 ${
+        className={`rounded-sm px-[3px] py-[2px] ${
           view === 'table'
-            ? 'bg-clay-100 text-clay-900'
-            : 'text-clay-500 hover:text-clay-900'
+            ? 'bg-clay-100 text-clay-700'
+            : 'text-clay-500 hover:text-clay-700'
         }`}
       >
-        <TableCellsIcon className="h-5 w-5" />
+        <TableCellsIcon className="h-6 w-6" />
       </button>
       <button
         onClick={() => onChange('grid')}
-        className={`rounded-sm p-1.5 ${
+        className={`rounded-sm px-[3px] py-[2px] ${
           view === 'grid'
-            ? 'bg-clay-100 text-clay-900'
-            : 'text-clay-500 hover:text-clay-900'
+            ? 'bg-clay-100 text-clay-700'
+            : 'text-clay-500 hover:text-clay-700'
         }`}
       >
-        <Squares2X2Icon className="h-5 w-5" />
+        <Squares2X2Icon className="h-6 w-6" />
       </button>
     </div>
   )
