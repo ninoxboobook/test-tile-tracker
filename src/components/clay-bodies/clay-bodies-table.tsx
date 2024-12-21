@@ -40,7 +40,7 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
                   className="rounded-md object-cover"
                 />
               ) : (
-                <div className="h-full w-full rounded-md bg-clay-200" />
+                <div className="h-full w-full rounded-md bg-sand border border-clay-200" />
               )}
             </div>
 
