@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel } from '@tanstack/react-table'
 import { TestTilesTable, columns } from '@/components/test-tiles/test-tiles-table'
 import { TestTilesGrid } from '@/components/test-tiles/test-tiles-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
@@ -13,6 +13,7 @@ import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { SearchConfig } from '@/types/search'
+import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]
@@ -199,13 +200,14 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
   const table = useReactTable({
     data: filteredTestTiles,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
@@ -241,8 +243,12 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
             table={table}
           />
         ) : (
-          <TestTilesGrid testTiles={filteredTestTiles} />
+          <TestTilesGrid 
+            testTiles={filteredTestTiles}
+            table={table}
+          />
         )}
+        <DataTablePagination table={table} />
       </div>
     </PageLayout>
   )

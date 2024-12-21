@@ -149,8 +149,8 @@ export function DecorationTestTiles({ testTiles, decorationId }: DecorationTestT
   if (testTiles.length === 0) {
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No test tiles yet</h3>
-        <p className="text-sm text-gray-500 mb-4">Create a test tile using this decoration to start exploring its properties.</p>
+        <h3 className="text-lg font-medium text-clay-700 mb-2">No test tiles yet</h3>
+        <p className="text-sm text-clay-500 mb-4">Create a test tile using this decoration to start exploring its properties.</p>
         <Link href={`/test-tiles/new?decorationId=${decorationId}`}>
           <ActionButton>Create Test Tile</ActionButton>
         </Link>

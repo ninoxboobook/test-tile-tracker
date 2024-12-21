@@ -2,13 +2,14 @@
 
 import { Collection, TestTile } from '@prisma/client'
 import { useState, useMemo } from 'react'
-import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel } from '@tanstack/react-table'
 import { CollectionsTable, columns } from '@/components/collections/collections-table'
 import { CollectionsGrid } from '@/components/collections/collections-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/lib/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
+import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
 import Link from 'next/link'
 import { SearchConfig } from '@/types/search'
 
@@ -50,13 +51,14 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
   const table = useReactTable({
     data: filteredCollections,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
@@ -91,8 +93,12 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
             table={table}
           />
         ) : (
-          <CollectionsGrid collections={filteredCollections} />
+          <CollectionsGrid 
+            collections={filteredCollections}
+            table={table}
+          />
         )}
+        <DataTablePagination table={table} />
       </div>
     </PageLayout>
   )

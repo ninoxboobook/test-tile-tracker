@@ -153,8 +153,8 @@ export function CollectionTestTiles({ testTiles, collectionId }: CollectionTestT
   if (testTiles.length === 0) {
     return (
       <div className="text-center py-8">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No test tiles yet</h3>
-        <p className="text-sm text-gray-500 mb-4">Add test tiles to this collection to start organizing your work.</p>
+        <h3 className="text-lg font-medium text-clay-700 mb-2">No test tiles yet</h3>
+        <p className="text-sm text-clay-500 mb-4">Add test tiles to this collection to start organizing your work.</p>
         <Link href={`/test-tiles/new?collectionId=${collectionId}`}>
           <ActionButton>Create Test Tile</ActionButton>
         </Link>

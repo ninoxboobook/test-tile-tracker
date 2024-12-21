@@ -2,7 +2,7 @@
 
 import { DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { useState, useMemo } from 'react'
-import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel } from '@tanstack/react-table'
 import { DecorationsTable, columns } from '@/components/decorations/decorations-table'
 import { DecorationsGrid } from '@/components/decorations/decorations-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
@@ -14,6 +14,7 @@ import { DecorationWithRelations } from '@/lib/schemas/decoration'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { SearchConfig } from '@/types/search'
+import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
 
 interface DecorationsContentProps {
   decorations: DecorationWithRelations[]
@@ -185,13 +186,14 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
   const table = useReactTable({
     data: filteredDecorations,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
@@ -227,8 +229,12 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
             table={table}
           />
         ) : (
-          <DecorationsGrid decorations={filteredDecorations} />
+          <DecorationsGrid 
+            decorations={filteredDecorations}
+            table={table}
+          />
         )}
+        <DataTablePagination table={table} />
       </div>
     </PageLayout>
   )
