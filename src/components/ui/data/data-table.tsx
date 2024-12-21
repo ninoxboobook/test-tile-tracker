@@ -14,7 +14,6 @@ import {
   Table,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { DataTablePagination } from './data-table-pagination'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -49,62 +48,59 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="space-y-8">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => {
-                  const isFirst = index === 0;
-                  const isLast = index === headerGroup.headers.length - 1;
-                  const roundedClasses = 
-                    isFirst ? 'rounded-l-lg' : 
-                    isLast ? 'rounded-r-lg' : '';
-                  
-                  return (
-                    <th
-                      key={header.id}
-                      className={`bg-clay-100 px-6 py-3 text-left text-sm font-medium text-clay-700 uppercase tracking-wider ${roundedClasses}`}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                        </div>
-                      )}
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="text-clay-800">
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-b border-clay-200 hover:bg-clay-50">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="h-14 px-6 py-3 whitespace-nowrap">
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => {
+                const isFirst = index === 0;
+                const isLast = index === headerGroup.headers.length - 1;
+                const roundedClasses = 
+                  isFirst ? 'rounded-l-lg' : 
+                  isLast ? 'rounded-r-lg' : '';
+                
+                return (
+                  <th
+                    key={header.id}
+                    className={`bg-clay-100 px-6 py-3 text-left text-sm font-medium text-clay-700 uppercase tracking-wider ${roundedClasses}`}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? 'cursor-pointer select-none'
+                            : '',
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </div>
                     )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <DataTablePagination table={table} />
+                  </th>
+                );
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody className="text-clay-800">
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="border-b border-clay-200 hover:bg-clay-50">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="h-14 px-6 py-3 whitespace-nowrap">
+                  {flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
-} 
+}

@@ -2,7 +2,7 @@
 
 import { ClayBody, ClayBodyType, Cone } from '@prisma/client'
 import { useState, useMemo } from 'react'
-import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel } from '@tanstack/react-table'
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel } from '@tanstack/react-table'
 import { ClayBodiesTable, columns } from '@/components/clay-bodies/clay-bodies-table'
 import { ClayBodiesGrid } from '@/components/clay-bodies/clay-bodies-grid'
 import { PageLayout } from '@/components/ui/layout/page-layout'
@@ -13,6 +13,7 @@ import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { SearchConfig } from '@/types/search'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
 
 interface ClayBodiesContentProps {
   clayBodies: (ClayBody & {
@@ -161,6 +162,7 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
@@ -196,8 +198,12 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
             table={table}
           />
         ) : (
-          <ClayBodiesGrid clayBodies={filteredClayBodies} />
+          <ClayBodiesGrid 
+            clayBodies={filteredClayBodies}
+            table={table}
+          />
         )}
+        <DataTablePagination table={table} />
       </div>
     </PageLayout>
   )
