@@ -5,6 +5,7 @@ import { ColumnDef, Table } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data/data-table'
 import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface TestTilesTableProps {
   testTiles: TestTileWithRelations[]
@@ -12,6 +13,30 @@ interface TestTilesTableProps {
 }
 
 export const columns: ColumnDef<TestTileWithRelations>[] = [
+  {
+    accessorKey: 'imageUrl',
+    header: 'Image',
+    cell: ({ row }) => {
+      const imageUrl = Array.isArray(row.original.imageUrl) 
+        ? row.original.imageUrl[0] 
+        : row.original.imageUrl;
+      
+      return (
+        <div className="relative h-10 w-10">
+          {imageUrl && imageUrl.length > 0 ? (
+            <Image
+              src={imageUrl}
+              alt={`${row.original.name} thumbnail`}
+              fill
+              className="rounded-md object-cover"
+            />
+          ) : (
+            <div className="h-full w-full rounded-md bg-gray-100" />
+          )}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: 'name',
     header: 'Name',
