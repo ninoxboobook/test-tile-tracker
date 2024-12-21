@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/20/solid'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import { Listbox } from '@headlessui/react'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -57,7 +58,7 @@ export function DataTablePagination<TData>({
           </Listbox>
         </div>
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
+      <div className="flex items-center space-x-6">
 
         <div className="flex items-center space-x-2">
           <Listbox
@@ -92,20 +93,22 @@ export function DataTablePagination<TData>({
           </Listbox>
         </div>
         <div className="flex items-center space-x-2">
-          <button
-            className="rounded-md border p-1 disabled:opacity-50"
+          <ActionButton
+            variant="primary"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="!p-2 disabled:opacity-50"
           >
             <ChevronLeftIcon className="h-5 w-5" />
-          </button>
-          <button
-            className="rounded-md border p-1 disabled:opacity-50"
+          </ActionButton>
+          <ActionButton
+            variant="primary"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="!p-2 disabled:opacity-50"
           >
             <ChevronRightIcon className="h-5 w-5" />
-          </button>
+          </ActionButton>
         </div>
       </div>
     </div>
