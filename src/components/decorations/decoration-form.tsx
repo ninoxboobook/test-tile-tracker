@@ -265,17 +265,21 @@ export function DecorationForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <CancelButton
-          hasUnsavedChanges={() => Object.keys(errors).length > 0 || 
-            watch('name') !== initialData?.name || 
-            watch('manufacturer') !== initialData?.manufacturer || 
-            watch('source') !== initialData?.source || 
-            watch('typeId') !== initialData?.type?.id || 
-            JSON.stringify(watch('coneIds')) !== JSON.stringify(initialData?.cone?.map(c => c.id)) || 
-            JSON.stringify(watch('atmosphereIds')) !== JSON.stringify(initialData?.atmosphere?.map(a => a.id)) || 
-            watch('notes') !== initialData?.notes || 
-            watch('imageUrl') !== initialData?.imageUrl
-          }
+          hasUnsavedChanges={() => {
+            const values = watch();
+            return (
+              !!values.name || 
+              !!values.manufacturer || 
+              !!values.source ||
+              !!values.typeId || 
+              (values.coneIds?.length ?? 0) > 0 || 
+              (values.atmosphereIds?.length ?? 0) > 0 || 
+              !!values.notes || 
+              !!values.imageUrl
+            );
+          }}
           route="/decorations"
+          type="button"
         />
         <ActionButton
           type="submit"

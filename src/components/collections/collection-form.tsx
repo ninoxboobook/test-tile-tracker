@@ -99,11 +99,16 @@ export function CollectionForm({
 
       <div className="mt-6 flex justify-end gap-3">
         <CancelButton
-          hasUnsavedChanges={() => Object.keys(errors).length > 0 || 
-            watch('name') !== initialData?.name || 
-            watch('description') !== initialData?.description
-          }
+          hasUnsavedChanges={() => {
+            const values = watch();
+            return (
+              !!values.name || 
+              !!values.description ||
+              (values.testTileIds?.length ?? 0) > 0
+            );
+          }}
           route="/collections"
+          type="button"
         />
         <ActionButton
           type="submit"
