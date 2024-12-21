@@ -14,44 +14,37 @@ interface DecorationsTableProps {
 
 export const columns: ColumnDef<DecorationWithRelations>[] = [
   {
-    accessorKey: 'imageUrl',
-    header: 'Image',
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => {
-      const imageUrl = Array.isArray(row.original.imageUrl) 
-        ? row.original.imageUrl[0] 
+      const imageUrl = Array.isArray(row.original.imageUrl)
+        ? row.original.imageUrl[0]
         : row.original.imageUrl;
-      
+
       return (
-        <div className="relative h-14 w-14">
-          {imageUrl && imageUrl.length > 0 ? (
-            <Image
-              src={imageUrl}
-              alt={`${row.original.name} thumbnail`}
-              fill
-              className="rounded-md object-cover"
-            />
-          ) : (
-            <div className="h-full w-full rounded-md bg-gray-100" />
-          )}
+        <div>
+          <Link
+            href={`/decorations/${row.original.id}`}
+            className="flex items-center gap-4 text-brand font-semibold hover:text-clay-600"
+          >
+            <div className="relative h-14 w-14 flex-shrink-0">
+              {imageUrl && imageUrl.length > 0 ? (
+                <Image
+                  src={imageUrl}
+                  alt=""
+                  fill
+                  className="rounded-md object-cover"
+                />
+              ) : (
+                <div className="h-full w-full rounded-md bg-clay-200" />
+              )}
+            </div>
+
+            {row.getValue('name')}
+          </Link>
         </div>
       );
     },
-  },
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    cell: ({ row }) => (
-      <Link
-        href={`/decorations/${row.original.id}`}
-        className="text-clay-600 hover:text-clay-500"
-      >
-        {row.getValue('name')}
-      </Link>
-    ),
-  },
-  {
-    accessorKey: 'source',
-    header: 'Source',
   },
   {
     id: 'type',
@@ -64,6 +57,14 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
     accessorFn: (row) => row.cone.map(c => c.name).join(', '),
   },
   {
+    accessorKey: 'source',
+    header: 'Source',
+  },
+  {
+    accessorKey: 'manufacturer',
+    header: 'Manufacturer',
+  },
+  {
     id: 'atmosphere',
     header: 'Atmosphere',
     accessorFn: (row) => row.atmosphere.map(a => a.name).join(', '),
@@ -71,10 +72,6 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
   {
     accessorKey: 'colour',
     header: 'Colour',
-  },
-  {
-    accessorKey: 'manufacturer',
-    header: 'Manufacturer',
   },
   {
     accessorKey: 'createdAt',

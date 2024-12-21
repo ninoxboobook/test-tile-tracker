@@ -14,40 +14,37 @@ interface TestTilesTableProps {
 
 export const columns: ColumnDef<TestTileWithRelations>[] = [
   {
-    accessorKey: 'imageUrl',
-    header: 'Image',
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => {
-      const imageUrl = Array.isArray(row.original.imageUrl) 
-        ? row.original.imageUrl[0] 
+      const imageUrl = Array.isArray(row.original.imageUrl)
+        ? row.original.imageUrl[0]
         : row.original.imageUrl;
-      
+
       return (
-        <div className="relative h-14 w-14">
-          {imageUrl && imageUrl.length > 0 ? (
-            <Image
-              src={imageUrl}
-              alt={`${row.original.name} thumbnail`}
-              fill
-              className="rounded-md object-cover"
-            />
-          ) : (
-            <div className="h-full w-full rounded-md bg-gray-100" />
-          )}
+        <div>
+          <Link
+            href={`/test-tiles/${row.original.id}`}
+            className="flex items-center gap-4 text-brand font-semibold hover:text-clay-600"
+          >
+            <div className="relative h-14 w-14 flex-shrink-0">
+              {imageUrl && imageUrl.length > 0 ? (
+                <Image
+                  src={imageUrl}
+                  alt=""
+                  fill
+                  className="rounded-md object-cover"
+                />
+              ) : (
+                <div className="h-full w-full rounded-md bg-clay-200" />
+              )}
+            </div>
+
+            {row.getValue('name')}
+          </Link>
         </div>
       );
     },
-  },
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    cell: ({ row }) => (
-      <Link
-        href={`/test-tiles/${row.original.id}`}
-        className="text-clay-600 hover:text-clay-500"
-      >
-        {row.getValue('name')}
-      </Link>
-    ),
   },
   {
     accessorKey: 'stamp',
@@ -59,7 +56,7 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
     cell: ({ row }) => (
       <Link
         href={`/clay-bodies/${row.original.clayBody.id}`}
-        className="text-clay-600 hover:text-clay-500"
+        className="text-brand underline hover:text-clay-600"
       >
         {row.original.clayBody.name}
       </Link>
@@ -77,13 +74,13 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
     accessorKey: 'decorations',
     header: 'Decorations',
     cell: ({ row }) => (
-      <div className="space-x-1">
-        {row.original.decorationLayers.flatMap(layer => 
+      <div className="space-x-1 whitespace-normal">
+        {row.original.decorationLayers.flatMap(layer =>
           layer.decorations.map((decoration, index) => (
             <span key={`${row.original.id}-${layer.order}-${decoration.id}`}>
               <Link
                 href={`/decorations/${decoration.id}`}
-                className="text-clay-600 hover:text-clay-500"
+                className="text-brand underline hover:text-clay-600"
               >
                 {decoration.name}
               </Link>
@@ -103,7 +100,7 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
           <span key={collection.id}>
             <Link
               href={`/collections/${collection.id}`}
-              className="text-clay-600 hover:text-clay-500"
+              className="text-brand underline hover:text-clay-600"
             >
               {collection.name}
             </Link>

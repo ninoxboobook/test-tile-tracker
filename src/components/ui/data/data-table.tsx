@@ -88,9 +88,9 @@ export function DataTable<TData, TValue>({
               </tr>
             ))}
           </thead>
-          <tbody className="divide-y divide-clay-200">
+          <tbody className="text-clay-800">
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="hover:bg-clay-50">
+              <tr key={row.id} className="border-b border-clay-200 hover:bg-clay-50">
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="h-14 px-6 py-3 whitespace-nowrap">
                     {flexRender(

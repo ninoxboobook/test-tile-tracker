@@ -18,40 +18,37 @@ interface ClayBodiesTableProps {
 
 export const columns: ColumnDef<ClayBodyWithRelations>[] = [
   {
-    accessorKey: 'imageUrl',
-    header: 'Image',
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => {
-      const imageUrl = Array.isArray(row.original.imageUrl) 
-        ? row.original.imageUrl[0] 
+      const imageUrl = Array.isArray(row.original.imageUrl)
+        ? row.original.imageUrl[0]
         : row.original.imageUrl;
-      
+
       return (
-        <div className="relative h-14 w-14">
-          {imageUrl && imageUrl.length > 0 ? (
-            <Image
-              src={imageUrl}
-              alt={`${row.original.name} thumbnail`}
-              fill
-              className="rounded-md object-cover"
-            />
-          ) : (
-            <div className="h-full w-full rounded-md bg-gray-100" />
-          )}
+        <div>
+          <Link
+            href={`/clay-bodies/${row.original.id}`}
+            className="flex items-center gap-4 text-brand font-semibold hover:text-clay-600"
+          >
+            <div className="relative h-14 w-14 flex-shrink-0">
+              {imageUrl && imageUrl.length > 0 ? (
+                <Image
+                  src={imageUrl}
+                  alt=""
+                  fill
+                  className="rounded-md object-cover"
+                />
+              ) : (
+                <div className="h-full w-full rounded-md bg-clay-200" />
+              )}
+            </div>
+
+            {row.getValue('name')}
+          </Link>
         </div>
       );
     },
-  },
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    cell: ({ row }) => (
-      <Link
-        href={`/clay-bodies/${row.original.id}`}
-        className="text-clay-600 hover:text-clay-500"
-      >
-        {row.getValue('name')}
-      </Link>
-    ),
   },
   {
     accessorKey: 'type',
@@ -59,13 +56,13 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
     cell: ({ row }) => row.original.type?.name ?? '',
   },
   {
-    accessorKey: 'manufacturer',
-    header: 'Manufacturer',
-  },
-  {
     accessorKey: 'cone',
     header: 'Cone',
     cell: ({ row }) => row.original.cone.map(c => c.name).join(', '),
+  },
+  {
+    accessorKey: 'manufacturer',
+    header: 'Manufacturer',
   },
   {
     accessorKey: 'firingTemperature',
