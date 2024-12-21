@@ -48,7 +48,9 @@ const searchConfig: SearchConfig = {
     { id: 'stamp', accessorPath: ['stamp'] },
     { id: 'clayBody', accessorPath: ['clayBody', 'name'] },
     { id: 'decorations', accessorPath: ['decorationLayers', 'decorations', 'name'] },
-    { id: 'collections', accessorPath: ['collections', 'name'] }
+    { id: 'collections', accessorPath: ['collections', 'name'] },
+    { id: 'cone', accessorPath: ['cone', 'name'] },
+    { id: 'atmosphere', accessorPath: ['atmosphere', 'name'] }
   ]
 }
 
@@ -152,9 +154,17 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
             )
           }
           
-          // Handle nested object paths (like clayBody)
+          // Handle nested object paths (like clayBody, cone, atmosphere)
           if (column.id === 'clayBody') {
             return testTile.clayBody.name.toLowerCase().includes(searchLower)
+          }
+
+          if (column.id === 'cone') {
+            return testTile.cone.name.toLowerCase().includes(searchLower)
+          }
+
+          if (column.id === 'atmosphere') {
+            return testTile.atmosphere.name.toLowerCase().includes(searchLower)
           }
           
           // Handle direct properties

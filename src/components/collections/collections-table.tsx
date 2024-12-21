@@ -21,7 +21,7 @@ export const columns: ColumnDef<CollectionWithTestTiles>[] = [
     cell: ({ row }) => (
       <Link
         href={`/collections/${row.original.id}`}
-        className="text-clay-600 hover:text-clay-500"
+        className="text-brand font-semibold hover:text-clay-500"
       >
         {row.getValue('name')}
       </Link>
