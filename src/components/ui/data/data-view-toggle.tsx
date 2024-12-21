@@ -18,8 +18,10 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
             ? 'bg-clay-100 text-clay-700'
             : 'text-clay-500 hover:text-clay-700'
         }`}
+        aria-label="Switch to table view"
+        aria-pressed={view === 'table'}
       >
-        <TableCellsIcon className="h-6 w-6" />
+        <TableCellsIcon className="h-6 w-6" aria-hidden="true" />
       </button>
       <button
         onClick={() => onChange('grid')}
@@ -28,8 +30,10 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
             ? 'bg-clay-100 text-clay-700'
             : 'text-clay-500 hover:text-clay-700'
         }`}
+        aria-label="Switch to grid view"
+        aria-pressed={view === 'grid'}
       >
-        <Squares2X2Icon className="h-6 w-6" />
+        <Squares2X2Icon className="h-6 w-6" aria-hidden="true" />
       </button>
     </div>
   )

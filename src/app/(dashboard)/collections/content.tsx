@@ -59,6 +59,11 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 20,
+      },
+    },
   })
 
   return (

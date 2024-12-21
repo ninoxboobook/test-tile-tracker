@@ -208,6 +208,11 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 20,
+      },
+    },
   })
 
   return (
