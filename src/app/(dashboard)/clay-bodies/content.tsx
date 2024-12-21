@@ -13,7 +13,7 @@ import { PotentialFilter, FilterableColumnConfig } from '@/types/filters'
 import { SearchConfig } from '@/types/search'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
-import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
+import { DataTablePagination } from '@/components/ui/data/data-pagination'
 
 interface ClayBodiesContentProps {
   clayBodies: (ClayBody & {

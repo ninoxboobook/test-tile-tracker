@@ -13,7 +13,7 @@ import { TestTileWithRelations } from '@/types/test-tile'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { SearchConfig } from '@/types/search'
-import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
+import { DataTablePagination } from '@/components/ui/data/data-pagination'
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]

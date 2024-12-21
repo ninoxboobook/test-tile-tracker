@@ -9,7 +9,7 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { useViewPreference } from '@/lib/hooks/use-view-preference'
 import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
-import { DataTablePagination } from '@/components/ui/data/data-table-pagination'
+import { DataTablePagination } from '@/components/ui/data/data-pagination'
 import Link from 'next/link'
 import { SearchConfig } from '@/types/search'
 
