@@ -10,6 +10,7 @@ import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { ClayBodyType, Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
@@ -246,10 +247,24 @@ export function ClayBodyForm({
         placeholder="Add any additional notes about this clay body..."
       />
 
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex justify-end gap-3">
+        <CancelButton
+          hasUnsavedChanges={() => Object.keys(errors).length > 0 || watch('name') !== initialData?.name || 
+            watch('manufacturer') !== initialData?.manufacturer || 
+            watch('typeId') !== initialData?.type || 
+            watch('cone') !== initialData?.coneIds || 
+            watch('shrinkage') !== initialData?.shrinkage || 
+            watch('absorption') !== initialData?.absorption || 
+            watch('meshSize') !== initialData?.meshSize || 
+            watch('notes') !== initialData?.notes || 
+            watch('imageUrl') !== initialData?.imageUrl
+          }
+          route="/clay-bodies"
+        />
         <ActionButton
           type="submit"
           disabled={isSubmitting}
+          isLoading={isSubmitting}
         >
           {submitButtonText}
         </ActionButton>

@@ -11,6 +11,7 @@ import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { Modal } from '@/components/ui/modal'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { DecorationForm } from '@/components/decorations/decoration-form'
@@ -326,12 +327,30 @@ export function TestTileForm({
             name="notes"
             register={register}
             error={errors.notes}
-            placeholder="Add any notes about this test tile..."
+            placeholder="Add any additional notes about this test tile..."
           />
 
-          <ActionButton type="submit" isLoading={isSubmitting}>
-            {submitButtonText}
-          </ActionButton>
+          <div className="mt-6 flex justify-end gap-3">
+            <CancelButton
+              hasUnsavedChanges={() => Object.keys(errors).length > 0 || 
+                watch('name') !== initialData?.name || 
+                watch('clayBodyId') !== initialData?.clayBodyId || 
+                watch('coneId') !== initialData?.coneId || 
+                watch('atmosphereId') !== initialData?.atmosphereId || 
+                watch('decorationLayers') !== initialData?.decorationLayers || 
+                watch('notes') !== initialData?.notes || 
+                watch('imageUrl') !== initialData?.imageUrl
+              }
+              route="/test-tiles"
+            />
+            <ActionButton
+              type="submit"
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+            >
+              {submitButtonText}
+            </ActionButton>
+          </div>
         </div>
       </Form>
 

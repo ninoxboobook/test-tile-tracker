@@ -9,6 +9,7 @@ import { FormField } from '@/components/ui/forms/form-field'
 import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { TestTile } from '@prisma/client'
 
 interface CollectionFormProps {
@@ -17,7 +18,6 @@ interface CollectionFormProps {
   submitButtonText?: string
   testTiles: Pick<TestTile, 'id' | 'name'>[]
 }
-
 
 export function CollectionForm({
   initialData,
@@ -41,31 +41,29 @@ export function CollectionForm({
     }
   })
 
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      setIsSubmitting(true)
+      
+      // Get the current form values
+      const values = watch()
+      
+      // add test tiles to form data
+      values.testTileIds?.forEach(testTile => {
+        formData.append('testTileIds', testTile)
+      })
 
-const handleSubmit = async (formData: FormData) => {
-  try {
-    setIsSubmitting(true)
-    
-    // Get the current form values
-    const values = watch()
-    
-    // add test tiles to form data
-    values.testTileIds?.forEach(testTile   => {
-      formData.append('testTileIds', testTile)
-    })
-
-    console.log('Form data before submission:', Object.fromEntries(formData.entries()))
-    await action(formData)
-  } catch (error) {
-    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
-      return
+      console.log('Form data before submission:', Object.fromEntries(formData.entries()))
+      await action(formData)
+    } catch (error) {
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        return
+      }
+      console.error('Form submission error:', error)
+    } finally {
+      setIsSubmitting(false)
     }
-    console.error('Form submission error:', error)
-  } finally {
-    setIsSubmitting(false)
   }
-}
-
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -85,6 +83,7 @@ const handleSubmit = async (formData: FormData) => {
         name="description"
         register={register}
         error={errors.description}
+        placeholder="Add a description of this collection..."
       />
 
       <FormMultiSelect
@@ -98,9 +97,22 @@ const handleSubmit = async (formData: FormData) => {
         error={errors.testTileIds}
       />
 
-      <ActionButton type="submit" isLoading={isSubmitting}>
-        {submitButtonText}
-      </ActionButton>
+      <div className="mt-6 flex justify-end gap-3">
+        <CancelButton
+          hasUnsavedChanges={() => Object.keys(errors).length > 0 || 
+            watch('name') !== initialData?.name || 
+            watch('description') !== initialData?.description
+          }
+          route="/collections"
+        />
+        <ActionButton
+          type="submit"
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+        >
+          {submitButtonText}
+        </ActionButton>
+      </div>
     </Form>
   )
-} 
+}

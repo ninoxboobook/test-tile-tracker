@@ -9,6 +9,7 @@ import { FormTextarea } from '@/components/ui/forms/form-textarea'
 import { FormSelect } from '@/components/ui/forms/form-select'
 import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
@@ -262,8 +263,25 @@ export function DecorationForm({
         placeholder="Add any additional notes about this decoration..."
       />
 
-      <div className="mt-6 flex justify-end">
-        <ActionButton type="submit" disabled={isSubmitting}>
+      <div className="mt-6 flex justify-end gap-3">
+        <CancelButton
+          hasUnsavedChanges={() => Object.keys(errors).length > 0 || 
+            watch('name') !== initialData?.name || 
+            watch('manufacturer') !== initialData?.manufacturer || 
+            watch('source') !== initialData?.source || 
+            watch('typeId') !== initialData?.type?.id || 
+            JSON.stringify(watch('coneIds')) !== JSON.stringify(initialData?.cone?.map(c => c.id)) || 
+            JSON.stringify(watch('atmosphereIds')) !== JSON.stringify(initialData?.atmosphere?.map(a => a.id)) || 
+            watch('notes') !== initialData?.notes || 
+            watch('imageUrl') !== initialData?.imageUrl
+          }
+          route="/decorations"
+        />
+        <ActionButton
+          type="submit"
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+        >
           {submitButtonText}
         </ActionButton>
       </div>
