@@ -1,10 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
+import { Popover } from '@headlessui/react'
+import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { HexColorPicker } from 'react-colorful'
 import chroma from 'chroma-js'
 
-export type ColorCategory =
+type ColorCategory =
   | 'Red'
   | 'Pink'
   | 'Purple'
@@ -18,10 +20,15 @@ export type ColorCategory =
   | 'Brown'
   | 'Black'
 
+interface ColorValue {
+  hex: string
+  category: ColorCategory
+}
+
 interface FormColorPickerProps {
-  label?: string
+  label: string
   value?: string
-  onChange?: (color: { hex: string; category: ColorCategory }) => void
+  onChange?: (value: ColorValue | undefined) => void
   required?: boolean
   error?: { message?: string }
   className?: string
@@ -29,16 +36,16 @@ interface FormColorPickerProps {
 
 export function FormColorPicker({
   label,
-  value = '#000000',
+  value,
   onChange,
   required,
   error,
   className
 }: FormColorPickerProps) {
-  const [color, setColor] = useState(value)
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(value)
 
   // Categorize color based on HSL values
-  const categorizeColor = useCallback((hex: string): ColorCategory => {
+  const categorizeColor = (hex: string): ColorCategory => {
     try {
       const color = chroma(hex)
       const [h, s, l] = color.hsl()
@@ -67,26 +74,19 @@ export function FormColorPicker({
       }
 
       // Expanded grey detection
-      // More saturated colors can be grey if they're more muted
-      const saturationThreshold = l > 0.5 ? 0.15 : 0.25  // Allow higher saturation for darker colors
+      const saturationThreshold = l > 0.5 ? 0.15 : 0.25
       if (s <= saturationThreshold) {
-        if (l >= 0.95) return 'White'  // Only very light greys are white
-        if (l <= 0.2) return 'Black'  // Near-black
+        if (l >= 0.95) return 'White'
+        if (l <= 0.2) return 'Black'
         return 'Grey'
       }
 
-      // Special case for browns:
-      // Browns are typically oranges/reds with low-medium saturation and low-medium lightness
+      // Special case for browns
       if (
-        // Main brown range (warm colors)
-        // Narrowed from orange-brown range, excluding pure reds
         (hue >= 10 && hue < 40) &&
         (
-          // Darker browns: medium saturation
           (l < 0.4 && s > 0.2 && s <= 0.5) ||
-          // Medium browns: low-medium saturation
           (l >= 0.4 && l < 0.55 && s > 0.15 && s <= 0.45) ||
-          // Lighter browns: must be less saturated
           (l >= 0.55 && l < 0.65 && s > 0.1 && s <= 0.35)
         )
       ) {
@@ -95,7 +95,6 @@ export function FormColorPicker({
 
       // For desaturated colors (but not as desaturated as greys)
       if (s <= 0.3) {
-        // Use the same hue ranges as below, just with lower saturation threshold
         if (hue >= 345 || hue < 10) return 'Red'
         if (hue >= 10 && hue < 45) return 'Orange'
         if (hue >= 45 && hue < 65) return 'Yellow'
@@ -116,51 +115,69 @@ export function FormColorPicker({
       if (hue >= 255 && hue < 315) return 'Purple'
       if (hue >= 315 && hue < 345) return 'Pink'
 
-      return 'Grey' // Fallback
+      return 'Grey'
     } catch {
-      return 'Grey' // Fallback for invalid colors
+      return 'Grey'
     }
-  }, [])
+  }
 
-  const handleChange = useCallback((newColor: string) => {
-    setColor(newColor)
-    onChange?.({
-      hex: newColor,
-      category: categorizeColor(newColor)
-    })
-  }, [onChange, categorizeColor])
+  const handleColorChange = (hex: string) => {
+    setSelectedColor(hex)
+    onChange?.({ hex, category: categorizeColor(hex) })
+  }
 
-  // Update local state when value prop changes
-  useEffect(() => {
-    if (value !== color) {
-      setColor(value)
-    }
-  }, [value])
+  const clearColor = () => {
+    setSelectedColor(undefined)
+    onChange?.(undefined)
+  }
 
   return (
-    <div className={`space-y-2 ${className || ''}`}>
-      <label className="block font-medium text-clay-700">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <div className="space-y-4">
-        <HexColorPicker
-          color={color}
-          onChange={handleChange}
-          className="!w-full"
-        />
-        <div className="flex items-center gap-4">
-          <div
-            className="w-12 h-12 rounded-md border border-clay-400"
-            style={{ backgroundColor: color }}
-          />
-          <div className="space-y-1">
-            <div className="font-medium">{categorizeColor(color)}</div>
-            <div className="text-sm text-clay-600 uppercase">{color}</div>
-          </div>
+    <div className={className}>
+      <Popover as="div" className="space-y-2">
+        <div className="block font-medium text-clay-700">
+          {label} {required && <span className="text-red-500">*</span>}
         </div>
-      </div>
-      {error?.message && (
-        <p className="mt-1 text-sm text-red-600">{error.message}</p>
+        <div className="relative bg-white/40">
+          <div className="flex flex-wrap gap-2 min-h-[42px] py-1 px-3 border border-clay-400 rounded-md">
+            {selectedColor ? (
+              <span
+                className="inline-flex items-center gap-2 px-2 text-sm rounded-md bg-clay-100 text-clay-800"
+              >
+                <span 
+                  className="w-6 h-6 rounded border border-clay-200" 
+                  style={{ backgroundColor: selectedColor }}
+                />
+                <span>{selectedColor.toUpperCase()}</span>
+                <span>{categorizeColor(selectedColor)}</span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    clearColor()
+                  }}
+                  className="text-clay-500 hover:text-clay-700"
+                >
+                  <XMarkIcon className="h-4 w-4" />
+                </button>
+              </span>
+            ) : (
+              <span className="text-clay-700">Select colour</span>
+            )}
+          </div>
+          <Popover.Button className="absolute inset-y-0 right-0 flex items-center px-2">
+            <ChevronUpDownIcon className="h-5 w-5 text-clay-400" aria-hidden="true" />
+          </Popover.Button>
+
+          <Popover.Panel className="absolute z-10 mt-1 w-fit overflow-auto rounded-md bg-white p-4 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <HexColorPicker color={selectedColor} onChange={handleColorChange} />
+          </Popover.Panel>
+        </div>
+      </Popover>
+
+      {error && (
+        <p className="mt-2 text-sm text-red-600" id="color-error">
+          {error.message}
+        </p>
       )}
     </div>
   )
