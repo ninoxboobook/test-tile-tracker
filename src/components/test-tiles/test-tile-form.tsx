@@ -195,152 +195,160 @@ export function TestTileForm({
   return (
     <>
       <Form onSubmit={handleSubmit}>
-        {initialData?.id && (
-          <input type="hidden" name="id" value={initialData.id} />
-        )}
-        <div className="space-y-6">
-          <FormField
-            label="Name"
-            name="name"
-            register={register}
-            error={errors.name}
-            required
-          />
+        <div className="grid grid-cols-12 gap-8">
+          <div className="col-span-7 bg-sand-light p-8 space-y-6 rounded-2xl">
+            <h2 className="mb-10 text-2xl font-semibold text-clay-800">Test tile details</h2>
+            {initialData?.id && (
+              <input type="hidden" name="id" value={initialData.id} />
+            )}
+            <div className="space-y-6">
+              <FormField
+                label="Name"
+                name="name"
+                register={register}
+                error={errors.name}
+                required
+              />
 
-          <FormField
-            label="Stamp"
-            name="stamp"
-            register={register}
-            error={errors.stamp}
-          />
+              <FormField
+                label="Stamp"
+                name="stamp"
+                register={register}
+                error={errors.stamp}
+              />
 
-          <div className="space-y-2">
-            <FormSelect
-              name="clayBodyId"
-              label="Clay Body"
-              control={control}
-              options={clayBodies.map(body => ({ value: body.id, label: body.name }))}
-              error={errors.clayBodyId}
-              required
-            />
-            <div className="flex justify-end">
-              <ActionButton
-                type="button"
-                variant="secondary"
-                onClick={() => setIsClayBodyModalOpen(true)}
-              >
-                Add New Clay Body
-              </ActionButton>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium">Decorations</h3>
-              <button
-                type="button"
-                onClick={() => setIsDecorationModalOpen(true)}
-                className="text-sm text-blue-600 hover:text-blue-800"
-              >
-                Add New Decoration
-              </button>
-            </div>
-
-            {controlledFields.map((field, index) => (
-              <div key={field.id} className="flex items-start gap-2">
-                <FormMultiSelect
-                  label={`Layer ${index + 1}`}
-                  name={`decorationLayers.${index}.decorationIds`}
+              <div className="space-y-2">
+                <FormSelect
+                  name="clayBodyId"
+                  label="Clay Body"
                   control={control}
-                  options={decorations.map(d => ({
-                    label: d.name,
-                    value: d.id
-                  }))}
-                  error={errors.decorationLayers?.[index]?.decorationIds}
-                  onChange={(values) => handleLayerChange(index + 1, values)}
+                  options={clayBodies.map(body => ({ value: body.id, label: body.name }))}
+                  error={errors.clayBodyId}
+                  required
                 />
-                {index > 0 && (
+                <div className="flex justify-end">
+                  <ActionButton
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setIsClayBodyModalOpen(true)}
+                  >
+                    Add New Clay Body
+                  </ActionButton>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">Decorations</h3>
                   <button
                     type="button"
-                    onClick={() => remove(index)}
-                    className="mt-8 text-red-600 hover:text-red-800"
+                    onClick={() => setIsDecorationModalOpen(true)}
+                    className="text-sm text-blue-600 hover:text-blue-800"
                   >
-                    Remove
+                    Add New Decoration
                   </button>
-                )}
+                </div>
+
+                {controlledFields.map((field, index) => (
+                  <div key={field.id} className="flex items-start gap-2">
+                    <FormMultiSelect
+                      label={`Layer ${index + 1}`}
+                      name={`decorationLayers.${index}.decorationIds`}
+                      control={control}
+                      options={decorations.map(d => ({
+                        label: d.name,
+                        value: d.id
+                      }))}
+                      error={errors.decorationLayers?.[index]?.decorationIds}
+                      onChange={(values) => handleLayerChange(index + 1, values)}
+                    />
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => remove(index)}
+                        className="mt-8 text-red-600 hover:text-red-800"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={addLayer}
+                  disabled={!canAddLayer}
+                  className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-clay-400"
+                >
+                  Add Layer
+                </button>
               </div>
-            ))}
 
-            <button
-              type="button"
-              onClick={addLayer}
-              disabled={!canAddLayer}
-              className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-clay-400"
-            >
-              Add Layer
-            </button>
+              <FormSelect
+                name="coneId"
+                label="Cone"
+                control={control}
+                options={sortedCones.map(cone => ({ value: cone.id, label: cone.name }))}
+                error={errors.coneId}
+                required
+              />
+
+              <FormSelect
+                name="atmosphereId"
+                label="Atmosphere"
+                control={control}
+                options={atmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
+                error={errors.atmosphereId}
+                required
+              />
+
+              <FormMultiSelect
+                name="collectionIds"
+                label="Collections"
+                control={control}
+                options={collections.map(collection => ({
+                  value: collection.id,
+                  label: collection.name
+                }))}
+                error={errors.collectionIds as FieldError | Merge<FieldError, (FieldError | undefined)[]>}
+              />
+
+              <FormTextarea
+                label="Notes"
+                name="notes"
+                register={register}
+                error={errors.notes}
+                placeholder="Add any additional notes about this test tile..."
+              />
+            </div>
           </div>
+          <div className="col-span-5 bg-sand-light p-8 rounded-2xl">
+            <div>
+              <h3 className="mb-10 text-2xl font-semibold text-clay-800">Test tile images</h3>
+              <ImageDropzone
+                currentImageUrl={initialData?.imageUrl}
+                onImagesSelected={(urls) => {
+                  setValue('imageUrl', urls, { shouldValidate: true });
+                }}
+                label="Images"
+                inputClasses="h-60"
+              />
+              {errors.imageUrl && (
+                <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
+              )}
 
-          <FormSelect
-            name="coneId"
-            label="Cone"
-            control={control}
-            options={sortedCones.map(cone => ({ value: cone.id, label: cone.name }))}
-            error={errors.coneId}
-            required
-          />
-
-          <FormSelect
-            name="atmosphereId"
-            label="Atmosphere"
-            control={control}
-            options={atmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
-            error={errors.atmosphereId}
-            required
-          />
-
-          <FormMultiSelect
-            name="collectionIds"
-            label="Collections"
-            control={control}
-            options={collections.map(collection => ({
-              value: collection.id,
-              label: collection.name
-            }))}
-            error={errors.collectionIds as FieldError | Merge<FieldError, (FieldError | undefined)[]>}
-          />
-
-          <div>
-            <label className="block text-sm font-medium text-clay-700">Images</label>
-            <ImageDropzone
-              currentImageUrl={initialData?.imageUrl}
-              onImagesSelected={(urls) => {
-                setValue('imageUrl', urls, { shouldValidate: true });
-              }}
-            />
-            {errors.imageUrl && (
-              <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
-            )}
+            </div>
           </div>
-
-          <FormTextarea
-            label="Notes"
-            name="notes"
-            register={register}
-            error={errors.notes}
-            placeholder="Add any additional notes about this test tile..."
-          />
-
-          <div className="mt-6 flex justify-end gap-3">
+          <div className="col-span-12 flex justify-end space-x-4">
             <CancelButton
               hasUnsavedChanges={() => {
                 const values = watch();
                 return (
-                  !!values.name || 
-                  !!values.clayBodyId || 
-                  !!values.coneId || 
-                  !!values.atmosphereId || 
-                  (values.decorationLayers?.length ?? 0) > 0 || 
-                  !!values.notes || 
+                  !!values.name ||
+                  !!values.clayBodyId ||
+                  !!values.coneId ||
+                  !!values.atmosphereId ||
+                  (values.decorationLayers?.length ?? 0) > 0 ||
+                  !!values.notes ||
                   !!values.imageUrl
                 );
               }}

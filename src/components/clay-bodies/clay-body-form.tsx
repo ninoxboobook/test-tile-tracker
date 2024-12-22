@@ -103,176 +103,186 @@ export function ClayBodyForm({
 
   return (
     <Form onSubmit={handleSubmit}>
-      {initialData?.id && (
-        <input type="hidden" name="id" value={initialData.id} />
-      )}
-      <FormField
-        label="Name"
-        name="name"
-        register={register}
-        error={errors.name}
-        required
-      />
+      <div className="grid grid-cols-12 gap-8">
+        <div className="col-span-7 bg-sand-light p-8 space-y-6 rounded-2xl">
+          <h2 className="mb-10 text-2xl font-semibold text-clay-800">Clay body details</h2>
+          {initialData?.id && (
+            <input type="hidden" name="id" value={initialData.id} />
+          )}
+          <FormField
+            label="Name"
+            name="name"
+            register={register}
+            error={errors.name}
+            required
+          />
 
-      <FormSelect
-        label="Type"
-        name="typeId"
-        control={control}
-        options={clayBodyTypes.map(type => ({
-          value: type.id,
-          label: type.name
-        }))}
-        error={errors.typeId}
-        required
-      />
+          <FormSelect
+            label="Type"
+            name="typeId"
+            control={control}
+            options={clayBodyTypes.map(type => ({
+              value: type.id,
+              label: type.name
+            }))}
+            error={errors.typeId}
+            required
+          />
 
-      <FormField
-        label="Manufacturer"
-        name="manufacturer"
-        register={register}
-        error={errors.manufacturer}
-      />
+          <FormField
+            label="Manufacturer"
+            name="manufacturer"
+            register={register}
+            error={errors.manufacturer}
+          />
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormMultiSelect
-          label="Cone"
-          name="cone"
-          control={control}
-          options={sortedCones.map(cone => ({
-            value: cone.id,
-            label: cone.name
-          }))}
-          error={errors.cone}
-        />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormMultiSelect
+              label="Cone"
+              name="cone"
+              control={control}
+              options={sortedCones.map(cone => ({
+                value: cone.id,
+                label: cone.name
+              }))}
+              error={errors.cone}
+            />
 
-        <FormField
-          label="Firing Temperature"
-          name="firingTemperature"
-          register={register}
-          error={errors.firingTemperature}
-        />
-      </div>
+            <FormField
+              label="Firing Temperature"
+              name="firingTemperature"
+              register={register}
+              error={errors.firingTemperature}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormSelect
-          label="Texture"
-          name="texture"
-          control={control}
-          options={[
-            { value: 'Smooth', label: 'Smooth' },
-            { value: 'Fine Grog', label: 'Fine Grog' },
-            { value: 'Medium Grog', label: 'Medium Grog' },
-            { value: 'Coarse Grog', label: 'Coarse Grog' }
-          ]}
-          error={errors.texture}
-        />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormSelect
+              label="Texture"
+              name="texture"
+              control={control}
+              options={[
+                { value: 'Smooth', label: 'Smooth' },
+                { value: 'Fine Grog', label: 'Fine Grog' },
+                { value: 'Medium Grog', label: 'Medium Grog' },
+                { value: 'Coarse Grog', label: 'Coarse Grog' }
+              ]}
+              error={errors.texture}
+            />
 
-        <FormSelect
-          label="Plasticity"
-          name="plasticity"
-          control={control}
-          options={[
-            { value: 'Very Plastic', label: 'Very Plastic' },
-            { value: 'Plastic', label: 'Plastic' },
-            { value: 'Medium', label: 'Medium' },
-            { value: 'Slightly Plastic', label: 'Slightly Plastic' },
-            { value: 'Non-Plastic', label: 'Non-Plastic' }
-          ]}
-          error={errors.plasticity}
-        />
-      </div>
+            <FormSelect
+              label="Plasticity"
+              name="plasticity"
+              control={control}
+              options={[
+                { value: 'Very Plastic', label: 'Very Plastic' },
+                { value: 'Plastic', label: 'Plastic' },
+                { value: 'Medium', label: 'Medium' },
+                { value: 'Slightly Plastic', label: 'Slightly Plastic' },
+                { value: 'Non-Plastic', label: 'Non-Plastic' }
+              ]}
+              error={errors.plasticity}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Colour (Oxidation)"
-          name="colourOxidation"
-          register={register}
-          error={errors.colourOxidation}
-        />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormField
+              label="Colour (Oxidation)"
+              name="colourOxidation"
+              register={register}
+              error={errors.colourOxidation}
+            />
 
-        <FormField
-          label="Colour (Reduction)"
-          name="colourReduction"
-          register={register}
-          error={errors.colourReduction}
-        />
-      </div>
+            <FormField
+              label="Colour (Reduction)"
+              name="colourReduction"
+              register={register}
+              error={errors.colourReduction}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <FormField
-          label="Shrinkage (%)"
-          name="shrinkage"
-          type="number"
-          step="0.1"
-          register={register}
-          error={errors.shrinkage}
-        />
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormField
+              label="Shrinkage (%)"
+              name="shrinkage"
+              type="number"
+              step="0.1"
+              register={register}
+              error={errors.shrinkage}
+            />
 
-        <FormField
-          label="Absorption (%)"
-          name="absorption"
-          type="number"
-          step="0.1"
-          register={register}
-          error={errors.absorption}
-        />
+            <FormField
+              label="Absorption (%)"
+              name="absorption"
+              type="number"
+              step="0.1"
+              register={register}
+              error={errors.absorption}
+            />
 
-        <FormField
-          label="Mesh Size"
-          name="meshSize"
-          type="number"
-          register={register}
-          error={errors.meshSize}
-        />
-      </div>
+            <FormField
+              label="Mesh Size"
+              name="meshSize"
+              type="number"
+              register={register}
+              error={errors.meshSize}
+            />
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium text-clay-700">Images</label>
-        <ImageDropzone
-          currentImageUrl={initialData?.imageUrl}
-          onImagesSelected={(urls) => {
-            setValue('imageUrl', urls, { shouldValidate: true });
-          }}
-        />
-        {errors.imageUrl && (
-          <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
-        )}
-      </div>
+          <FormTextarea
+            label="Notes"
+            name="notes"
+            register={register}
+            error={errors.notes}
+            placeholder="Add any additional notes about this clay body..."
+          />
 
-      <FormTextarea
-        label="Notes"
-        name="notes"
-        register={register}
-        error={errors.notes}
-        placeholder="Add any additional notes about this clay body..."
-      />
+        </div>
+        <div className="col-span-5 bg-sand-light p-8 rounded-2xl">
+          <div>
+            <h3 className="mb-10 text-2xl font-semibold text-clay-800">Clay body images</h3>
+            <ImageDropzone
+              currentImageUrl={initialData?.imageUrl}
+              onImagesSelected={(urls) => {
+                setValue('imageUrl', urls, { shouldValidate: true });
+              }}
+              label="Images"
+              inputClasses="h-60"
+            />
+            {errors.imageUrl && (
+              <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>
+            )}
 
-      <div className="mt-6 flex justify-end gap-3">
-        <CancelButton
-          hasUnsavedChanges={() => {
-            const values = watch();
-            return (
-              !!values.name || 
-              !!values.manufacturer || 
-              !!values.typeId || 
-              (values.cone?.length ?? 0) > 0 || 
-              !!values.shrinkage || 
-              !!values.absorption || 
-              !!values.meshSize || 
-              !!values.notes || 
-              !!values.imageUrl
-            );
-          }}
-          type="button"
-          route="/clay-bodies"
-        />
-        <ActionButton
-          type="submit"
-          disabled={isSubmitting}
-          isLoading={isSubmitting}
-        >
-          {submitButtonText}
-        </ActionButton>
+          </div>
+
+        </div>
+        <div className="col-span-12 flex justify-end space-x-4">
+          <CancelButton
+            hasUnsavedChanges={() => {
+              const values = watch();
+              return (
+                !!values.name ||
+                !!values.manufacturer ||
+                !!values.typeId ||
+                (values.cone?.length ?? 0) > 0 ||
+                !!values.shrinkage ||
+                !!values.absorption ||
+                !!values.meshSize ||
+                !!values.notes ||
+                !!values.imageUrl
+              );
+            }}
+            type="button"
+            route="/clay-bodies"
+          />
+          <ActionButton
+            type="submit"
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+          >
+            {submitButtonText}
+          </ActionButton>
+        </div>
       </div>
     </Form>
   )

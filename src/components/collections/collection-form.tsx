@@ -44,10 +44,10 @@ export function CollectionForm({
   const handleSubmit = async (formData: FormData) => {
     try {
       setIsSubmitting(true)
-      
+
       // Get the current form values
       const values = watch()
-      
+
       // add test tiles to form data
       values.testTileIds?.forEach(testTile => {
         formData.append('testTileIds', testTile)
@@ -67,56 +67,60 @@ export function CollectionForm({
 
   return (
     <Form onSubmit={handleSubmit}>
-      {initialData?.id && (
-        <input type="hidden" name="id" value={initialData.id} />
-      )}
-      <FormField
-        label="Name"
-        name="name"
-        register={register}
-        error={errors.name}
-        required
-      />
-
-      <FormTextarea
-        label="Description"
-        name="description"
-        register={register}
-        error={errors.description}
-        placeholder="Add a description of this collection..."
-      />
-
-      <FormMultiSelect
-        name="testTileIds"
-        label="Test Tiles"
-        control={control}
-        options={testTiles.map(testTile => ({
-          value: testTile.id,
-          label: testTile.name
-        }))}
-        error={errors.testTileIds}
-      />
-
-      <div className="mt-6 flex justify-end gap-3">
-        <CancelButton
-          hasUnsavedChanges={() => {
-            const values = watch();
-            return (
-              !!values.name || 
-              !!values.description ||
-              (values.testTileIds?.length ?? 0) > 0
-            );
-          }}
-          route="/collections"
-          type="button"
+      <div className="grid grid-cols-12 gap-8">
+        <div className="p-8 bg-sand-light rounded-2xl col-span-7 space-y-6 ">
+        {initialData?.id && (
+          <input type="hidden" name="id" value={initialData.id} />
+        )}
+        <FormField
+          label="Name"
+          name="name"
+          register={register}
+          error={errors.name}
+          required
         />
-        <ActionButton
-          type="submit"
-          disabled={isSubmitting}
-          isLoading={isSubmitting}
-        >
-          {submitButtonText}
-        </ActionButton>
+
+        <FormTextarea
+          label="Description"
+          name="description"
+          register={register}
+          error={errors.description}
+          placeholder="Add a description of this collection..."
+        />
+
+        <FormMultiSelect
+          name="testTileIds"
+          label="Test Tiles"
+          control={control}
+          options={testTiles.map(testTile => ({
+            value: testTile.id,
+            label: testTile.name
+          }))}
+          error={errors.testTileIds}
+        />
+
+        <div className="mt-6 flex justify-end gap-3">
+          <CancelButton
+            hasUnsavedChanges={() => {
+              const values = watch();
+              return (
+                !!values.name ||
+                !!values.description ||
+                (values.testTileIds?.length ?? 0) > 0
+              );
+            }}
+            route="/collections"
+            type="button"
+          />
+          <ActionButton
+            type="submit"
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+          >
+            {submitButtonText}
+          </ActionButton>
+        </div>
+      </div>
       </div>
     </Form>
   )
