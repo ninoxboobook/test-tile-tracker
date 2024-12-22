@@ -14,6 +14,7 @@ import { DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { FormColorPicker } from '../ui/forms/form-color-picker'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
@@ -182,11 +183,14 @@ export function DecorationForm({
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <FormField
-              label="Colour"
-              name="colour"
-              register={register}
-              error={errors.colour}
+            <FormColorPicker
+              label="Color"
+              value="#FF0000"
+              onChange={({ hex, category }) => {
+                console.log('Selected color:', hex);
+                console.log('Color category:', category);
+              }}
+              required
             />
             <FormMultiSelect
               label="Atmosphere"
@@ -254,11 +258,11 @@ export function DecorationForm({
             placeholder="Add any additional notes about this decoration..."
           />
 
-          
+
         </div>
         <div className="col-span-5 bg-sand-light p-8 rounded-2xl">
           <div>
-          <h3 className="mb-10 text-2xl font-semibold text-clay-800">Decoration images</h3>
+            <h3 className="mb-10 text-2xl font-semibold text-clay-800">Decoration images</h3>
             <ImageDropzone
               currentImageUrl={initialData?.imageUrl}
               onImagesSelected={(urls) => {
@@ -273,31 +277,31 @@ export function DecorationForm({
           </div>
         </div>
         <div className="col-span-12 flex justify-end space-x-4">
-            <CancelButton
-              hasUnsavedChanges={() => {
-                const values = watch();
-                return (
-                  !!values.name ||
-                  !!values.manufacturer ||
-                  !!values.source ||
-                  !!values.typeId ||
-                  (values.coneIds?.length ?? 0) > 0 ||
-                  (values.atmosphereIds?.length ?? 0) > 0 ||
-                  !!values.notes ||
-                  !!values.imageUrl
-                );
-              }}
-              route="/decorations"
-              type="button"
-            />
-            <ActionButton
-              type="submit"
-              disabled={isSubmitting}
-              isLoading={isSubmitting}
-            >
-              {submitButtonText}
-            </ActionButton>
-          </div>
+          <CancelButton
+            hasUnsavedChanges={() => {
+              const values = watch();
+              return (
+                !!values.name ||
+                !!values.manufacturer ||
+                !!values.source ||
+                !!values.typeId ||
+                (values.coneIds?.length ?? 0) > 0 ||
+                (values.atmosphereIds?.length ?? 0) > 0 ||
+                !!values.notes ||
+                !!values.imageUrl
+              );
+            }}
+            route="/decorations"
+            type="button"
+          />
+          <ActionButton
+            type="submit"
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+          >
+            {submitButtonText}
+          </ActionButton>
+        </div>
       </div>
     </Form>
   )
