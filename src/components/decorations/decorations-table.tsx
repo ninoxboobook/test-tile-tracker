@@ -72,6 +72,24 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
   {
     accessorKey: 'colour',
     header: 'Colour',
+    cell: ({ row }) => {
+      const colorStr = row.getValue('colour')
+      if (!colorStr) return null
+      
+      try {
+        const { hex } = JSON.parse(colorStr as string)
+        return (
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-8 h-8 rounded-full" 
+              style={{ backgroundColor: hex }}
+            />
+          </div>
+        )
+      } catch {
+        return null
+      }
+    },
   },
   {
     accessorKey: 'createdAt',
