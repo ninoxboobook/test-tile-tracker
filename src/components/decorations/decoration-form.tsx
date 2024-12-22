@@ -95,6 +95,11 @@ export function DecorationForm({
         formDataObj.imageUrl = values.imageUrl;
       }
 
+      // Add colour values from form state
+      if (values.colour?.length) {
+        formDataObj.colour = values.colour;
+      }
+
       // Convert back to FormData
       const newFormData = new FormData();
       Object.entries(formDataObj).forEach(([key, value]) => {
@@ -185,11 +190,9 @@ export function DecorationForm({
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormColorPicker
               label="Color"
-              value="#FF0000"
-              onChange={({ hex, category }) => {
-                console.log('Selected color:', hex);
-                console.log('Color category:', category);
-              }}
+              name="colour"
+              control={control}
+              error={errors.colour}
             />
             <FormMultiSelect
               label="Atmosphere"

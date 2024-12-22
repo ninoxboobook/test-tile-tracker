@@ -1,10 +1,11 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { Popover } from '@headlessui/react'
 import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { HexColorPicker } from 'react-colorful'
 import chroma from 'chroma-js'
+import { useController, Control, FieldError, Merge } from 'react-hook-form'
 
 type ColorCategory =
   | 'Red'
@@ -27,22 +28,32 @@ interface ColorValue {
 
 interface FormColorPickerProps {
   label: string
-  value?: string
-  onChange?: (value: ColorValue | undefined) => void
+  name: string
+  control: Control<any>
+  error?: FieldError | Merge<FieldError, (FieldError | undefined)[]>
   required?: boolean
-  error?: { message?: string }
   className?: string
 }
 
 export function FormColorPicker({
   label,
-  value,
-  onChange,
-  required,
+  name,
+  control,
   error,
+  required,
   className
 }: FormColorPickerProps) {
-  const [selectedColor, setSelectedColor] = useState<string | undefined>(value)
+  const {
+    field: { value, onChange }
+  } = useController({
+    name,
+    control,
+    defaultValue: null,
+  })
+
+  // Parse the JSON string from the form value
+  const colorValue = value ? JSON.parse(value) : null
+  const selectedColor = colorValue?.hex
 
   // Categorize color based on HSL values
   const categorizeColor = (hex: string): ColorCategory => {
@@ -122,13 +133,12 @@ export function FormColorPicker({
   }
 
   const handleColorChange = (hex: string) => {
-    setSelectedColor(hex)
-    onChange?.({ hex, category: categorizeColor(hex) })
+    const category = categorizeColor(hex)
+    onChange(JSON.stringify({ hex, category }))
   }
 
   const clearColor = () => {
-    setSelectedColor(undefined)
-    onChange?.(undefined)
+    onChange(null)
   }
 
   return (
@@ -148,7 +158,7 @@ export function FormColorPicker({
                   style={{ backgroundColor: selectedColor }}
                 />
                 <span>{selectedColor.toUpperCase()}</span>
-                <span>{categorizeColor(selectedColor)}</span>
+                <span>{colorValue?.category}</span>
                 <button
                   type="button"
                   onClick={(e) => {
