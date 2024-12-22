@@ -14,7 +14,7 @@ export function ActionButton({
   
   const variants = {
     primary: "text-clay-50 bg-brand hover:bg-clay-700 focus:ring-clay-500",
-    secondary: "text-brand bg-clay-50 border-brand hover:bg-clay-50 focus:ring-clay-500",
+    secondary: "text-brand bg-sand-light border-brand hover:bg-clay-50 focus:ring-clay-500",
     danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500"
   };
 
