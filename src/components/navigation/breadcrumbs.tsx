@@ -19,14 +19,15 @@ function generateBreadcrumbs(pathname: string, currentTitle?: string) {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ')
 
-    // If this is the last segment and it's an ID (matches UUID pattern)
-    // and we have a title, use the title instead
-    if (
-      index === paths.length - 1 && 
-      currentTitle && 
-      /^[a-f0-9-]{36}$/i.test(path)
-    ) {
-      label = currentTitle
+    // If this is an ID (matches UUID pattern) and we have a title
+    if (currentTitle && /^[a-f0-9-]{36}$/i.test(path)) {
+      // If the next segment is "edit", extract just the name from "Edit [Name]"
+      const nextSegment = paths[index + 1]
+      if (nextSegment === 'edit') {
+        label = currentTitle.replace(/^Edit /, '')
+      } else {
+        label = currentTitle
+      }
     } else {
       // Remove dynamic route parameters for other segments
       label = label.replace(/\[.*?\]/, '')

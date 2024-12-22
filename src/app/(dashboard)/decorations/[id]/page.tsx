@@ -74,9 +74,9 @@ export default async function DecorationPage(
     { 
       label: 'Colour', 
       value: decorationWithRelations.colour ? (() => {
-        const { hex, category } = JSON.parse(decorationWithRelations.colour)
+        const { hex, category } = JSON.parse(decorationWithRelations.colour) as { hex: string; category: string }
         return {
-          type: 'color',
+          type: 'color' as const,
           hex,
           category
         }

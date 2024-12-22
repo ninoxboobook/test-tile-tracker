@@ -5,6 +5,7 @@ import { UseFormRegister, FieldError } from 'react-hook-form'
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
   name: string
+  helpText?: string
   register: UseFormRegister<any>
   error?: FieldError
   required?: boolean
@@ -13,6 +14,7 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export function FormField({
   label,
   name,
+  helpText,
   register,
   error,
   required,
@@ -28,7 +30,7 @@ export function FormField({
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
-
+      {helpText && <span className="text-sm text-clay-500">{helpText}</span>}
       <input
         type={type}
         id={name}
