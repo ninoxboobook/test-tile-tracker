@@ -69,16 +69,16 @@ export function FormMultiSelect({
 
   return (
     <div className={className}>
-      <Combobox as="div" value={null} onChange={handleSelect}>
-        <Combobox.Label className="block text-sm font-medium text-clay-700">
+      <Combobox as="div" value={null} onChange={handleSelect} className="space-y-2">
+        <Combobox.Label className="block font-medium text-clay-700">
           {label} {required && <span className="text-red-500">*</span>}
         </Combobox.Label>
-        <div className="relative mt-1">
-          <div className="flex flex-wrap gap-2 p-1 border rounded-md">
+        <div className="relative bg-white/40">
+          <div className="flex flex-wrap gap-2 min-h-[42px] py-1 px-3 border border-clay-400 rounded-md">
             {selectedOptions.map((option: Option) => (
               <span
                 key={option.value}
-                className="inline-flex items-center gap-1 px-2 py-1 text-sm rounded-md bg-clay-100 text-clay-800"
+                className="inline-flex items-center gap-1 px-2 text-sm rounded-md bg-clay-100 text-clay-800"
               >
                 {option.label}
                 <button
@@ -94,7 +94,7 @@ export function FormMultiSelect({
               </span>
             ))}
             <Combobox.Input
-              className="border-0 p-0 focus:ring-0 text-sm flex-1 min-w-[120px]"
+              className="border-0 p-0 bg-transparent focus:ring-0 flex-1 min-w-[120px] placeholder:text-clay-700"
               placeholder={selectedOptions.length === 0 ? placeholder : ''}
               onChange={(event) => setQuery(event.target.value)}
             />
@@ -103,7 +103,7 @@ export function FormMultiSelect({
             <ChevronUpDownIcon className="h-5 w-5 text-clay-400" aria-hidden="true" />
           </Combobox.Button>
 
-          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             {filteredOptions.length === 0 && query !== '' ? (
               <div className="relative cursor-default select-none py-2 px-4 text-clay-700">
                 Nothing found.

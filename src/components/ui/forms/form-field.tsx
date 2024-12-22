@@ -20,10 +20,10 @@ export function FormField({
   ...props
 }: FormFieldProps) {
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <label
         htmlFor={name}
-        className="block text-sm font-medium text-clay-700"
+        className="block font-medium text-clay-700"
       >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
@@ -34,7 +34,7 @@ export function FormField({
         id={name}
         {...register(name)}
         {...props}
-        className="mt-1 block w-full rounded-md border-clay-300 shadow-sm focus:border-clay-500 focus:ring-clay-500 sm:text-sm"
+        className="mt-1 block w-full rounded-md border-clay-400 bg-white/40 focus:border-clay-500 focus:ring-clay-500 placeholder:text-clay-700"
       />
 
       {error && (

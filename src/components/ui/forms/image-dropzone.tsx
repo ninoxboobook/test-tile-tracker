@@ -4,14 +4,17 @@ import { useState, useCallback } from 'react'
 import Image from 'next/image'
 import { useDropzone } from 'react-dropzone'
 import { uploadBlob } from '@/lib/blob'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline'
 
 interface ImageDropzoneProps {
   currentImageUrl?: string[] | null
   onImagesSelected: (urls: string[]) => void
+  className?: string
+  label?: string
+  inputClasses?: string
 }
 
-export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzoneProps) {
+export function ImageDropzone({ currentImageUrl, onImagesSelected, className, label, inputClasses }: ImageDropzoneProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [uploadedImages, setUploadedImages] = useState<string[]>(() => {
@@ -56,23 +59,29 @@ export function ImageDropzone({ currentImageUrl, onImagesSelected }: ImageDropzo
   })
 
   return (
-    <div className="space-y-4">
+    <div className={`space-y-2 ${className ? className : ''}`}>
+      {label && (<label className="block font-medium text-clay-700">{label}</label>)}
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer
-          ${isDragActive ? 'border-clay-500 bg-clay-50' : 'border-clay-300 hover:border-clay-400'}
+        className={`border border-dashed rounded-lg p-6 flex items-center justify-center cursor-pointer
+          ${inputClasses ? inputClasses : ''}
+          ${isDragActive ? 'border-clay-600 bg-clay-50' : 'border-clay-400 hover:border-clay-500'}
           ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         <input {...getInputProps()} />
+        <div className="flex flex-col items-center">
+        <CloudArrowUpIcon className="h-8 w-8 text-clay-600 mb-2" aria-hidden="true" />
         {isUploading ? (
-          <p className="text-sm text-clay-500">Uploading...</p>
+          <p className="text-clay-700">Uploading...</p>
         ) : isDragActive ? (
-          <p className="text-sm text-clay-500">Drop the files here...</p>
+          <p className="text-clay-700">Drop the files here...</p>
         ) : (
-          <p className="text-sm text-clay-500">
+          <p className="text-clay-700">
             Drag and drop images here, or click to select files
           </p>
         )}
+        <p className="text-sm text-clay-600 mt-2">Supported file types: JPG, JPEG, PNG, GIF</p>
+        </div>
       </div>
 
       {error && (

@@ -56,11 +56,11 @@ export function Dialog({
                 </div>
                 <div className="sm:flex sm:items-start">
                   <div className="mt-4">
-                    <HeadlessDialog.Title as="h3" className="text-xl font-display font-semibold text-clay-700">
+                    <HeadlessDialog.Title as="h3" className="text-xl font-display font-semibold text-clay-800">
                       {title}
                     </HeadlessDialog.Title>
                     <div className="mt-2">
-                      <p className="text-clay-800">
+                      <p className="text-clay-900">
                         {description}
                       </p>
                     </div>

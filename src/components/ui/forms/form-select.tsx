@@ -43,15 +43,15 @@ export function FormSelect({
   const selectedOption = options.find(option => option.value === value) || { value: '', label: placeholder }
 
   return (
-    <div className={className}>
+    <div className={`space-y-2 ${className || ''}`}>
       <Listbox value={value} onChange={onChange}>
         {({ open }) => (
           <>
-            <Listbox.Label className="block text-sm font-medium text-clay-700">
+            <Listbox.Label className="block font-medium text-clay-700">
               {label} {required && <span className="text-red-500">*</span>}
             </Listbox.Label>
             <div className="relative mt-1">
-              <Listbox.Button className="relative w-full cursor-default rounded-md border border-clay-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-clay-500 focus:outline-none focus:ring-1 focus:ring-clay-500 sm:text-sm">
+              <Listbox.Button className="relative w-full cursor-default rounded-md border border-clay-400 bg-white/40 text-clay-700 py-2 pl-3 pr-10 text-left focus:border-clay-500 focus:outline-none focus:ring-1 focus:ring-clay-500">
                 <span className="block truncate">{selectedOption.label}</span>
                 <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                   <ChevronUpDownIcon className="h-5 w-5 text-clay-400" aria-hidden="true" />
@@ -65,12 +65,12 @@ export function FormSelect({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <Listbox.Option
                     key=""
                     className={({ active }) =>
                       `relative cursor-default select-none py-2 pl-3 pr-9 ${
-                        active ? 'bg-clay-100 text-clay-900' : 'text-clay-900'
+                        active ? 'bg-clay-100 text-clay-700' : 'text-clay-700'
                       }`
                     }
                     value=""

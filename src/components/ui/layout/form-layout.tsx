@@ -19,12 +19,9 @@ export function FormLayout({ title, description, children, backHref }: FormLayou
           <ActionButton>Back</ActionButton>
         </Link>
       }
+      variant="detail"
     >
-      <div className="max-w-2xl bg-white shadow sm:rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          {children}
-        </div>
-      </div>
+      {children}
     </PageLayout>
   );
 } 
