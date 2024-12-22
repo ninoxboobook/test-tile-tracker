@@ -77,12 +77,13 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
       if (!colorStr) return null
       
       try {
-        const { hex } = JSON.parse(colorStr as string)
+        const { hex, category } = JSON.parse(colorStr as string)
         return (
           <div className="flex items-center gap-2">
             <div 
               className="w-8 h-8 rounded-full" 
               style={{ backgroundColor: hex }}
+              title={category}
             />
           </div>
         )
@@ -90,6 +91,16 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
         return null
       }
     },
+    filterFn: (row, columnId, filterValue) => {
+      const colorStr = row.getValue(columnId) as string | null
+      if (!colorStr) return false
+      try {
+        const { category } = JSON.parse(colorStr)
+        return filterValue.includes(category)
+      } catch {
+        return false
+      }
+    }
   },
   {
     accessorKey: 'createdAt',

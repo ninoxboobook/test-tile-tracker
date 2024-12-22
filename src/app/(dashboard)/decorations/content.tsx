@@ -21,10 +21,13 @@ interface DecorationsContentProps {
 }
 
 // Define filterable columns configuration
-const filterConfig: FilterableColumnConfig<'source' | 'type'> = {
-  columns: ['source', 'type'] as const,
+const filterConfig: FilterableColumnConfig<'source' | 'type' | 'colour'> = {
+  columns: ['source', 'type', 'colour'] as const,
   getLabel: (columnId) => 
-    columns.find(col => 'accessorKey' in col && col.accessorKey === columnId)?.header as string || columnId
+    columns.find(col => 
+      ('accessorKey' in col && col.accessorKey === columnId) ||
+      ('id' in col && col.id === columnId)
+    )?.header as string || columnId
 }
 
 type FilterableColumn = typeof filterConfig.columns[number]
@@ -42,6 +45,22 @@ const searchConfig: SearchConfig = {
   ]
 }
 
+// Color categories in display order
+const COLOR_CATEGORIES = [
+  'Red',
+  'Pink',
+  'Purple',
+  'Blue',
+  'Turquoise',
+  'Green',
+  'Yellow',
+  'Orange',
+  'White',
+  'Grey',
+  'Brown',
+  'Black',
+] as const;
+
 export function DecorationsContent({ decorations }: DecorationsContentProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('decorations')
   const [search, setSearch] = useState('')
@@ -57,6 +76,23 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
             .map(item => item.type.name)
             .filter(Boolean)
         )).sort()
+      } else if (columnId === 'colour') {
+        uniqueValues = Array.from(new Set(
+          decorations
+            .map(item => {
+              if (!item.colour) return null;
+              try {
+                const { category } = JSON.parse(item.colour);
+                return category;
+              } catch {
+                return null;
+              }
+            })
+            .filter(Boolean)
+        )).sort((a, b) => {
+          // Sort by the predefined order
+          return COLOR_CATEGORIES.indexOf(a as any) - COLOR_CATEGORIES.indexOf(b as any);
+        });
       } else {
         uniqueValues = Array.from(new Set(
           decorations
@@ -175,9 +211,18 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
           if (filterId === 'atmosphere') {
             return decoration.atmosphere.some(a => values.includes(a.name))
           }
+          if (filterId === 'colour') {
+            try {
+              if (!decoration.colour) return false;
+              const { category } = JSON.parse(decoration.colour);
+              return values.includes(category);
+            } catch {
+              return false;
+            }
+          }
           
-          // Handle primitive fields (source, manufacturer, etc.)
-          const value = decoration[filterId as 'source' | 'manufacturer' | 'colour']
+          // Handle primitive fields (source, manufacturer)
+          const value = decoration[filterId as 'source' | 'manufacturer']
           return typeof value === 'string' && values.includes(value)
         })
       })

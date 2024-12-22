@@ -155,37 +155,64 @@ export function DecorationForm({
             required
           />
 
-          <FormSelect
-            label="Source"
-            name="source"
-            control={control}
-            options={[
-              { value: 'Commercial', label: 'Commercial' },
-              { value: 'Studio', label: 'Studio' },
-              { value: 'Recipe', label: 'Recipe' },
-              { value: 'Other', label: 'Other' }
-            ]}
-            error={errors.source}
-          />
+
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormSelect
+              label="Source"
+              name="source"
+              control={control}
+              options={[
+                { value: 'Commercial', label: 'Commercial' },
+                { value: 'Studio', label: 'Studio' },
+                { value: 'Recipe', label: 'Recipe' },
+                { value: 'Other', label: 'Other' }
+              ]}
+              error={errors.source}
+            />
             <FormField
               label="Manufacturer"
               name="manufacturer"
               register={register}
               error={errors.manufacturer}
             />
-            <FormMultiSelect
-              label="Cone"
-              name="coneIds"
-              control={control}
-              options={sortedCones.map(cone => ({
-                value: cone.id,
-                label: cone.name
-              }))}
-              error={errors.coneIds}
-            />
           </div>
+
+          <FormMultiSelect
+            label="Cone"
+            name="coneIds"
+            control={control}
+            options={sortedCones.map(cone => ({
+              value: cone.id,
+              label: cone.name
+            }))}
+            error={errors.coneIds}
+          />
+
+          <FormMultiSelect
+            label="Atmosphere"
+            name="atmosphereIds"
+            control={control}
+            options={atmospheres.map(atm => ({
+              value: atm.id,
+              label: atm.name
+            }))}
+            error={errors.atmosphereIds}
+          />
+
+          <FormSelect
+            label="Surface"
+            name="surface"
+            control={control}
+            options={[
+              { value: 'Matte', label: 'Matte' },
+              { value: 'Satin', label: 'Satin' },
+              { value: 'Glossy', label: 'Glossy' },
+              { value: 'Breaking', label: 'Breaking' },
+              { value: 'Crystalline', label: 'Crystalline' }
+            ]}
+            error={errors.surface}
+          />
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormColorPicker
@@ -193,32 +220,6 @@ export function DecorationForm({
               name="colour"
               control={control}
               error={errors.colour}
-            />
-            <FormMultiSelect
-              label="Atmosphere"
-              name="atmosphereIds"
-              control={control}
-              options={atmospheres.map(atm => ({
-                value: atm.id,
-                label: atm.name
-              }))}
-              error={errors.atmosphereIds}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <FormSelect
-              label="Surface"
-              name="surface"
-              control={control}
-              options={[
-                { value: 'Matte', label: 'Matte' },
-                { value: 'Satin', label: 'Satin' },
-                { value: 'Glossy', label: 'Glossy' },
-                { value: 'Breaking', label: 'Breaking' },
-                { value: 'Crystalline', label: 'Crystalline' }
-              ]}
-              error={errors.surface}
             />
             <FormSelect
               label="Transparency"
@@ -234,15 +235,12 @@ export function DecorationForm({
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <FormField
-              label="Glazy URL"
-              name="glazyUrl"
-              register={register}
-              error={errors.glazyUrl}
-              placeholder="https://glazy.org/recipes/2468"
-            />
-          </div>
+          <FormField
+            label="Glazy URL"
+            name="glazyUrl"
+            register={register}
+            error={errors.glazyUrl}
+          />
 
           <FormTextarea
             label="Recipe"

@@ -148,17 +148,17 @@ export function FormColorPicker({
           {label} {required && <span className="text-red-500">*</span>}
         </div>
         <div className="relative bg-white/40">
-          <div className="flex flex-wrap gap-2 min-h-[42px] py-1 px-3 border border-clay-400 rounded-md">
+          <div className="flex flex-wrap items-center gap-2 min-h-[42px] py-1 px-3 border border-clay-400 rounded-md">
             {selectedColor ? (
               <span
-                className="inline-flex items-center gap-2 px-2 text-sm rounded-md bg-clay-100 text-clay-800"
+                className="inline-flex items-center gap-2 pr-2 text-sm rounded-md bg-clay-100 text-clay-800"
               >
                 <span 
-                  className="w-6 h-6 rounded border border-clay-200" 
+                  className="w-6 h-6 rounded-l border border-clay-200" 
                   style={{ backgroundColor: selectedColor }}
                 />
                 <span>{selectedColor.toUpperCase()}</span>
-                <span>{colorValue?.category}</span>
+                <span className="font-semibold">{colorValue?.category}</span>
                 <button
                   type="button"
                   onClick={(e) => {

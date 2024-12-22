@@ -4,7 +4,11 @@ import { ReactNode } from 'react'
 
 interface DetailItem {
   label: string
-  value: string | null | undefined | { href: string; text: string }[]
+  value: string | null | undefined | { href: string; text: string }[] | {
+    type: 'color'
+    hex: string
+    category: string
+  }
 }
 
 interface DetailLayoutProps {
@@ -16,6 +20,21 @@ interface DetailLayoutProps {
 export function DetailLayout({ title, items, images }: DetailLayoutProps) {
   const renderValue = (value: DetailItem['value']) => {
     if (!value) return null
+    
+    // Handle color value
+    if (typeof value === 'object' && !Array.isArray(value) && 'type' in value && value.type === 'color') {
+      return (
+        <div className="inline-flex items-center gap-2 mt-1 border border-clay-300 pr-3 rounded">
+          <div 
+            className="w-8 h-8 rounded-l" 
+            style={{ backgroundColor: value.hex }}
+            aria-label={value.category}
+          />
+          <span>{value.hex.toUpperCase()}</span>
+          <span className="font-semibold">{value.category}</span>
+        </div>
+      )
+    }
     
     // Handle array of links
     if (Array.isArray(value)) {

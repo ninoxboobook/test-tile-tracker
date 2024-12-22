@@ -71,7 +71,17 @@ export default async function DecorationPage(
     { label: 'Manufacturer', value: decorationWithRelations.manufacturer },
     { label: 'Cones', value: decorationWithRelations.cone.length > 0 ? decorationWithRelations.cone.map(c => c.name).join(', ') : undefined },
     { label: 'Atmospheres', value: decorationWithRelations.atmosphere.length > 0 ? decorationWithRelations.atmosphere.map(a => a.name).join(', ') : undefined },
-    { label: 'Colour', value: decorationWithRelations.colour },
+    { 
+      label: 'Colour', 
+      value: decorationWithRelations.colour ? (() => {
+        const { hex, category } = JSON.parse(decorationWithRelations.colour)
+        return {
+          type: 'color',
+          hex,
+          category
+        }
+      })() : undefined
+    },
     { label: 'Surface', value: decorationWithRelations.surface },
     { label: 'Transparency', value: decorationWithRelations.transparency },
     { label: 'Glazy URL', value: decorationWithRelations.glazyUrl || undefined },
