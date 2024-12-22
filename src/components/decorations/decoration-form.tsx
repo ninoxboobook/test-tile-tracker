@@ -190,7 +190,6 @@ export function DecorationForm({
                 console.log('Selected color:', hex);
                 console.log('Color category:', category);
               }}
-              required
             />
             <FormMultiSelect
               label="Atmosphere"

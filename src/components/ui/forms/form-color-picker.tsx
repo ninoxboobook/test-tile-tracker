@@ -43,31 +43,57 @@ export function FormColorPicker({
       const color = chroma(hex)
       const [h, s, l] = color.hsl()
       
-      // Handle achromatic colors first
-      if (l >= 0.95) return 'White'
+      // Handle true white and black first
+      if (l >= 0.98) return 'White'  // Only pure white
       if (l <= 0.08) return 'Black'
-      if (s <= 0.08) {
-        if (l >= 0.8) return 'White'  // Off-white
-        if (l <= 0.2) return 'Black'  // Near-black
-        return 'Grey'
-      }
 
       // Normalize hue to 0-360 range
       const hue = h < 0 ? h + 360 : h
 
+      // Handle very light colors (but not white)
+      if (l >= 0.90) {
+        // If it has enough saturation, categorize by hue
+        if (s > 0.05) {
+          if (hue >= 345 || hue < 10) return 'Red'
+          if (hue >= 10 && hue < 45) return 'Orange'
+          if (hue >= 45 && hue < 65) return 'Yellow'
+          if (hue >= 65 && hue < 150) return 'Green'
+          if (hue >= 150 && hue < 175) return 'Turquoise'
+          if (hue >= 175 && hue < 255) return 'Blue'
+          if (hue >= 255 && hue < 315) return 'Purple'
+          if (hue >= 315 && hue < 345) return 'Pink'
+        }
+        return 'White'  // If not enough saturation, it's white
+      }
+
+      // Expanded grey detection
+      // More saturated colors can be grey if they're more muted
+      const saturationThreshold = l > 0.5 ? 0.15 : 0.25  // Allow higher saturation for darker colors
+      if (s <= saturationThreshold) {
+        if (l >= 0.95) return 'White'  // Only very light greys are white
+        if (l <= 0.2) return 'Black'  // Near-black
+        return 'Grey'
+      }
+
       // Special case for browns:
-      // Browns are typically oranges/reds with low saturation and low-medium lightness
+      // Browns are typically oranges/reds with low-medium saturation and low-medium lightness
       if (
-        // Main brown range (oranges and reds)
-        ((hue >= 10 && hue < 50) || (hue >= 0 && hue < 10)) &&
-        s <= 0.7 && // Not too saturated
-        l > 0.1 && l < 0.5 && // Darker shades
-        s > l // Saturation should be higher than lightness for browns
+        // Main brown range (warm colors)
+        // Narrowed from orange-brown range, excluding pure reds
+        (hue >= 10 && hue < 40) &&
+        (
+          // Darker browns: medium saturation
+          (l < 0.4 && s > 0.2 && s <= 0.5) ||
+          // Medium browns: low-medium saturation
+          (l >= 0.4 && l < 0.55 && s > 0.15 && s <= 0.45) ||
+          // Lighter browns: must be less saturated
+          (l >= 0.55 && l < 0.65 && s > 0.1 && s <= 0.35)
+        )
       ) {
         return 'Brown'
       }
 
-      // For desaturated colors, lean towards their hue category rather than brown
+      // For desaturated colors (but not as desaturated as greys)
       if (s <= 0.3) {
         // Use the same hue ranges as below, just with lower saturation threshold
         if (hue >= 345 || hue < 10) return 'Red'
