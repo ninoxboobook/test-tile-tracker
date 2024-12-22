@@ -46,22 +46,43 @@ export function FormColorPicker({
       // Handle achromatic colors first
       if (l >= 0.95) return 'White'
       if (l <= 0.08) return 'Black'
-      if (s <= 0.15) {
+      if (s <= 0.08) {
         if (l >= 0.8) return 'White'  // Off-white
         if (l <= 0.2) return 'Black'  // Near-black
         return 'Grey'
       }
 
-      // Handle browns (low saturation, low-medium lightness)
-      if (s <= 0.4 && l <= 0.6) return 'Brown'
-
       // Normalize hue to 0-360 range
       const hue = h < 0 ? h + 360 : h
 
-      // Categorize by hue ranges
+      // Special case for browns:
+      // Browns are typically oranges/reds with low saturation and low-medium lightness
+      if (
+        // Main brown range (oranges and reds)
+        ((hue >= 10 && hue < 50) || (hue >= 0 && hue < 10)) &&
+        s <= 0.7 && // Not too saturated
+        l > 0.1 && l < 0.5 && // Darker shades
+        s > l // Saturation should be higher than lightness for browns
+      ) {
+        return 'Brown'
+      }
+
+      // For desaturated colors, lean towards their hue category rather than brown
+      if (s <= 0.3) {
+        // Use the same hue ranges as below, just with lower saturation threshold
+        if (hue >= 345 || hue < 10) return 'Red'
+        if (hue >= 10 && hue < 45) return 'Orange'
+        if (hue >= 45 && hue < 65) return 'Yellow'
+        if (hue >= 65 && hue < 150) return 'Green'
+        if (hue >= 150 && hue < 175) return 'Turquoise'
+        if (hue >= 175 && hue < 255) return 'Blue'
+        if (hue >= 255 && hue < 315) return 'Purple'
+        if (hue >= 315 && hue < 345) return 'Pink'
+      }
+
+      // Categorize by hue ranges for saturated colors
       if (hue >= 345 || hue < 10) return 'Red'
-      if (hue >= 10 && hue < 20) return 'Orange'
-      if (hue >= 20 && hue < 45) return 'Brown'
+      if (hue >= 10 && hue < 45) return 'Orange'
       if (hue >= 45 && hue < 65) return 'Yellow'
       if (hue >= 65 && hue < 150) return 'Green'
       if (hue >= 150 && hue < 175) return 'Turquoise'
