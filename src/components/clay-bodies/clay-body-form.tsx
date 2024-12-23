@@ -162,10 +162,11 @@ export function ClayBodyForm({
               name="texture"
               control={control}
               options={[
+                { value: 'Very smooth', label: 'Very smooth' },
                 { value: 'Smooth', label: 'Smooth' },
-                { value: 'Fine Grog', label: 'Fine Grog' },
-                { value: 'Medium Grog', label: 'Medium Grog' },
-                { value: 'Coarse Grog', label: 'Coarse Grog' }
+                { value: 'Medium', label: 'Medium' },
+                { value: 'Coarse', label: 'Coarse' },
+                { value: 'Very Coarse', label: 'Very coarse' },
               ]}
               error={errors.texture}
             />
@@ -175,11 +176,10 @@ export function ClayBodyForm({
               name="plasticity"
               control={control}
               options={[
-                { value: 'Very Plastic', label: 'Very Plastic' },
+                { value: 'Very Plastic', label: 'Very plastic' },
                 { value: 'Plastic', label: 'Plastic' },
-                { value: 'Medium', label: 'Medium' },
-                { value: 'Slightly Plastic', label: 'Slightly Plastic' },
-                { value: 'Non-Plastic', label: 'Non-Plastic' }
+                { value: 'Slightly Plastic', label: 'Slightly plastic' },
+                { value: 'Non-Plastic', label: 'Non-plastic' }
               ]}
               error={errors.plasticity}
             />

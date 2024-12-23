@@ -206,10 +206,10 @@ export function DecorationForm({
             control={control}
             options={[
               { value: 'Matte', label: 'Matte' },
+              { value: 'Semi-matte', label: 'Semi-matte' },
               { value: 'Satin', label: 'Satin' },
-              { value: 'Glossy', label: 'Glossy' },
-              { value: 'Breaking', label: 'Breaking' },
-              { value: 'Crystalline', label: 'Crystalline' }
+              { value: 'Semi-gloss', label: 'Semi-gloss' },
+              { value: 'Gloss', label: 'Gloss' },
             ]}
             error={errors.surface}
           />
@@ -228,7 +228,7 @@ export function DecorationForm({
               options={[
                 { value: 'Opaque', label: 'Opaque' },
                 { value: 'Semi-opaque', label: 'Semi-opaque' },
-                { value: 'Semi-transparent', label: 'Semi-transparent' },
+                { value: 'Translucent', label: 'Translucent' },
                 { value: 'Transparent', label: 'Transparent' }
               ]}
               error={errors.transparency}

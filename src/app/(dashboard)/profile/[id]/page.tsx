@@ -80,11 +80,11 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                       <div className="flex-1 min-w-0">
                         <Link
                           href={`/test-tiles/${tile.id}`}
-                          className="font-medium text-clay-700 hover:text-clay-900 truncate"
+                          className="font-semibold text-brand hover:text-clay-900 truncate"
                         >
                           {tile.name}
                         </Link>
-                        <p className="text-clay-500 truncate">
+                        <p className="text-clay-600 truncate">
                           {tile.clayBody.name} • {tile.decorationLayers.reduce((total, layer) => total + layer.decorations.length, 0)} decorations
                         </p>
                       </div>

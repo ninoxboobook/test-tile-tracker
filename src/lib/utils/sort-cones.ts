@@ -13,8 +13,8 @@ const getConeNumericValue = (coneName: string): number => {
   if (!match) return 0 // Return 0 for non-numeric cones (like firing ranges)
   
   const num = parseInt(match[1])
-  // If the original string had leading zeros, it's a negative cone
-  return coneName.includes('0') && num > 0 ? -num : num
+  // Only treat as negative if it starts with 0 (not just contains 0)
+  return /^(?:Cone )?0/.test(coneName) && num > 0 ? -num : num
 }
 
 export const sortCones = (cones: Array<Cone>): Array<Cone> => {
