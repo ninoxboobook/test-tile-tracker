@@ -7,17 +7,21 @@ interface FormLayoutProps {
   description?: string;
   children: React.ReactNode;
   backHref: string;
+  additionalActions?: React.ReactNode;
 }
 
-export function FormLayout({ title, description, children, backHref }: FormLayoutProps) {
+export function FormLayout({ title, description, children, backHref, additionalActions }: FormLayoutProps) {
   return (
     <PageLayout
       title={title}
       description={description}
       action={
-        <Link href={backHref}>
-          <ActionButton>Back</ActionButton>
-        </Link>
+        <div className="flex space-x-3 items-center">
+          {additionalActions}
+          <Link href={backHref}>
+            <ActionButton>Back</ActionButton>
+          </Link>
+        </div>
       }
       variant="detail"
     >
