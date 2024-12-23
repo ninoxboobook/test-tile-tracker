@@ -21,6 +21,7 @@ import { Atmosphere } from '@prisma/client'
 import { Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
 
 interface DecorationLayer {
   order: number
@@ -62,6 +63,7 @@ export function TestTileForm({
   ])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const sortedCones = useMemo(() => sortCones(cones), [cones])
+  const sortedAtmospheres = useMemo(() => sortAtmospheres(atmospheres), [atmospheres])
   const {
     register,
     control,
@@ -296,7 +298,7 @@ export function TestTileForm({
                 name="atmosphereId"
                 label="Atmosphere"
                 control={control}
-                options={atmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
+                options={sortedAtmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
                 error={errors.atmosphereId}
                 required
               />

@@ -14,6 +14,7 @@ import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { ClayBodyType, Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { sortClayTypes } from '@/lib/utils/sort-clay-types'
 
 interface ClayBodyFormProps {
   initialData?: any
@@ -32,6 +33,7 @@ export function ClayBodyForm({
 }: ClayBodyFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const sortedCones = useMemo(() => sortCones(cones), [cones])
+  const sortedClayTypes = useMemo(() => sortClayTypes(clayBodyTypes), [clayBodyTypes])
   const {
     register,
     control,
@@ -121,7 +123,7 @@ export function ClayBodyForm({
             label="Type"
             name="typeId"
             control={control}
-            options={clayBodyTypes.map(type => ({
+            options={sortedClayTypes.map(type => ({
               value: type.id,
               label: type.name
             }))}

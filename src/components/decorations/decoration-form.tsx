@@ -14,6 +14,8 @@ import { DecorationType, Cone, Atmosphere } from '@prisma/client'
 import { useState, useMemo } from 'react'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
+import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
+import { sortDecorationTypes } from '@/lib/utils/sort-decoration-types'
 import { FormColorPicker } from '../ui/forms/form-color-picker'
 
 interface DecorationFormProps {
@@ -44,6 +46,8 @@ export function DecorationForm({
     : {}
 
   const sortedCones = useMemo(() => sortCones(cones), [cones])
+  const sortedAtmospheres = useMemo(() => sortAtmospheres(atmospheres), [atmospheres])
+  const sortedDecorationTypes = useMemo(() => sortDecorationTypes(decorationTypes), [decorationTypes])
 
   const {
     register,
@@ -147,7 +151,7 @@ export function DecorationForm({
             label="Type"
             name="typeId"
             control={control}
-            options={decorationTypes.map(type => ({
+            options={sortedDecorationTypes.map(type => ({
               value: type.id,
               label: type.name
             }))}
@@ -193,7 +197,7 @@ export function DecorationForm({
             label="Atmosphere"
             name="atmosphereIds"
             control={control}
-            options={atmospheres.map(atm => ({
+            options={sortedAtmospheres.map(atm => ({
               value: atm.id,
               label: atm.name
             }))}
