@@ -8,8 +8,8 @@ import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
-import { ImageUpload } from '@/components/ui/forms/image-upload'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
+import { ProfileImage } from '@/components/profile/profile-image'
 
 interface ProfileFormProps {
   initialData?: Partial<ProfileUpdateFormData>
@@ -85,13 +85,11 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           </div>
         )}
         <div className="col-span-4 bg-sand-light rounded-2xl p-8">
-          <h3 className="text-lg font-medium leading-6 text-clay-900">Profile Picture</h3>
-          <div className="mt-4">
-            <ImageUpload
+            <ProfileImage
               currentImageUrl={imageUrl}
               onImageSelected={handleImageSelected}
+              initials={initialData?.username?.[0]?.toUpperCase() || 'U'}
             />
-          </div>
         </div>
         <div className="col-span-8 bg-sand-light rounded-2xl p-8 space-y-6">
           <FormField
