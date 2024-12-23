@@ -75,33 +75,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             <ul role="list" className="divide-y divide-clay-200">
               {user.testTiles.length > 0 ? (
                 user.testTiles.map((tile) => (
-                  <li key={tile.id} className="px-4 py-4 sm:px-6">
+                  <li key={tile.id} className="px-8 py-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center flex-1 min-w-0">
-                        {tile.images?.[0] && (
-                          <div className="relative h-12 w-12 rounded-md overflow-hidden mr-4 flex-shrink-0">
-                            <Image
-                              src={tile.images[0]}
-                              alt={`${tile.name} thumbnail`}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        )}
-                        <div className="min-w-0">
-                          <Link
-                            href={`/test-tiles/${tile.id}`}
-                            className="text-sm font-medium text-clay-600 hover:text-clay-900 truncate block"
-                          >
-                            {tile.name}
-                          </Link>
-                          <p className="text-sm text-clay-500 truncate">
-                            {tile.clayBody.name} • {tile.decorationLayers.reduce((total, layer) => total + layer.decorations.length, 0)} decorations
-                          </p>
-                        </div>
+                      <div className="flex-1 min-w-0">
+                        <Link
+                          href={`/test-tiles/${tile.id}`}
+                          className="font-medium text-clay-700 hover:text-clay-900 truncate"
+                        >
+                          {tile.name}
+                        </Link>
+                        <p className="text-clay-500 truncate">
+                          {tile.clayBody.name} • {tile.decorationLayers.reduce((total, layer) => total + layer.decorations.length, 0)} decorations
+                        </p>
                       </div>
                       <div className="flex-shrink-0 ml-5">
-                        <div className="text-sm text-clay-500">
+                        <div className="text-clay-500">
                           {formatDate(tile.createdAt)}
                         </div>
                       </div>
@@ -109,7 +97,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   </li>
                 ))
               ) : (
-                <li className="px-4 py-4 sm:px-6 text-sm text-clay-500">
+                <li className="px-4 py-4 sm:px-6 text-clay-500">
                   No test tiles found
                 </li>
               )}
