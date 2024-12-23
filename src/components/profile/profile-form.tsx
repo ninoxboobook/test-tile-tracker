@@ -7,6 +7,7 @@ import { profileUpdateSchema, type ProfileUpdateFormData } from '@/lib/schemas/u
 import { Form } from '@/components/ui/forms/form'
 import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { ImageUpload } from '@/components/ui/forms/image-upload'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
 
@@ -21,7 +22,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
   const {
     register,
-    formState: { errors },
+    formState: { errors, dirtyFields },
     handleSubmit,
     setValue,
   } = useForm<ProfileUpdateFormData>({
@@ -34,7 +35,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       setIsSubmitting(true)
       setMessage(null)
       const formData = new FormData()
-      
+
       Object.entries(data).forEach(([key, value]) => {
         if (value) {
           formData.append(key, value)
@@ -49,8 +50,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       await updateProfile(formData)
       setMessage({ type: 'success', text: 'Profile updated successfully' })
     } catch (error) {
-      setMessage({ 
-        type: 'error', 
+      setMessage({
+        type: 'error',
         text: error instanceof Error ? error.message : 'Failed to update profile'
       })
     } finally {
@@ -72,20 +73,18 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
   return (
     <Form onSubmit={handleFormSubmit}>
-      <div className="space-y-6">
+      <div className="grid grid-cols-12 gap-8">
         {message && (
           <div
-            className={`p-4 mb-4 rounded-md ${
-              message.type === 'success' 
-                ? 'bg-green-50 text-green-700 border border-green-200' 
-                : 'bg-red-50 text-red-700 border border-red-200'
-            }`}
+            className={`p-4 mb-4 rounded-md ${message.type === 'success'
+              ? 'bg-green-50 text-green-700 border border-green-200'
+              : 'bg-red-50 text-red-700 border border-red-200'
+              }`}
           >
             {message.text}
           </div>
         )}
-
-        <div className="border-b border-clay-900/10 pb-6">
+        <div className="col-span-4 bg-sand-light rounded-2xl p-8">
           <h3 className="text-lg font-medium leading-6 text-clay-900">Profile Picture</h3>
           <div className="mt-4">
             <ImageUpload
@@ -94,78 +93,85 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             />
           </div>
         </div>
-
-        <FormField
-          label="Email"
-          name="email"
-          type="email"
-          register={register}
-          error={errors.email}
-          placeholder="Enter your email"
-        />
-
-        <FormField
-          label="Username"
-          name="username"
-          register={register}
-          error={errors.username}
-          placeholder="Enter your username"
-        />
-
-        <FormField
-          label="First Name"
-          name="firstName"
-          register={register}
-          error={errors.firstName}
-          placeholder="Enter your first name"
-        />
-
-        <FormField
-          label="Last Name"
-          name="lastName"
-          register={register}
-          error={errors.lastName}
-          placeholder="Enter your last name"
-        />
-
-        <div className="border-t pt-6 space-y-6">
-          <h3 className="text-lg font-medium mb-4">Change Password</h3>
-          
+        <div className="col-span-8 bg-sand-light rounded-2xl p-8 space-y-6">
           <FormField
-            label="Current Password"
-            name="currentPassword"
-            type="password"
+            label="Email"
+            name="email"
+            type="email"
             register={register}
-            error={errors.currentPassword}
-            placeholder="Enter your current password"
+            error={errors.email}
+            placeholder="Enter your email"
           />
 
           <FormField
-            label="New Password"
-            name="newPassword"
-            type="password"
+            label="Username"
+            name="username"
             register={register}
-            error={errors.newPassword}
-            placeholder="Enter your new password"
+            error={errors.username}
+            placeholder="Enter your username"
           />
 
           <FormField
-            label="Confirm New Password"
-            name="confirmNewPassword"
-            type="password"
+            label="First Name"
+            name="firstName"
             register={register}
-            error={errors.confirmNewPassword}
-            placeholder="Confirm your new password"
+            error={errors.firstName}
+            placeholder="Enter your first name"
           />
+
+          <FormField
+            label="Last Name"
+            name="lastName"
+            register={register}
+            error={errors.lastName}
+            placeholder="Enter your last name"
+          />
+
+          <div className="border-t pt-6 space-y-6">
+            <h3 className="text-lg font-medium mb-4">Change Password</h3>
+
+            <FormField
+              label="Current Password"
+              name="currentPassword"
+              type="password"
+              register={register}
+              error={errors.currentPassword}
+              placeholder="Enter your current password"
+            />
+
+            <FormField
+              label="New Password"
+              name="newPassword"
+              type="password"
+              register={register}
+              error={errors.newPassword}
+              placeholder="Enter your new password"
+            />
+
+            <FormField
+              label="Confirm New Password"
+              name="confirmNewPassword"
+              type="password"
+              register={register}
+              error={errors.confirmNewPassword}
+              placeholder="Confirm your new password"
+            />
+          </div>
         </div>
-
-        <div className="flex justify-end">
-          <ActionButton
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
-          </ActionButton>
+        <div className="col-span-12">
+          <div className="flex justify-end space-x-3">
+            <CancelButton
+              type="button"
+              hasUnsavedChanges={() => Object.keys(dirtyFields).length > 0}
+              route="/dashboard"
+            />
+            <ActionButton
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
+            </ActionButton>
+          </div>
         </div>
       </div>
     </Form>
