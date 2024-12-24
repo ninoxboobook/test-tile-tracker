@@ -28,7 +28,7 @@ export function DataGridTile({
   return (
     <div className="flex flex-col">
       {variant === 'single' ? (
-        <div className="aspect-square bg-clay-50">
+        <div className="aspect-square bg-clay-50 relative">
           <div className="absolute top-3 right-3 z-10 flex flex-wrap justify-end gap-1">
             {lozenges.map((lozenge) => (
               <Lozenge key={lozenge.label} variant={lozenge.lozengeVariant}>{lozenge.label}</Lozenge>
