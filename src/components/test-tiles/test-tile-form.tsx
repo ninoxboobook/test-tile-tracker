@@ -224,7 +224,7 @@ export function TestTileForm({
                   <div className="grow">
                     <FormSelect
                       name="clayBodyId"
-                      label="Clay Body"
+                      label="Clay body"
                       control={control}
                       options={clayBodies.map(body => ({ value: body.id, label: body.name }))}
                       error={errors.clayBodyId}
@@ -384,11 +384,11 @@ export function TestTileForm({
       <Modal
         isOpen={isClayBodyModalOpen}
         onClose={() => setIsClayBodyModalOpen(false)}
-        title="Add New Clay Body"
+        title="Add new clay body"
       >
         <ClayBodyForm
           action={handleClayBodySubmit}
-          submitButtonText="Create Clay Body"
+          submitButtonText="Create clay body"
           clayBodyTypes={clayBodyTypes}
           cones={cones}
         />
@@ -397,11 +397,11 @@ export function TestTileForm({
       <Modal
         isOpen={isDecorationModalOpen}
         onClose={() => setIsDecorationModalOpen(false)}
-        title="Add New Decoration"
+        title="Add new decoration"
       >
         <DecorationForm
           action={handleDecorationSubmit}
-          submitButtonText="Create Decoration"
+          submitButtonText="Create decoration"
           decorationTypes={decorationTypes}
           cones={cones}
           atmospheres={atmospheres}
