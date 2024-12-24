@@ -1,26 +1,35 @@
 export interface ActionButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'tertiaryDanger' | 'danger';
+  size?: 'default' | 'compact';
   isLoading?: boolean;
 }
 
 export function ActionButton({ 
   children, 
-  variant = 'primary', 
+  variant = 'primary',
+  size = 'default', 
   isLoading, 
   className,
   ...props 
 }: ActionButtonProps) {
-  const baseStyles = "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
+  const baseStyles = "inline-flex items-center border border-transparent rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
+  
+  const sizes = {
+    default: "text-base px-4 py-2",
+    compact: "text-sm px-2.5 py-1.5"
+  };
   
   const variants = {
-    primary: "text-clay-50 bg-brand hover:bg-clay-700 focus:ring-clay-500",
-    secondary: "text-brand bg-sand-light border-brand hover:bg-clay-50 focus:ring-clay-500",
-    danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500"
+    primary: "text-clay-50 bg-brand hover:bg-clay-700 focus:ring-clay-500 disabled:opacity-50",
+    secondary: "text-brand bg-sand-light border-brand hover:bg-clay-50 focus:ring-clay-500 disabled:opacity-50",
+    tertiary: "px-0 text-brand bg-transparent hover:text-clay-600 focus:ring-clay-500 disabled:opacity-50",
+    tertiaryDanger: "px-0 text-red-600 bg-transparent hover:text-red-800 focus:ring-clay-500 disabled:opacity-50",
+    danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 disabled:opacity-50"
   };
 
   return (
     <button 
-      className={`${baseStyles} ${variants[variant]} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={isLoading}
       {...props}
     >

@@ -204,54 +204,80 @@ export function TestTileForm({
               <input type="hidden" name="id" value={initialData.id} />
             )}
             <div className="space-y-6">
-              <FormField
-                label="Name"
-                name="name"
-                register={register}
-                error={errors.name}
-                required
-              />
-
-              <FormField
-                label="Stamp"
-                name="stamp"
-                register={register}
-                error={errors.stamp}
-              />
-
-              <div className="space-y-2">
-                <FormSelect
-                  name="clayBodyId"
-                  label="Clay Body"
-                  control={control}
-                  options={clayBodies.map(body => ({ value: body.id, label: body.name }))}
-                  error={errors.clayBodyId}
+              <div className="pb-4 space-y-6">
+                <FormField
+                  label="Name"
+                  name="name"
+                  register={register}
+                  error={errors.name}
                   required
                 />
-                <div className="flex justify-end">
-                  <ActionButton
-                    type="button"
-                    variant="secondary"
-                    onClick={() => setIsClayBodyModalOpen(true)}
-                  >
-                    Add New Clay Body
-                  </ActionButton>
+
+                <FormField
+                  label="Stamp"
+                  name="stamp"
+                  register={register}
+                  error={errors.stamp}
+                />
+
+                <div className="space-x-3 flex">
+                  <div className="grow">
+                    <FormSelect
+                      name="clayBodyId"
+                      label="Clay Body"
+                      control={control}
+                      options={clayBodies.map(body => ({ value: body.id, label: body.name }))}
+                      error={errors.clayBodyId}
+                      required
+                    />
+                  </div>
+                  <div className="self-end">
+                    <ActionButton
+                      type="button"
+                      variant="secondary"
+                      onClick={() => setIsClayBodyModalOpen(true)}
+                    >
+                      Add new clay body
+                    </ActionButton>
+                  </div>
                 </div>
+
+                <FormSelect
+                  name="coneId"
+                  label="Cone"
+                  control={control}
+                  options={sortedCones.map(cone => ({ value: cone.id, label: cone.name }))}
+                  error={errors.coneId}
+                  required
+                />
+
+                <FormSelect
+                  name="atmosphereId"
+                  label="Atmosphere"
+                  control={control}
+                  options={sortedAtmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
+                  error={errors.atmosphereId}
+                  required
+                />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-4 border-y border-clay-200 pt-5 pb-10">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium">Decorations</h3>
-                  <button
-                    type="button"
-                    onClick={() => setIsDecorationModalOpen(true)}
-                    className="text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    Add New Decoration
-                  </button>
+                  <div>
+                    <h3 className="text-lg font-medium text-clay-800 mt-2">Decorations</h3>
+                    <p className="text-clay-900 mb-2">Add layers of decorations to your test tile</p>
+                  </div>
+                  <ActionButton
+                      type="button"
+                      variant="secondary"
+                      onClick={() => setIsDecorationModalOpen(true)}
+                      className="mt-1"
+                      >
+                      Add new decoration
+                    </ActionButton>
                 </div>
 
                 {controlledFields.map((field, index) => (
-                  <div key={field.id} className="flex items-start gap-2">
+                  <div key={field.id} className="flex items-end gap-3">
                     <FormMultiSelect
                       label={`Layer ${index + 1}`}
                       name={`decorationLayers.${index}.decorationIds`}
@@ -262,47 +288,33 @@ export function TestTileForm({
                       }))}
                       error={errors.decorationLayers?.[index]?.decorationIds}
                       onChange={(values) => handleLayerChange(index + 1, values)}
+                      className="w-full"
                     />
                     {index > 0 && (
-                      <button
+
+                      <ActionButton
                         type="button"
+                        variant="tertiaryDanger"
                         onClick={() => remove(index)}
-                        className="mt-8 text-red-600 hover:text-red-800"
                       >
                         Remove
-                      </button>
+                      </ActionButton>
+
                     )}
                   </div>
                 ))}
 
-                <button
+                <ActionButton
                   type="button"
+                  variant="secondary"
+                  size="compact"
                   onClick={addLayer}
                   disabled={!canAddLayer}
-                  className="mt-2 text-sm text-blue-600 hover:text-blue-800 disabled:text-clay-400"
                 >
-                  Add Layer
-                </button>
+                  Add layer
+                </ActionButton>
               </div>
-
-              <FormSelect
-                name="coneId"
-                label="Cone"
-                control={control}
-                options={sortedCones.map(cone => ({ value: cone.id, label: cone.name }))}
-                error={errors.coneId}
-                required
-              />
-
-              <FormSelect
-                name="atmosphereId"
-                label="Atmosphere"
-                control={control}
-                options={sortedAtmospheres.map(atmosphere => ({ value: atmosphere.id, label: atmosphere.name }))}
-                error={errors.atmosphereId}
-                required
-              />
-
+              <div className="space-y-6 pt-2">
               <FormMultiSelect
                 name="collectionIds"
                 label="Collections"
@@ -321,6 +333,7 @@ export function TestTileForm({
                 error={errors.notes}
                 placeholder="Add any additional notes about this test tile..."
               />
+              </div>
             </div>
           </div>
           <div className="col-span-5 bg-sand-light p-8 rounded-2xl">
