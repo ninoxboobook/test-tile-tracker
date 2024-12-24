@@ -6,6 +6,8 @@ import * as z from 'zod'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { ActionButton } from '../ui/buttons/action-button'
+import { FormField } from '../ui/forms/form-field'
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -17,7 +19,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 export function LoginForm() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
-  
+
   const {
     register,
     handleSubmit,
@@ -29,7 +31,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setError(null) // Clear any previous errors
-      
+
       const result = await signIn('credentials', {
         redirect: false,
         email: data.email.toLowerCase(), // Normalize email
@@ -58,37 +60,25 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-clay-700">
-          Email
-        </label>
-        <input
-          {...register('email')}
-          type="email"
-          id="email"
-          autoComplete="email"
-          className="mt-1 block w-full rounded-md border-clay-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Email"
+        name="email"
+        type="email"
+        register={register}
+        error={errors.email}
+        autoComplete="email"
+        required
+      />
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-clay-700">
-          Password
-        </label>
-        <input
-          {...register('password')}
-          type="password"
-          id="password"
-          autoComplete="current-password"
-          className="mt-1 block w-full rounded-md border-clay-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-        {errors.password && (
-          <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-        )}
-      </div>
+      <FormField
+        label="Password"
+        name="password"
+        type="password"
+        register={register}
+        error={errors.password}
+        autoComplete="current-password"
+        required
+      />
 
       {error && (
         <div className="rounded-md bg-red-50 p-4">
@@ -100,13 +90,19 @@ export function LoginForm() {
         </div>
       )}
 
-      <button
+      <ActionButton
         type="submit"
-        disabled={isSubmitting}
-        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+        isLoading={isSubmitting}
+        className="w-full justify-center"
       >
         {isSubmitting ? 'Signing in...' : 'Sign in'}
-      </button>
+      </ActionButton>
+      <p className="text-center">
+        <a href="/register" className="font-medium text-brand hover:text-clay-500">
+          Or create a new account
+        </a>
+      </p>
+
     </form>
   )
 }
