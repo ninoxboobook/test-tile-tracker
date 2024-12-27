@@ -49,7 +49,7 @@ export function DashboardNav({ user }: { user: any }) {
 
               <div className="flex flex-shrink-0 items-center">
                 <Link href="/dashboard" className="text-xl font-bold text-brand">
-                  <Image src="/ttt-logo.svg" alt="Test Tile Tracker" width={40} height={28} />
+                  <Image src="/images/ttt-logo.svg" alt="Test Tile Tracker" width={40} height={28} />
                 </Link>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
