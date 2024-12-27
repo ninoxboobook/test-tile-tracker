@@ -10,6 +10,7 @@ import {
   FolderIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
+import { Carousel } from '@/components/ui/carousel'
 
 const features = [
   {
@@ -79,6 +80,83 @@ export default async function HomePage() {
       </div>
 
       <div></div>
+
+      <div className="mx-auto max-w-7xl px-6">
+        <Carousel
+          tiles={[
+            {
+              title: 'Shino Test #1',
+              subtitle: 'Carbon Trap Shino',
+              lozenges: [
+                { label: 'Cone 10', lozengeVariant: 'brand' },
+                { label: 'B Mix', lozengeVariant: 'neutral' },
+                { label: 'Shino', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { label: 'Date', value: '2024-01-15' },
+                { label: 'Collection', value: 'Shino Tests' }
+              ],
+              description: 'Testing carbon trapping with spray application'
+            },
+            {
+              title: 'Tenmoku Over Celadon',
+              subtitle: 'Layered Test',
+              lozenges: [
+                { label: 'Cone 6', lozengeVariant: 'brand' },
+                { label: 'Porcelain', lozengeVariant: 'neutral' },
+                { label: 'Tenmoku', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { label: 'Date', value: '2024-01-12' },
+                { label: 'Collection', value: 'Layered Glazes' }
+              ],
+              description: 'Exploring glaze interactions'
+            },
+            {
+              title: 'Copper Red Test',
+              subtitle: 'Reduction Firing',
+              lozenges: [
+                { label: 'Cone 10', lozengeVariant: 'brand' },
+                { label: 'Stoneware', lozengeVariant: 'neutral' },
+                { label: 'Copper Red', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { label: 'Date', value: '2024-01-10' },
+                { label: 'Collection', value: 'Copper Reds' }
+              ],
+              description: 'Testing reduction atmosphere effects'
+            },
+            {
+              title: 'Ash Glaze Study',
+              subtitle: 'Wood Ash Base',
+              lozenges: [
+                { label: 'Cone 11', lozengeVariant: 'brand' },
+                { label: 'Groggy Clay', lozengeVariant: 'neutral' },
+                { label: 'Ash Glaze', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { label: 'Date', value: '2024-01-08' },
+                { label: 'Collection', value: 'Ash Glazes' }
+              ],
+              description: 'Local wood ash composition test'
+            },
+            {
+              title: 'Crystalline Test',
+              subtitle: 'Zinc Silicate',
+              lozenges: [
+                { label: 'Cone 8', lozengeVariant: 'brand' },
+                { label: 'Porcelain', lozengeVariant: 'neutral' },
+                { label: 'Crystalline', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { label: 'Date', value: '2024-01-05' },
+                { label: 'Collection', value: 'Crystal Growth' }
+              ],
+              description: 'Testing crystal growth patterns'
+            }
+          ]}
+        />
+      </div>
 
       <div className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
