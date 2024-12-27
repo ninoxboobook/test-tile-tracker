@@ -3,6 +3,11 @@ import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import Image from 'next/image'
 import splashImg from 'public/images/splash.jpg'
+import testTile1 from 'public/images/test-tile-1.png'
+import testTile2 from 'public/images/test-tile-2.png'
+import testTile3 from 'public/images/test-tile-3.png'
+import testTile4 from 'public/images/test-tile-4.png'
+import testTile5 from 'public/images/test-tile-5.png'
 import { UnauthNav } from '@/components/navigation/unauth-nav-menu'
 import {
   BeakerIcon,
@@ -11,6 +16,12 @@ import {
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import { Carousel } from '@/components/ui/carousel'
+import { Footer } from '@/components/navigation/footer'
+import {
+  baseButtonStyles,
+  buttonSizes,
+  buttonVariants,
+} from '@/components/ui/buttons/action-button'
 
 const features = [
   {
@@ -45,7 +56,7 @@ export default async function HomePage() {
   return (
     <div className="bg-sand min-h-screen">
       <UnauthNav />
-      <div className="relative">
+      <div className="relative mb-20">
         <div className="mx-auto max-w-7xl py-10">
           <div className="bg-sand-light rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2">
             <div className="mx-auto px-14 py-14 col-span-1">
@@ -53,18 +64,18 @@ export default async function HomePage() {
               <h2 className="text-6xl font-display font-bold text-clay-900">
                 Document Your Pottery Journey
               </h2>
-              <p className="mt-6 text-lg leading-8 text-clay-700">
+              <p className="mt-6 pr-4 text-lg text-clay-700">
                 A comprehensive tool for potters to document and track their ceramic experiments. From test tiles and clay bodies to glazes and decorations, organize your pottery documentation in one place.
               </p>
               <div className="mt-10 flex items-center gap-x-6">
                 <Link
                   href="/register"
-                  className="rounded-md bg-brand px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-emphasis focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  className={baseButtonStyles + ' ' + buttonVariants.primary + ' ' + buttonSizes.default}
                 >
                   Get Started
                 </Link>
-                <Link href="/login" className="text-sm font-semibold leading-6 text-clay-900">
-                  Sign in to your account <span aria-hidden="true">→</span>
+                <Link href="/login" className={baseButtonStyles + ' ' + buttonVariants.secondary + ' ' + buttonSizes.default}>
+                  Sign in to your account
                 </Link>
               </div>
             </div>
@@ -79,28 +90,29 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <div></div>
-
       <div className="mx-auto max-w-7xl px-6">
+        <div className="mb-10">
+        <h2 className="font-display font-semibold text-clay-800 text-4xl text-center pb-4">No more rummaging through boxes</h2>
+        <p className="text-xl max-w-4xl text-center mx-auto text-clay-700">Document and organise your personal library of test tiles, decorations and clay so you can access it anywhere. Search, filter and cross-reference existing test tiles to make every glaze day a good day.</p>
+        </div>
         <Carousel
           tiles={[
             {
-              title: 'Shino Test #1',
-              subtitle: 'Carbon Trap Shino',
+              title: 'Frozen Pond Test',
+              subtitle: 'Walkers PB103',
+              images: [testTile1.src],
               lozenges: [
-                { label: 'Cone 10', lozengeVariant: 'brand' },
-                { label: 'B Mix', lozengeVariant: 'neutral' },
-                { label: 'Shino', lozengeVariant: 'brand-emphasis' }
+                { label: 'Cone 6', lozengeVariant: 'brand' },
+                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { label: 'Date', value: '2024-01-15' },
-                { label: 'Collection', value: 'Shino Tests' }
+                { value: 'Honey Flux, Mayco Green Tea' },
               ],
-              description: 'Testing carbon trapping with spray application'
             },
             {
               title: 'Tenmoku Over Celadon',
               subtitle: 'Layered Test',
+              images: [testTile2.src],
               lozenges: [
                 { label: 'Cone 6', lozengeVariant: 'brand' },
                 { label: 'Porcelain', lozengeVariant: 'neutral' },
@@ -115,6 +127,7 @@ export default async function HomePage() {
             {
               title: 'Copper Red Test',
               subtitle: 'Reduction Firing',
+              images: [testTile3.src],
               lozenges: [
                 { label: 'Cone 10', lozengeVariant: 'brand' },
                 { label: 'Stoneware', lozengeVariant: 'neutral' },
@@ -129,6 +142,7 @@ export default async function HomePage() {
             {
               title: 'Ash Glaze Study',
               subtitle: 'Wood Ash Base',
+              images: [testTile4.src],
               lozenges: [
                 { label: 'Cone 11', lozengeVariant: 'brand' },
                 { label: 'Groggy Clay', lozengeVariant: 'neutral' },
@@ -143,6 +157,7 @@ export default async function HomePage() {
             {
               title: 'Crystalline Test',
               subtitle: 'Zinc Silicate',
+              images: [testTile5.src],
               lozenges: [
                 { label: 'Cone 8', lozengeVariant: 'brand' },
                 { label: 'Porcelain', lozengeVariant: 'neutral' },
@@ -187,6 +202,7 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
