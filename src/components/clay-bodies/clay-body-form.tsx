@@ -23,6 +23,7 @@ interface ClayBodyFormProps {
   clayBodyTypes: ClayBodyType[]
   cones: Array<Cone>
   isInModal?: boolean
+  onCancel?: () => void
 }
 
 export function ClayBodyForm({
@@ -31,8 +32,10 @@ export function ClayBodyForm({
   submitButtonText = 'Create Clay Body',
   clayBodyTypes,
   cones,
-  isInModal = false
+  isInModal = false,
+  onCancel
 }: ClayBodyFormProps) {
+  console.log('ClayBodyForm props:', { isInModal, onCancel })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const sortedCones = useMemo(() => sortCones(cones), [cones])
   const sortedClayTypes = useMemo(() => sortClayTypes(clayBodyTypes), [clayBodyTypes])
@@ -277,7 +280,7 @@ export function ClayBodyForm({
               );
             }}
             type="button"
-            route="/clay-bodies"
+            onCancel={isInModal && onCancel ? onCancel : () => window.location.href = '/clay-bodies'}
           />
           <ActionButton
             type="submit"

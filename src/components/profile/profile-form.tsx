@@ -183,9 +183,9 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         <div className="col-span-12">
           <div className="flex justify-end space-x-3">
             <CancelButton
-              type="button"
               hasUnsavedChanges={() => Object.keys(dirtyFields).length > 0}
-              route="/dashboard"
+              type="button"
+              onCancel={() => window.location.href = '/dashboard'}
             />
             <ActionButton
               type="submit"

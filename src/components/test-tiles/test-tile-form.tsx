@@ -22,6 +22,7 @@ import { Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
+import { createClayBodyFromModal } from '@/app/(dashboard)/clay-bodies/actions'
 
 interface DecorationLayer {
   order: number
@@ -101,21 +102,18 @@ export function TestTileForm({
   };
 
   const handleClayBodySubmit = async (formData: FormData) => {
-    const response = await fetch('/api/clay-bodies', {
-      method: 'POST',
-      body: formData
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to create clay body')
+    try {
+      const clayBody = await createClayBodyFromModal(formData)
+      // Update the clay bodies list with the new clay body
+      setClayBodies(prevBodies => [...prevBodies, clayBody])
+      // Set the selected value to the new clay body
+      setValue('clayBodyId', clayBody.id, { shouldValidate: true })
+      // Close the modal
+      setIsClayBodyModalOpen(false)
+    } catch (error) {
+      console.error('Error creating clay body:', error)
+      throw error
     }
-
-    const clayBody = await response.json()
-    // Update the clay bodies list with the new clay body
-    setClayBodies(prevBodies => [...prevBodies, clayBody])
-    // Set the selected value to the new clay body
-    setValue('clayBodyId', clayBody.id, { shouldValidate: true })
-    setIsClayBodyModalOpen(false)
   }
 
   const handleLayerChange = (order: number, decorationIds: string[]) => {
@@ -367,7 +365,7 @@ export function TestTileForm({
                   !!values.imageUrl
                 );
               }}
-              route="/test-tiles"
+              onCancel={() => window.location.href = '/test-tiles'}
               type="button"
             />
             <ActionButton
@@ -383,15 +381,21 @@ export function TestTileForm({
 
       <Modal
         isOpen={isClayBodyModalOpen}
-        onClose={() => setIsClayBodyModalOpen(false)}
+        onClose={() => {
+          console.log('Modal onClose called')
+          setIsClayBodyModalOpen(false)
+        }}
         title="Add new clay body"
       >
         <ClayBodyForm
           action={handleClayBodySubmit}
-          submitButtonText="Create clay body"
           clayBodyTypes={clayBodyTypes}
           cones={cones}
-          isInModal={true}
+          isInModal
+          onCancel={() => {
+            console.log('ClayBodyForm onCancel called')
+            setIsClayBodyModalOpen(false)
+          }}
         />
       </Modal>
 

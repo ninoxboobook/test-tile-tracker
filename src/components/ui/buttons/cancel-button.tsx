@@ -5,17 +5,18 @@ import { useRouter } from 'next/navigation'
 import { ActionButton, ActionButtonProps } from './action-button'
 import { Dialog } from '../dialog'
 
-interface CancelButtonProps extends Omit<ActionButtonProps, 'variant'> {
+interface CancelButtonProps extends Omit<ActionButtonProps, 'variant' | 'onClick'> {
   /**
    * Function to check if there are unsaved changes
    * Should return true if there are unsaved changes
    */
   hasUnsavedChanges: () => boolean
   /**
-   * Optional route to navigate to
-   * If not provided, will navigate to previous page
+   * Function to call when cancel is confirmed
+   * This will be called either when there are no unsaved changes,
+   * or after the user confirms discarding changes
    */
-  route?: string
+  onCancel: () => void
   /**
    * Optional dialog title
    * @default "Discard changes?"
@@ -30,26 +31,26 @@ interface CancelButtonProps extends Omit<ActionButtonProps, 'variant'> {
 
 export function CancelButton({
   hasUnsavedChanges,
-  route,
+  onCancel,
   dialogTitle = 'Discard changes?',
   dialogDescription = 'Any unsaved changes will be lost.',
   children = 'Cancel',
   ...props
 }: CancelButtonProps) {
-  const router = useRouter()
   const [showDialog, setShowDialog] = useState(false)
 
-  const handleCancel = () => {
+  const handleCancel = (e?: React.MouseEvent) => {
+    e?.preventDefault()
     if (hasUnsavedChanges()) {
       setShowDialog(true)
     } else {
-      route ? router.push(route) : router.back()
+      onCancel()
     }
   }
 
   const handleConfirm = () => {
     setShowDialog(false)
-    route ? router.push(route) : router.back()
+    onCancel()
   }
 
   return (

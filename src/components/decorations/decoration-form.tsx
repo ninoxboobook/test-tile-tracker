@@ -26,6 +26,7 @@ interface DecorationFormProps {
   cones: Array<Cone>
   atmospheres: Array<Atmosphere>
   isInModal?: boolean
+  onCancel?: () => void
 }
 
 export function DecorationForm({
@@ -35,7 +36,8 @@ export function DecorationForm({
   decorationTypes,
   cones,
   atmospheres,
-  isInModal = false
+  isInModal = false,
+  onCancel
 }: DecorationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string>('')
@@ -297,8 +299,8 @@ export function DecorationForm({
                 !!values.imageUrl
               );
             }}
-            route="/decorations"
             type="button"
+            onCancel={onCancel || (() => window.location.href = '/decorations')}
           />
           <ActionButton
             type="submit"

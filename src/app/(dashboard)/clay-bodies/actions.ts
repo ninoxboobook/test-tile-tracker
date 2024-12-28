@@ -80,6 +80,69 @@ export async function createClayBody(data: ClayBodyFormData) {
   redirect(`/clay-bodies/${clayBody.id}`)
 }
 
+export async function createClayBodyFromModal(formData: FormData) {
+  const session = await validateSession()
+
+  // Convert FormData to object while preserving arrays
+  const entries = Array.from(formData.entries());
+  const rawData = entries.reduce((acc, [key, value]) => {
+    if (key === 'cone' || key === 'imageUrl') {
+      if (!acc[key]) {
+        acc[key] = formData.getAll(key);
+      }
+    } else {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, any>);
+
+  // Convert string numbers to actual numbers before validation
+  const processedData = {
+    ...rawData,
+    shrinkage: rawData.shrinkage ? parseFloat(rawData.shrinkage as string) : null,
+    absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
+    meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
+    imageUrl: rawData.imageUrl?.filter((url: any) => typeof url === 'string') || []
+  }
+
+  const validatedData = clayBodySchema.parse(processedData)
+
+  const clayBody = await prisma.clayBody.create({
+    data: {
+      name: validatedData.name,
+      type: {
+        connect: { id: validatedData.typeId }
+      },
+      cone: validatedData.cone?.length ? {
+        connect: validatedData.cone.map(id => ({ id }))
+      } : undefined,
+      manufacturer: validatedData.manufacturer,
+      firingTemperature: validatedData.firingTemperature,
+      plasticity: validatedData.plasticity,
+      texture: validatedData.texture,
+      colourOxidation: validatedData.colourOxidation,
+      colourReduction: validatedData.colourReduction,
+      shrinkage: validatedData.shrinkage,
+      absorption: validatedData.absorption,
+      meshSize: validatedData.meshSize,
+      imageUrl: validatedData.imageUrl || [],
+      notes: validatedData.notes,
+      user: {
+        connect: {
+          id: session.user.id
+        }
+      }
+    },
+    include: {
+      type: true,
+      cone: true
+    }
+  })
+
+  revalidatePath('/clay-bodies')
+  return clayBody
+}
+
 export async function updateClayBody(id: string, data: ClayBodyFormData) {
   const session = await validateSession()
 

@@ -109,8 +109,8 @@ export function CollectionForm({
                 (values.testTileIds?.length ?? 0) > 0
               );
             }}
-            route="/collections"
             type="button"
+            onCancel={() => window.location.href = '/collections'}
           />
           <ActionButton
             type="submit"
