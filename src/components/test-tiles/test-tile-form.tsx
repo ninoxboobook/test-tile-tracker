@@ -23,6 +23,7 @@ import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
 import { createClayBodyFromModal } from '@/app/(dashboard)/clay-bodies/actions'
+import { createDecorationFromModal } from '@/app/(dashboard)/decorations/actions'
 
 interface DecorationLayer {
   order: number
@@ -128,23 +129,19 @@ export function TestTileForm({
   }
 
   const handleDecorationSubmit = async (formData: FormData) => {
-    const response = await fetch('/api/decorations', {
-      method: 'POST',
-      body: formData
-    })
+    try {
+      const decoration = await createDecorationFromModal(formData)
+      setDecorations(prevDecorations => [...prevDecorations, decoration])
 
-    if (!response.ok) {
-      throw new Error('Failed to create decoration')
+      // Add the new decoration to the current layer
+      const currentLayer = decorationLayers[decorationLayers.length - 1]
+      handleLayerChange(currentLayer.order, [...currentLayer.decorationIds, decoration.id])
+
+      setIsDecorationModalOpen(false)
+    } catch (error) {
+      console.error('Error creating decoration:', error)
+      throw error
     }
-
-    const decoration = await response.json()
-    setDecorations(prevDecorations => [...prevDecorations, decoration])
-
-    // Add the new decoration to the current layer
-    const currentLayer = decorationLayers[decorationLayers.length - 1]
-    handleLayerChange(currentLayer.order, [...currentLayer.decorationIds, decoration.id])
-
-    setIsDecorationModalOpen(false)
   }
 
   const handleSubmit = async (formData: FormData) => {
@@ -400,11 +397,11 @@ export function TestTileForm({
       >
         <DecorationForm
           action={handleDecorationSubmit}
-          submitButtonText="Create decoration"
           decorationTypes={decorationTypes}
           cones={cones}
           atmospheres={atmospheres}
           isInModal={true}
+          onCancel={() => setIsDecorationModalOpen(false)}
         />
       </Modal>
     </>

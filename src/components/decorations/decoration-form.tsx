@@ -17,6 +17,7 @@ import { sortCones } from '@/lib/utils/sort-cones'
 import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
 import { sortDecorationTypes } from '@/lib/utils/sort-decoration-types'
 import { FormColorPicker } from '../ui/forms/form-color-picker'
+import { useRouter } from 'next/navigation'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
@@ -63,6 +64,8 @@ export function DecorationForm({
     resolver: zodResolver(decorationSchema),
     defaultValues
   })
+
+  const router = useRouter()
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -300,7 +303,13 @@ export function DecorationForm({
               );
             }}
             type="button"
-            onCancel={onCancel || (() => window.location.href = '/decorations')}
+            onCancel={() => {
+              if (isInModal) {
+                onCancel?.()
+              } else {
+                router.push('/decorations')
+              }
+            }}
           />
           <ActionButton
             type="submit"
