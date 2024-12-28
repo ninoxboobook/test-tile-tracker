@@ -62,20 +62,20 @@ export default async function HomePage() {
             <div className="mx-auto px-14 py-14 col-span-1">
               <h1 className="text-2xl font-display font-semibold text-brand mb-2">Test Tile Tracker <span className="text-xs font-sans font-medium inline-block translate-y-[-12px]"><em>beta</em></span></h1>
               <h2 className="text-6xl font-display font-bold text-clay-900">
-                Document Your Pottery Journey
+                Make every glaze day a good day
               </h2>
-              <p className="mt-6 pr-4 text-lg text-clay-700">
-                A comprehensive tool for potters to document and track their ceramic experiments. From test tiles and clay bodies to glazes and decorations, organize your pottery documentation in one place.
+              <p className="mt-6 pr-4 text-xl text-clay-700">
+              Document and organise your personal library of test tiles, decorations and clay so you can access it anywhere.
               </p>
-              <div className="mt-10 flex items-center gap-x-6">
+              <div className="mt-10 flex items-center gap-x-3">
                 <Link
                   href="/register"
                   className={baseButtonStyles + ' ' + buttonVariants.primary + ' ' + buttonSizes.default}
                 >
-                  Get Started
+                  Get started for free
                 </Link>
                 <Link href="/login" className={baseButtonStyles + ' ' + buttonVariants.secondary + ' ' + buttonSizes.default}>
-                  Sign in to your account
+                  Sign in
                 </Link>
               </div>
             </div>
@@ -93,13 +93,13 @@ export default async function HomePage() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10">
         <h2 className="font-display font-semibold text-clay-800 text-4xl text-center pb-4">No more rummaging through boxes</h2>
-        <p className="text-xl max-w-4xl text-center mx-auto text-clay-700">Document and organise your personal library of test tiles, decorations and clay so you can access it anywhere. Search, filter and cross-reference existing test tiles to make every glaze day a good day.</p>
+        <p className="text-lg max-w-4xl text-center mx-auto text-clay-700">Document and organise your personal library of test tiles, decorations and clay so you can access it anywhere. Search, filter and cross-reference existing test tiles to make every glaze day a good day.</p>
         </div>
         <Carousel
           tiles={[
             {
-              title: 'Frozen Pond Test',
-              subtitle: 'Walkers PB103',
+              title: 'Frozen pond test',
+              subtitle: 'Keane Midfire',
               images: [testTile1.src],
               lozenges: [
                 { label: 'Cone 6', lozengeVariant: 'brand' },
@@ -110,64 +110,52 @@ export default async function HomePage() {
               ],
             },
             {
-              title: 'Tenmoku Over Celadon',
-              subtitle: 'Layered Test',
+              title: 'Chrome red',
+              subtitle: 'Keane Midfire',
               images: [testTile2.src],
               lozenges: [
                 { label: 'Cone 6', lozengeVariant: 'brand' },
-                { label: 'Porcelain', lozengeVariant: 'neutral' },
-                { label: 'Tenmoku', lozengeVariant: 'brand-emphasis' }
+                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { label: 'Date', value: '2024-01-12' },
-                { label: 'Collection', value: 'Layered Glazes' }
+                { value: 'Martin\'s Chrome Red' },
               ],
-              description: 'Exploring glaze interactions'
             },
             {
-              title: 'Copper Red Test',
-              subtitle: 'Reduction Firing',
+              title: 'Matte over slips',
+              subtitle: 'Studio Reclaim',
               images: [testTile3.src],
               lozenges: [
                 { label: 'Cone 10', lozengeVariant: 'brand' },
-                { label: 'Stoneware', lozengeVariant: 'neutral' },
-                { label: 'Copper Red', lozengeVariant: 'brand-emphasis' }
+                { label: 'Reduction', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { label: 'Date', value: '2024-01-10' },
-                { label: 'Collection', value: 'Copper Reds' }
+                { value: 'Porcelain slip, Terracotta slip, Iron oxide, Base matte' },
               ],
-              description: 'Testing reduction atmosphere effects'
             },
             {
-              title: 'Ash Glaze Study',
-              subtitle: 'Wood Ash Base',
+              title: 'Green brush-on',
+              subtitle: 'Walkers PB103',
               images: [testTile4.src],
               lozenges: [
-                { label: 'Cone 11', lozengeVariant: 'brand' },
-                { label: 'Groggy Clay', lozengeVariant: 'neutral' },
-                { label: 'Ash Glaze', lozengeVariant: 'brand-emphasis' }
+                { label: 'Cone 10', lozengeVariant: 'brand' },
+                { label: 'Reduction', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { label: 'Date', value: '2024-01-08' },
-                { label: 'Collection', value: 'Ash Glazes' }
+                { value: 'Studio teal' },
               ],
-              description: 'Local wood ash composition test'
             },
             {
-              title: 'Crystalline Test',
-              subtitle: 'Zinc Silicate',
+              title: 'Butterscotch',
+              subtitle: 'Feeneys Dark Stoneware',
               images: [testTile5.src],
               lozenges: [
-                { label: 'Cone 8', lozengeVariant: 'brand' },
-                { label: 'Porcelain', lozengeVariant: 'neutral' },
-                { label: 'Crystalline', lozengeVariant: 'brand-emphasis' }
+                { label: 'Cone 10', lozengeVariant: 'brand' },
+                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { label: 'Date', value: '2024-01-05' },
-                { label: 'Collection', value: 'Crystal Growth' }
+                { value: 'Porcelain slip, Butterscotch' },
               ],
-              description: 'Testing crystal growth patterns'
             }
           ]}
         />
