@@ -15,6 +15,7 @@ import { ClayBodyType, Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { sortClayTypes } from '@/lib/utils/sort-clay-types'
+import { useRouter } from 'next/navigation'
 
 interface ClayBodyFormProps {
   initialData?: any
@@ -35,7 +36,7 @@ export function ClayBodyForm({
   isInModal = false,
   onCancel
 }: ClayBodyFormProps) {
-  console.log('ClayBodyForm props:', { isInModal, onCancel })
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const sortedCones = useMemo(() => sortCones(cones), [cones])
   const sortedClayTypes = useMemo(() => sortClayTypes(clayBodyTypes), [clayBodyTypes])
@@ -280,7 +281,13 @@ export function ClayBodyForm({
               );
             }}
             type="button"
-            onCancel={isInModal && onCancel ? onCancel : () => window.location.href = '/clay-bodies'}
+            onCancel={() => {
+              if (isInModal) {
+                onCancel?.()
+              } else {
+                router.push('/clay-bodies')
+              }
+            }}
           />
           <ActionButton
             type="submit"

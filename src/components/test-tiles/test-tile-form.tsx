@@ -269,9 +269,9 @@ export function TestTileForm({
                       variant="secondary"
                       onClick={() => setIsDecorationModalOpen(true)}
                       className="mt-1"
-                      >
+                  >
                       Add new decoration
-                    </ActionButton>
+                  </ActionButton>
                 </div>
 
                 {controlledFields.map((field, index) => (
@@ -381,21 +381,15 @@ export function TestTileForm({
 
       <Modal
         isOpen={isClayBodyModalOpen}
-        onClose={() => {
-          console.log('Modal onClose called')
-          setIsClayBodyModalOpen(false)
-        }}
+        onClose={() => setIsClayBodyModalOpen(false)}
         title="Add new clay body"
       >
         <ClayBodyForm
           action={handleClayBodySubmit}
           clayBodyTypes={clayBodyTypes}
           cones={cones}
-          isInModal
-          onCancel={() => {
-            console.log('ClayBodyForm onCancel called')
-            setIsClayBodyModalOpen(false)
-          }}
+          isInModal={true}
+          onCancel={() => setIsClayBodyModalOpen(false)}
         />
       </Modal>
 
