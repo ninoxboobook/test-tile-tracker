@@ -9,19 +9,23 @@ import testTile3 from 'public/images/test-tile-3.png'
 import testTile4 from 'public/images/test-tile-4.png'
 import testTile5 from 'public/images/test-tile-5.png'
 import { UnauthNav } from '@/components/navigation/unauth-nav-menu'
+import { Footer } from '@/components/navigation/footer'
+import { DemoTilesView } from '@/components/ui/demo-tiles-view'
 import {
   BeakerIcon,
   SwatchIcon,
   FolderIcon,
   MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
-import { Carousel } from '@/components/ui/carousel'
-import { Footer } from '@/components/navigation/footer'
 import {
   baseButtonStyles,
   buttonSizes,
   buttonVariants,
 } from '@/components/ui/buttons/action-button'
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 const features = [
   {
@@ -64,17 +68,17 @@ export default async function HomePage() {
               <h2 className="text-6xl font-display font-bold text-clay-900">
                 Make every glaze day a good day
               </h2>
-              <p className="mt-6 pr-4 text-xl text-clay-700">
-              Document and organise your personal library of test tiles, decorations and clay so you can access it anywhere.
+              <p className="mt-8 pr-4 text-xl text-clay-700">
+              Document and organise your test tiles, decorations and clay bodies. Keep track of your experiments, build your personal library, and access it anywhere, anytime.
               </p>
-              <div className="mt-10 flex items-center gap-x-3">
+              <div className="mt-8 flex items-center gap-x-3">
                 <Link
                   href="/register"
-                  className={baseButtonStyles + ' ' + buttonVariants.primary + ' ' + buttonSizes.default}
+                  className={classNames(baseButtonStyles, buttonVariants.primary, buttonSizes.default)}
                 >
-                  Get started for free
+                  Get started
                 </Link>
-                <Link href="/login" className={baseButtonStyles + ' ' + buttonVariants.secondary + ' ' + buttonSizes.default}>
+                <Link href="/login" className={classNames(baseButtonStyles, buttonVariants.secondary, buttonSizes.default)}>
                   Sign in
                 </Link>
               </div>
@@ -92,10 +96,11 @@ export default async function HomePage() {
 
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10">
-        <h2 className="font-display font-semibold text-clay-800 text-4xl text-center pb-4">No more rummaging through boxes</h2>
-        <p className="text-lg max-w-4xl text-center mx-auto text-clay-700">Document and organise your personal library of test tiles, decorations and clay so you can access it anywhere. Search, filter and cross-reference existing test tiles to make every glaze day a good day.</p>
+          <h2 className="font-display font-semibold text-clay-800 text-4xl text-center pb-4">No more rummaging through boxes</h2>
+          <p className="text-lg max-w-5xl text-center mx-auto text-clay-700">Do your test tiles or pots have a habit of going missing? Can you never remember what a particular glaze combination looks like? Test Tile Tracker lets you search, filter and cross-reference your test tiles so you can spend less time wondering and more time creating.</p>
         </div>
-        <Carousel
+
+        <DemoTilesView
           tiles={[
             {
               title: 'Frozen pond test',
@@ -164,8 +169,8 @@ export default async function HomePage() {
       <div className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-3xl font-display font-semibold text-clay-900 sm:text-4xl">
-              Your Complete Pottery Documentation System
+            <h2 className="text-3xl font-display font-semibold text-clay-800 sm:text-4xl">
+              Get started with Test Tile Tracker
             </h2>
             <p className="mt-6 text-lg leading-8 text-clay-700">
               Keep track of every aspect of your ceramic work, from test tiles and clay bodies to glazes and firing schedules. Build your knowledge base and learn from every experiment.
