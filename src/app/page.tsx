@@ -12,10 +12,10 @@ import { UnauthNav } from '@/components/navigation/unauth-nav-menu'
 import { Footer } from '@/components/navigation/footer'
 import { DemoTilesView } from '@/components/ui/demo-tiles-view'
 import {
-  BeakerIcon,
+  PlusIcon,
+  PaintBrushIcon,
   SwatchIcon,
   FolderIcon,
-  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline'
 import {
   baseButtonStyles,
@@ -29,28 +29,28 @@ function classNames(...classes: string[]) {
 
 const features = [
   {
-    name: 'Test Tiles',
+    name: 'Add clay bodies',
     description:
-      'Document your test tiles with photos, clay bodies, decorations, and firing details. Track multiple decoration layers and organize tiles into collections.',
+      'Start by adding the clay bodies you use in your practice. Record details like clay body type, firing temperature range, texture, shrinkage and more to help you make informed decisions.',
+    icon: PlusIcon,
+  },
+  {
+    name: 'Add decorations',
+    description:
+      'Add glazes, underglazes, slips, oxides and other decorations to your library. Document recipes (or link out to Glazy), firing requirements, and colour and surface properties.',
+    icon: PaintBrushIcon,
+  },
+  {
+    name: 'Document test tiles',
+    description:
+      'Create test tiles using your clay bodies and decorations. Take photos, record multiple decoration layers, and add notes about your results.',
     icon: SwatchIcon,
   },
   {
-    name: 'Clay Bodies',
+    name: 'Organise collections',
     description:
-      'Maintain a catalog of clay bodies with detailed properties like cone range, firing temperature, texture, plasticity, and shrinkage rates.',
-    icon: BeakerIcon,
-  },
-  {
-    name: 'Collections',
-    description:
-      'Group related test tiles into collections for easy reference. Perfect for organizing experiments, tracking projects, or documenting class work.',
+      'Group related test tiles into collections to track experiments and projects. Perfect for organising glaze combinations, surface techniques, or class work.',
     icon: FolderIcon,
-  },
-  {
-    name: 'Decorations',
-    description:
-      'Keep track of your glazes, slips, underglazes, and other decorations. Record recipes, firing requirements, and application methods.',
-    icon: MagnifyingGlassIcon,
   },
 ]
 
@@ -63,7 +63,7 @@ export default async function HomePage() {
       <div className="relative mb-20">
         <div className="mx-auto max-w-7xl py-10">
           <div className="bg-sand-light rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2">
-            <div className="mx-auto px-14 py-14 col-span-1">
+            <div className="mx-auto px-16 py-16 col-span-1">
               <h1 className="text-2xl font-display font-semibold text-brand mb-2">Test Tile Tracker <span className="text-xs font-sans font-medium inline-block translate-y-[-12px]"><em>beta</em></span></h1>
               <h2 className="text-6xl font-display font-bold text-clay-900">
                 Make every glaze day a good day
@@ -94,9 +94,9 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <div className="mb-8">
-          <h2 className="font-display font-semibold text-clay-800 text-4xl text-center pb-4">No more rummaging through boxes</h2>
+          <h2 className="font-display font-semibold text-clay-800 text-4xl text-center mb-6">No more rummaging through boxes</h2>
           <p className="text-lg max-w-5xl text-center mx-auto text-clay-700">Do your test tiles or pots have a habit of going missing? Can you never remember what a particular glaze combination looks like? Test Tile Tracker lets you search, filter and cross-reference your test tiles so you can spend less time wondering and more time creating.</p>
         </div>
 
@@ -166,27 +166,44 @@ export default async function HomePage() {
         />
       </div>
 
-      <div className="py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-3xl font-display font-semibold text-clay-800 sm:text-4xl">
+      <div className="pt-28 pb-20">
+        <div className="mx-auto max-w-7xl grid grid-cols-12 gap-14">
+          <div className="mx-auto max-w-2xl col-span-5">
+            <h2 className="text-4xl font-display font-semibold text-clay-800 pt-14">
               Get started with Test Tile Tracker
             </h2>
-            <p className="mt-6 text-lg leading-8 text-clay-700">
-              Keep track of every aspect of your ceramic work, from test tiles and clay bodies to glazes and firing schedules. Build your knowledge base and learn from every experiment.
+            <p className="mt-6 mb-8 text-xl leading-8 text-clay-700">
+              Test Tile Tracker is free and easy to use. Sign up to create your own studio library today.
             </p>
+            <Link
+                  href="/register"
+                  className={classNames(baseButtonStyles, buttonVariants.primary, buttonSizes.default)}
+                >
+                  Sign up
+                </Link>
           </div>
-          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-            <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-              {features.map((feature) => (
-                <div key={feature.name} className="relative pl-16">
-                  <dt className="text-base font-display font-semibold leading-7 text-clay-900">
-                    <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-brand">
-                      <feature.icon className="h-6 w-6 text-white" aria-hidden="true" />
+          <div className="mx-auto col-span-7 max-w-2xl rounded-2xl bg-sand-light p-14">
+            <dl className="relative">
+              {/* Vertical dotted line */}
+              <div className="absolute left-5 top-0 h-[calc(100%-8rem)] w-[2px] border-l-2 border-dashed border-clay-300" />
+              
+              {features.map((feature, index) => (
+                <div key={feature.name} className="relative mb-16 last:mb-0 pl-16">
+                  {/* Icon disc */}
+                  <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-brand">
+                    <feature.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                  </div>
+                  
+                  <dt>
+                    {/* Step number */}
+                    <span className="inline-block text-sm font-medium text-brand">Step {index + 1}</span>
+                    {/* Heading */}
+                    <div className="font-display text-2xl font-semibold text-clay-800">
+                      {feature.name}
                     </div>
-                    {feature.name}
                   </dt>
-                  <dd className="mt-2 text-base leading-7 text-clay-700">
+                  {/* Description */}
+                  <dd className="mt-3 text-lg leading-7 text-clay-700">
                     {feature.description}
                   </dd>
                 </div>
