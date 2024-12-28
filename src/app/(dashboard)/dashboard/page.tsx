@@ -8,6 +8,11 @@ import { DataGridTile } from '@/components/ui/data/data-grid-tile'
 import { EmptyState } from '@/components/ui/data/data-empty-state'
 import { LozengeVariant } from '@/components/ui/lozenge'
 import Link from 'next/link'
+import { baseButtonStyles, buttonSizes, buttonVariants } from '@/components/ui/buttons/action-button'
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 function getGreeting(hour: number): string {
   if (hour >= 5 && hour < 12) {
@@ -83,15 +88,15 @@ export default async function DashboardPage() {
       variant="detail"
     >
       <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-9 bg-sand-light rounded-2xl p-8">
+        <div className="col-span-12 md:col-span-9 order-2 md:order-1 bg-sand-light rounded-2xl p-8">
           <div className="flex justify-between mb-10">
             <h2 className="text-2xl font-display font-semibold text-clay-800">Latest test tiles</h2>
-            <Link href="/test-tiles" className="px-4 py-2 inline-flex items-center border border-transparent rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 text-brand bg-sand-light border-brand hover:bg-clay-50 focus:ring-clay-500 disabled:opacity-50">
+            <Link href="/test-tiles" className={classNames(baseButtonStyles, buttonSizes.default, buttonVariants.secondary)}>
               View all
             </Link>
           </div>
           {recentTestTiles.length > 0 ? (
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {recentTestTiles.map((tile) => (
                 <Link key={tile.id} href={`/test-tiles/${tile.id}`} className="overflow-hidden rounded-lg border border-clay-200 bg-clay-50 hover:border-clay-300">
                   <DataGridTile
@@ -99,9 +104,9 @@ export default async function DashboardPage() {
                     subtitle={tile.clayBody.name}
                     images={tile.imageUrl || []}
                     lozenges={[
-                      { 
+                      {
                         label: /^(Low|Mid|High)/.test(tile.cone.name) ? tile.cone.name : `Cone ${tile.cone.name}`,
-                        lozengeVariant: 'brand' as LozengeVariant 
+                        lozengeVariant: 'brand' as LozengeVariant
                       },
                       { label: tile.atmosphere.name, lozengeVariant: 'brand-emphasis' as LozengeVariant },
                     ]}
@@ -131,31 +136,41 @@ export default async function DashboardPage() {
             />
           )}
         </div>
-        <div className="col-span-3 space-y-8">
-          <DashboardCard
-            title="Test tiles"
-            count={testTileCount}
-            href="/test-tiles"
-            description="View all test tiles"
-          />
-          <DashboardCard
-            title="Collections"
-            count={collectionCount}
-            href="/collections"
-            description="View all collections"
-          />
-          <DashboardCard
-            title="Clay bodies"
-            count={clayBodiesCount}
-            href="/clay-bodies"
-            description="View all clay bodies"
-          />
-          <DashboardCard
-            title="Decorations"
-            count={decorationsCount}
-            href="/decorations"
-            description="View all decorations"
-          />
+        <div className="col-span-12 md:col-span-3 order-1 md:order-2 space-y-8">
+          <div className="grid grid-cols-2 md:grid-cols-1 gap-6">
+            <div className="col-span-2 sm:col-span-1 md:col-span-2">
+              <DashboardCard
+                title="Test tiles"
+                count={testTileCount}
+                href="/test-tiles"
+                description="View all test tiles"
+              />
+            </div>
+            <div className="col-span-2 sm:col-span-1 md:col-span-2">
+              <DashboardCard
+                title="Collections"
+                count={collectionCount}
+                href="/collections"
+                description="View all collections"
+              />
+            </div>
+            <div className="col-span-2 sm:col-span-1 md:col-span-2">
+              <DashboardCard
+                title="Clay bodies"
+                count={clayBodiesCount}
+                href="/clay-bodies"
+                description="View all clay bodies"
+              />
+            </div>
+            <div className="col-span-2 sm:col-span-1 md:col-span-2">
+              <DashboardCard
+                title="Decorations"
+                count={decorationsCount}
+                href="/decorations"
+                description="View all decorations"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </PageLayout>
