@@ -25,7 +25,7 @@ export function ActionButton({
   className,
   ...props 
 }: ActionButtonProps) {
-  const baseStyles = "inline-flex items-center border border-transparent rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
+  const baseStyles = "inline-flex items-center border rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2";
   
   const sizes = {
     default: "text-base px-4 py-2",
@@ -35,8 +35,8 @@ export function ActionButton({
   const variants = {
     primary: "text-clay-50 bg-brand hover:bg-clay-700 focus:ring-clay-500 disabled:opacity-50",
     secondary: "text-brand bg-sand-light border-brand hover:bg-clay-50 focus:ring-clay-500 disabled:opacity-50",
-    tertiary: "px-0 text-brand bg-transparent hover:text-clay-600 focus:ring-clay-500 disabled:opacity-50",
-    tertiaryDanger: "px-0 text-red-600 bg-transparent hover:text-red-800 focus:ring-clay-500 disabled:opacity-50",
+    tertiary: "!px-0 text-brand border-transparent bg-transparent hover:text-clay-600 focus:ring-clay-500 disabled:opacity-50",
+    tertiaryDanger: "!px-0 text-red-600 border-transparent bg-transparent hover:text-red-800 focus:ring-clay-500 disabled:opacity-50",
     danger: "text-white bg-red-600 hover:bg-red-700 focus:ring-red-500 disabled:opacity-50"
   };
 
