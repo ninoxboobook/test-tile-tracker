@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { DecorationForm } from '@/components/decorations/decoration-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
-import { createDecoration } from './actions'
+import { createDecorationAndRedirect } from './actions'
 
 export default async function NewDecorationPage() {
   const session = await getServerSession(authOptions)
@@ -31,7 +31,7 @@ export default async function NewDecorationPage() {
       backHref="/decorations"
     >
       <DecorationForm 
-        action={createDecoration}
+        action={createDecorationAndRedirect}
         decorationTypes={decorationTypes}
         cones={cones}
         atmospheres={atmospheres}

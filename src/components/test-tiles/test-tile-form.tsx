@@ -22,8 +22,8 @@ import { Cone } from '@prisma/client'
 import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
-import { createClayBodyFromModal } from '@/app/(dashboard)/clay-bodies/actions'
-import { createDecorationFromModal } from '@/app/(dashboard)/decorations/actions'
+import { createClayBody } from '@/app/(dashboard)/clay-bodies/new/actions'
+import { createDecoration } from '@/app/(dashboard)/decorations/new/actions'
 
 interface DecorationLayer {
   order: number
@@ -104,7 +104,7 @@ export function TestTileForm({
 
   const handleClayBodySubmit = async (formData: FormData) => {
     try {
-      const clayBody = await createClayBodyFromModal(formData)
+      const clayBody = await createClayBody(formData, false)
       // Update the clay bodies list with the new clay body
       setClayBodies(prevBodies => [...prevBodies, clayBody])
       // Set the selected value to the new clay body
@@ -130,12 +130,19 @@ export function TestTileForm({
 
   const handleDecorationSubmit = async (formData: FormData) => {
     try {
-      const decoration = await createDecorationFromModal(formData)
+      const decoration = await createDecoration(formData, false)
       setDecorations(prevDecorations => [...prevDecorations, decoration])
 
       // Add the new decoration to the current layer
-      const currentLayer = decorationLayers[decorationLayers.length - 1]
-      handleLayerChange(currentLayer.order, [...currentLayer.decorationIds, decoration.id])
+      const currentLayerIndex = controlledFields.length - 1
+      const currentLayer = controlledFields[currentLayerIndex]
+      
+      // Update the form state
+      const newDecorationIds = [...(currentLayer.decorationIds || []), decoration.id]
+      setValue(`decorationLayers.${currentLayerIndex}.decorationIds`, newDecorationIds)
+      
+      // Update the local state
+      handleLayerChange(currentLayer.order, newDecorationIds)
 
       setIsDecorationModalOpen(false)
     } catch (error) {

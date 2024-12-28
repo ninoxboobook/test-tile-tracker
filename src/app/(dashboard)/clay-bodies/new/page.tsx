@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
-import { createClayBody } from './actions'
+import { createClayBodyAndRedirect } from './actions'
 
 export default async function NewClayBodyPage() {
   const session = await getServerSession(authOptions)
@@ -28,7 +28,7 @@ export default async function NewClayBodyPage() {
       backHref="/clay-bodies"
     >
       <ClayBodyForm 
-        action={createClayBody} 
+        action={createClayBodyAndRedirect}
         clayBodyTypes={clayBodyTypes}
         cones={cones}
       />

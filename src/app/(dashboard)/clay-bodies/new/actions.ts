@@ -8,7 +8,7 @@ import { clayBodySchema } from '@/lib/schemas/clay-body'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
-export async function createClayBody(formData: FormData) {
+export async function createClayBody(formData: FormData, redirectOnSuccess = true) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
@@ -66,9 +66,24 @@ export async function createClayBody(formData: FormData) {
   }
 
   const clayBody = await prisma.clayBody.create({
-    data: createData
+    data: createData,
+    include: {
+      type: true,
+      cone: true
+    }
   })
 
   revalidatePath('/clay-bodies')
-  redirect(`/clay-bodies/${clayBody.id}`)
+  
+  if (redirectOnSuccess) {
+    redirect(`/clay-bodies/${clayBody.id}`)
+  }
+  
+  return clayBody
+}
+
+// Wrapper that always redirects and returns void
+export async function createClayBodyAndRedirect(formData: FormData) {
+  'use server'
+  await createClayBody(formData, true)
 }

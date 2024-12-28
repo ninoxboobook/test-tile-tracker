@@ -8,7 +8,7 @@ import { decorationSchema } from '@/lib/schemas/decoration'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
 
-export async function createDecoration(formData: FormData) {
+export async function createDecoration(formData: FormData, redirectOnSuccess = true) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
@@ -79,7 +79,12 @@ export async function createDecoration(formData: FormData) {
     })
 
     revalidatePath('/decorations')
-    redirect(`/decorations/${decoration.id}`)
+    
+    if (redirectOnSuccess) {
+      redirect(`/decorations/${decoration.id}`)
+    }
+    
+    return decoration
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
@@ -88,6 +93,12 @@ export async function createDecoration(formData: FormData) {
     }
     throw error
   }
+}
+
+// Wrapper that always redirects and returns void
+export async function createDecorationAndRedirect(formData: FormData) {
+  'use server'
+  await createDecoration(formData, true)
 }
 
 // Helper functions for fetching data needed by the form
