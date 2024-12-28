@@ -105,8 +105,8 @@ export function Carousel({ tiles, autoPlayInterval = 3000 }: CarouselProps) {
   return (
     <div className="relative">
       {/* Gradient overlays */}
-      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-sand to-transparent pointer-events-none z-10" />
-      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-sand to-transparent pointer-events-none z-10" />
+      <div className="absolute left-0 top-0 bottom-0 w-12 md:w-32 bg-gradient-to-r from-sand to-transparent pointer-events-none z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-12 md:w-32 bg-gradient-to-l from-sand to-transparent pointer-events-none z-10" />
 
       {/* Play/Pause button */}
       <button
@@ -132,7 +132,7 @@ export function Carousel({ tiles, autoPlayInterval = 3000 }: CarouselProps) {
         onTouchEnd={handleDragEnd}
       >
         {items.map((tile, index) => (
-          <div key={`${tile.title}-${index}`} className="flex-none w-80 border border-clay-400 overflow-hidden rounded-xl">
+          <div key={`${tile.title}-${index}`} className="flex-none w-64 md:w-72 lg:w-80 border border-clay-400 overflow-hidden rounded-xl">
             <DataGridTile {...tile} />
           </div>
         ))}

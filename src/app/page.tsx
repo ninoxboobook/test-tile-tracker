@@ -58,20 +58,20 @@ export default async function HomePage() {
   const session = await getServerSession(authOptions)
 
   return (
-    <div className="bg-sand min-h-screen">
+    <div className="bg-sand min-h-full px-4 sm:px-6">
       <UnauthNav />
-      <div className="relative mb-20">
+      <div className="relative mb-4 md:mb-14 lg:mb-20">
         <div className="mx-auto max-w-7xl py-10">
-          <div className="bg-sand-light rounded-2xl overflow-hidden grid grid-cols-1 sm:grid-cols-2">
-            <div className="mx-auto px-16 py-16 col-span-1">
+          <div className="bg-sand-light rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+            <div className="mx-auto p-10 lg:p-16 col-span-1 order-2 md:order-1">
               <h1 className="text-2xl font-display font-semibold text-brand mb-2">Test Tile Tracker <span className="text-xs font-sans font-medium inline-block translate-y-[-12px]"><em>beta</em></span></h1>
-              <h2 className="text-6xl font-display font-bold text-clay-900">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-clay-900">
                 Make every glaze day a good day
               </h2>
-              <p className="mt-8 pr-4 text-xl text-clay-700">
-              Document and organise your test tiles, decorations and clay bodies. Keep track of your experiments, build your personal library, and access it anywhere, anytime.
+              <p className="mt-4 md:mt-6 lg:mt-8 pr-4 text-lg lg:text-xl text-clay-700">
+                Document and organise your test tiles, decorations and clay bodies. Keep track of your experiments, build your personal library, and access it anywhere, anytime.
               </p>
-              <div className="mt-8 flex items-center gap-x-3">
+              <div className="mt-6 lg:mt-8 flex items-center gap-x-3">
                 <Link
                   href="/register"
                   className={classNames(baseButtonStyles, buttonVariants.primary, buttonSizes.default)}
@@ -83,7 +83,7 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className="col-span-1 h-full">
+            <div className="col-span-1 h-60 md:h-full order-1 md:order-2">
               <Image
                 src={splashImg}
                 alt=""
@@ -95,9 +95,9 @@ export default async function HomePage() {
       </div>
 
       <div className="mx-auto max-w-6xl px-6">
-        <div className="mb-8">
-          <h2 className="font-display font-semibold text-clay-800 text-4xl text-center mb-6">No more rummaging through boxes</h2>
-          <p className="text-lg max-w-5xl text-center mx-auto text-clay-700">Do your test tiles or pots have a habit of going missing? Can you never remember what a particular glaze combination looks like? Test Tile Tracker lets you search, filter and cross-reference your test tiles so you can spend less time wondering and more time creating.</p>
+        <div className="mb-6 md:mb-8">
+          <h2 className="font-display font-semibold text-clay-800 text-3xl md:text-4xl text-center mb-4 md:mb-6">No more rummaging through boxes</h2>
+          <p className="md:text-lg max-w-5xl text-center mx-auto text-clay-700">Do your test tiles or pots have a habit of going missing? Can you never remember what a particular glaze combination looks like? Test Tile Tracker lets you search, filter and cross-reference your test tiles so you can spend less time wondering and more time creating.</p>
         </div>
 
         <DemoTilesView
@@ -166,34 +166,37 @@ export default async function HomePage() {
         />
       </div>
 
-      <div className="pt-28 pb-20">
-        <div className="mx-auto max-w-7xl grid grid-cols-12 gap-14">
-          <div className="mx-auto max-w-2xl col-span-5">
-            <h2 className="text-4xl font-display font-semibold text-clay-800 pt-14">
+      <div className="pt-14 pb-8 md:pt-14 md:pt-20 lg:pt-28 lg:pb-20">
+        <div className="mx-auto max-w-7xl grid grid-cols-12 gap-8 md:gap-14">
+          <div className="mx-auto max-w-2xl col-span-12 md:col-span-5">
+            <h2 className="text-3xl md:text-4xl text-center md:text-left font-display font-semibold text-clay-800 lg:pt-14">
               Get started with Test Tile Tracker
             </h2>
-            <p className="mt-6 mb-8 text-xl leading-8 text-clay-700">
+            <p className="mt-4 md:mt-6 mb-6 md:mb-8 text-lg lg:text-xl text-center md:text-left text-clay-700">
               Test Tile Tracker is free and easy to use. Sign up to create your own studio library today.
             </p>
-            <Link
-                  href="/register"
-                  className={classNames(baseButtonStyles, buttonVariants.primary, buttonSizes.default)}
-                >
-                  Sign up
-                </Link>
+            <div className="flex md:block justify-center">
+
+              <Link
+                href="/register"
+                className={classNames(baseButtonStyles, buttonVariants.primary, buttonSizes.default)}
+              >
+                Sign up
+              </Link>
+            </div>
           </div>
-          <div className="mx-auto col-span-7 max-w-2xl rounded-2xl bg-sand-light p-14">
+          <div className="mx-auto col-span-12 md:col-span-7 max-w-2xl rounded-2xl bg-sand-light p-14">
             <dl className="relative">
               {/* Vertical dotted line */}
-              <div className="absolute left-5 top-0 h-[calc(100%-8rem)] w-[2px] border-l-2 border-dashed border-clay-300" />
-              
+              <div className="absolute left-5 top-0 h-[calc(100%-12rem)] md:h-[calc(100%-8rem)] w-[2px] border-l-2 border-dashed border-clay-300" />
+
               {features.map((feature, index) => (
                 <div key={feature.name} className="relative mb-16 last:mb-0 pl-16">
                   {/* Icon disc */}
                   <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-brand">
                     <feature.icon className="h-6 w-6 text-white" aria-hidden="true" />
                   </div>
-                  
+
                   <dt>
                     {/* Step number */}
                     <span className="inline-block text-sm font-medium text-brand">Step {index + 1}</span>

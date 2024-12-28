@@ -31,7 +31,7 @@ export function DemoTilesView({ tiles }: DemoTilesViewProps) {
 
   return (
     <div>
-      <div className="flex justify-center mb-14">
+      <div className="flex justify-center mb-12 md:mb-14">
         <div className="flex items-center space-x-1 rounded-md border border-clay-400 bg-sand-light p-1">
           <button
             onClick={() => setView('grid')}
