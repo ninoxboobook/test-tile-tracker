@@ -95,7 +95,7 @@ export default async function HomePage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-10">
+        <div className="mb-8">
           <h2 className="font-display font-semibold text-clay-800 text-4xl text-center pb-4">No more rummaging through boxes</h2>
           <p className="text-lg max-w-5xl text-center mx-auto text-clay-700">Do your test tiles or pots have a habit of going missing? Can you never remember what a particular glaze combination looks like? Test Tile Tracker lets you search, filter and cross-reference your test tiles so you can spend less time wondering and more time creating.</p>
         </div>

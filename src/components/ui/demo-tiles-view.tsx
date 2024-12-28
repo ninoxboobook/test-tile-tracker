@@ -31,31 +31,35 @@ export function DemoTilesView({ tiles }: DemoTilesViewProps) {
 
   return (
     <div>
-      <div className="flex gap-2 justify-center mb-8">
-        <button
-          onClick={() => setView('grid')}
-          className={classNames(
-            'inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium focus:outline-none',
-            view === 'grid'
-              ? 'bg-clay-100 text-clay-900'
-              : 'text-clay-500 hover:text-clay-700 hover:bg-clay-50'
-          )}
-        >
-          <Squares2X2Icon className="h-5 w-5" />
-          Grid View
-        </button>
-        <button
-          onClick={() => setView('table')}
-          className={classNames(
-            'inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium focus:outline-none',
-            view === 'table'
-              ? 'bg-clay-100 text-clay-900'
-              : 'text-clay-500 hover:text-clay-700 hover:bg-clay-50'
-          )}
-        >
-          <TableCellsIcon className="h-5 w-5" />
-          Table View
-        </button>
+      <div className="flex justify-center mb-10">
+        <div className="flex items-center space-x-1 rounded-md border border-clay-400 bg-sand-light p-1">
+          <button
+            onClick={() => setView('grid')}
+            className={`rounded-sm px-3 py-1 inline-flex items-center gap-2 ${
+              view === 'grid'
+                ? 'bg-clay-100 text-clay-700'
+                : 'text-clay-500 hover:text-clay-700'
+            }`}
+            aria-label="Switch to grid view"
+            aria-pressed={view === 'grid'}
+          >
+            <Squares2X2Icon className="h-6 w-6" aria-hidden="true" />
+            <span className="text-base font-medium">Grid View</span>
+          </button>
+          <button
+            onClick={() => setView('table')}
+            className={`rounded-sm px-3 py-1 inline-flex items-center gap-2 ${
+              view === 'table'
+                ? 'bg-clay-100 text-clay-700'
+                : 'text-clay-500 hover:text-clay-700'
+            }`}
+            aria-label="Switch to table view"
+            aria-pressed={view === 'table'}
+          >
+            <TableCellsIcon className="h-6 w-6" aria-hidden="true" />
+            <span className="text-base font-medium">Table View</span>
+          </button>
+        </div>
       </div>
 
       {view === 'grid' ? (
