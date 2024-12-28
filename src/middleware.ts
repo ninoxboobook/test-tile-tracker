@@ -8,12 +8,16 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   })
 
+  // Allow access to images regardless of auth status
+  if (request.nextUrl.pathname.startsWith('/images')) {
+    return NextResponse.next()
+  }
+
   // Handle public routes
   if (
     request.nextUrl.pathname.startsWith('/login') ||
     request.nextUrl.pathname.startsWith('/register') ||
-    request.nextUrl.pathname === '/' ||
-    request.nextUrl.pathname.startsWith('/images')
+    request.nextUrl.pathname === '/'
   ) {
     // Redirect to dashboard if already authenticated
     if (token) {
