@@ -391,6 +391,7 @@ export function TestTileForm({
           submitButtonText="Create clay body"
           clayBodyTypes={clayBodyTypes}
           cones={cones}
+          isInModal={true}
         />
       </Modal>
 
@@ -405,6 +406,7 @@ export function TestTileForm({
           decorationTypes={decorationTypes}
           cones={cones}
           atmospheres={atmospheres}
+          isInModal={true}
         />
       </Modal>
     </>

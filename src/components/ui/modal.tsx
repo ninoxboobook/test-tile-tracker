@@ -39,7 +39,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-sand-light px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:p-6">
                 <div>
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-clay-900 mb-4">
+                  <Dialog.Title as="h3" className="text-2xl font-semibold leading-6 text-clay-800 mb-8">
                     {title}
                   </Dialog.Title>
                   {children}
