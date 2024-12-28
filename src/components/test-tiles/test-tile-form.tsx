@@ -200,7 +200,7 @@ export function TestTileForm({
     <>
       <Form onSubmit={handleSubmit}>
         <div className="grid grid-cols-12 gap-8">
-          <div className="col-span-7 bg-sand-light p-8 space-y-6 rounded-2xl">
+          <div className="col-span-12 md:col-span-7 bg-sand-light p-8 space-y-6 rounded-2xl">
             <h2 className="mb-10 text-2xl font-semibold text-clay-800">Test tile details</h2>
             {initialData?.id && (
               <input type="hidden" name="id" value={initialData.id} />
@@ -338,7 +338,7 @@ export function TestTileForm({
               </div>
             </div>
           </div>
-          <div className="col-span-5 bg-sand-light p-8 rounded-2xl">
+          <div className="col-span-12 md:col-span-5 bg-sand-light p-8 rounded-2xl">
             <div>
               <h3 className="mb-10 text-2xl font-semibold text-clay-800">Test tile images</h3>
               <ImageDropzone

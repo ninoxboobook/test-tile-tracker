@@ -87,7 +87,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           </div>
         )}
 
-        <div className="col-span-4">
+        <div className="col-span-12 md:col-span-4">
           <div className="bg-sand-light rounded-2xl p-8 space-y-6 flex flex-col items-center">
             <ProfileImage
               currentImageUrl={imageUrl}
@@ -111,7 +111,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             </div>
           </div>
         </div>
-        <div className="col-span-8 bg-sand-light rounded-2xl p-8">
+        <div className="col-span-12 md:col-span-8 bg-sand-light rounded-2xl p-8">
           <div className="space-y-6 pb-12">
             <h3 className="text-xl font-semibold mb-4 text-clay-800">Your details</h3>
             <FormField

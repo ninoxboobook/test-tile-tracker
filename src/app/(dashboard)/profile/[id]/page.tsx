@@ -27,7 +27,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       backHref="/dashboard"
     >
       <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-4">
+        <div className="col-span-12 md:col-span-4">
           <div className="bg-sand-light rounded-2xl p-8">
             <div className="flex flex-col items-center space-y-6">
               {user.imageUrl ? (
@@ -66,7 +66,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </div>
 
 
-        <div className="col-span-8 bg-sand-light rounded-2xl">
+        <div className="col-span-12 md:col-span-8 bg-sand-light rounded-2xl">
           <div className="p-8">
             <h3 className="text-2xl font-semibold text-clay-800">Recent test tiles</h3>
             <p className="mt-2 text-clay-600">Last 5 test tiles created by {user?.username}</p>

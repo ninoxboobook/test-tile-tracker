@@ -68,7 +68,7 @@ export function CollectionForm({
   return (
     <Form onSubmit={handleSubmit}>
       <div className="grid grid-cols-12 gap-8">
-        <div className="p-8 bg-sand-light rounded-2xl col-span-7 space-y-6 ">
+        <div className="p-8 bg-sand-light rounded-2xl col-span-12 md:col-span-7 space-y-6 ">
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}

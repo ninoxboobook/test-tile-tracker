@@ -112,7 +112,7 @@ export function ClayBodyForm({
   return (
     <Form onSubmit={handleSubmit}>
       <div className="grid grid-cols-12 gap-8">
-        <div className={`${isInModal ? 'col-span-12' : 'col-span-7 p-8'} bg-sand-light space-y-6 rounded-2xl`}>
+        <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-7 p-8'} bg-sand-light space-y-6 rounded-2xl`}>
         <h2 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Clay body details</h2>
           {initialData?.id && (
             <input type="hidden" name="id" value={initialData.id} />
@@ -246,7 +246,7 @@ export function ClayBodyForm({
           />
 
         </div>
-        <div className={`${isInModal ? 'col-span-12' : 'col-span-5 p-8'} bg-sand-light rounded-2xl`}>
+        <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-5 p-8'} bg-sand-light rounded-2xl`}>
           <div>
           <h3 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Clay body images</h3>
             <ImageDropzone

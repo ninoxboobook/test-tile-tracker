@@ -135,7 +135,7 @@ export function DecorationForm({
   return (
     <Form onSubmit={handleSubmit}>
       <div className="grid grid-cols-12 gap-8">
-        <div className={`${isInModal ? 'col-span-12' : 'col-span-7 p-8'} bg-sand-light space-y-6 rounded-2xl`}>
+        <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-7 p-8'} bg-sand-light space-y-6 rounded-2xl`}>
         <h2 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Decoration details</h2>
           {error && (
             <div className="mb-4 rounded-md border border-red-500 bg-red-50 p-4 text-sm text-red-500">
@@ -271,7 +271,7 @@ export function DecorationForm({
 
 
         </div>
-        <div className={`${isInModal ? 'col-span-12' : 'col-span-5 p-8'} bg-sand-light rounded-2xl`}>
+        <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-5 p-8'} bg-sand-light rounded-2xl`}>
           <div>
           <h3 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Decoration images</h3>
             <ImageDropzone
