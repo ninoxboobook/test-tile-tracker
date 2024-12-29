@@ -4,7 +4,7 @@ import { Table } from '@tanstack/react-table'
 import { Input } from './data-input'
 import { ViewToggle } from './data-view-toggle'
 import { DataTableColumnOptions } from './data-table-column-options'
-import { Menu } from '@headlessui/react'
+import { Popover } from '@headlessui/react'
 import { ChevronDownIcon, FunnelIcon } from '@heroicons/react/16/solid'
 
 export type FilterOption = {
@@ -97,8 +97,8 @@ export function DataViewToolbar<TData>({
         {/* Mobile filters */}
         {filters.length > 0 && (
           <div className="block lg:hidden">
-            <Menu as="div" className="relative w-full md:w-auto">
-              <Menu.Button
+            <Popover as="div" className="relative w-full md:w-auto">
+              <Popover.Button
                 className="flex items-center gap-1 rounded-md border bg-sand-light border-clay-400 text-clay-700 px-3 py-2 text-sm font-medium hover:bg-sand"
               >
                 <FunnelIcon className="h-4 w-4" />
@@ -108,8 +108,8 @@ export function DataViewToolbar<TData>({
                     {totalActiveFilters}
                   </span>
                 )}
-              </Menu.Button>
-              <Menu.Items className="absolute left-0 right-0 mt-2 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 rounded-md max-h-[80vh] overflow-y-auto">
+              </Popover.Button>
+              <Popover.Panel className="absolute left-0 right-0 mt-2 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 rounded-md max-h-[80vh] overflow-y-auto">
                 <div className="p-4 space-y-6">
                   {filters.map(filter => (
                     <FilterMenu
@@ -120,8 +120,8 @@ export function DataViewToolbar<TData>({
                     />
                   ))}
                 </div>
-              </Menu.Items>
-            </Menu>
+              </Popover.Panel>
+            </Popover>
           </div>
         )}
 
@@ -131,8 +131,8 @@ export function DataViewToolbar<TData>({
             <div className="text-sm font-semibold uppercase text-clay-700 pl-7 pr-1">Filter by</div>
           )}
           {filters.map(filter => (
-            <Menu as="div" key={filter.id} className="relative">
-              <Menu.Button
+            <Popover as="div" key={filter.id} className="relative">
+              <Popover.Button
                 className={`flex items-center gap-1 rounded-md border bg-sand-light border-clay-400 text-clay-700 pl-3 pr-2 py-2 text-sm font-medium ${activeFilters[filter.id]?.length
                   ? 'bg-sand border-brand text-clay-900 hover:bg-clay-100'
                   : 'bg-sand-light text-clay-700 hover:bg-sand'
@@ -145,8 +145,8 @@ export function DataViewToolbar<TData>({
                   </span>
                 )}
                 <ChevronDownIcon className="h-4 w-4 pt-[1px]" aria-hidden="true" />
-              </Menu.Button>
-              <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+              </Popover.Button>
+              <Popover.Panel className="absolute left-0 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                 <div className="p-2">
                   <FilterMenu
                     filter={filter}
@@ -154,8 +154,8 @@ export function DataViewToolbar<TData>({
                     onFilterChange={onFilterChange}
                   />
                 </div>
-              </Menu.Items>
-            </Menu>
+              </Popover.Panel>
+            </Popover>
           ))}
         </div>
       </div>
