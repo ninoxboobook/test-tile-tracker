@@ -1,18 +1,22 @@
 import { type ReactNode } from 'react'
+import { PhotoIcon } from '@heroicons/react/24/outline'
 
 interface EmptyStateProps {
   title: string
   description: string
   action?: ReactNode
+  size?: 'small' | 'large'
+  image?: ReactNode
 }
 
-export function EmptyState({ title, description, action }: EmptyStateProps) {
+export function EmptyState({ title, description, action, size = 'large', image }: EmptyStateProps) {
   return (
-    <div className="text-center py-12">
-      <h3 className="mt-2 text-sm font-medium text-clay-900">
+    <div className="flex flex-col items-center text-center py-12">
+      {image}
+      <h3 className={`${size === 'large' ? 'text-base' : 'text-sm'} mt-2 font-medium text-clay-700`}>
         {title}
       </h3>
-      <p className="mt-1 text-sm text-clay-500">
+      <p className={`${size === 'large' ? 'text-base' : 'text-sm'} mt-1 text-clay-600`}>
         {description}
       </p>
       {action && (

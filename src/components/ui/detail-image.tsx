@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { EmptyState } from './data/data-empty-state'
+import { PhotoIcon } from '@heroicons/react/24/outline'
 
 interface DetailImageProps {
   images?: string[]
@@ -11,7 +13,14 @@ export function DetailImage({ images = [] }: DetailImageProps) {
 
   if (images.length === 0) {
     return (
-      <div className="aspect-square bg-clay-50 rounded-xl" />
+      <div className="flex flex-col items-center justify-center aspect-square bg-sand-light rounded-2xl p-8">
+        <EmptyState
+          title="No images"
+          description="You haven't uploaded any images yet. Edit this entry to add some."
+          size="large"
+          image={<PhotoIcon className="h-10 w-10 text-clay-600 mb-2" aria-hidden="true" />}
+        />
+      </div>
     )
   }
 
