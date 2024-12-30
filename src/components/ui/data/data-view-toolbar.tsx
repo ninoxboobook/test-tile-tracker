@@ -97,7 +97,7 @@ export function DataViewToolbar<TData>({
         {/* Mobile filters */}
         {filters.length > 0 && (
           <div className="block lg:hidden">
-            <Popover as="div" className="relative w-full md:w-auto">
+            <Popover as="div" className="w-full relative md:w-auto">
               <Popover.Button
                 className="flex items-center gap-1 rounded-md border bg-sand-light border-clay-400 text-clay-700 px-3 py-2 text-sm font-medium hover:bg-sand"
               >
@@ -109,7 +109,7 @@ export function DataViewToolbar<TData>({
                   </span>
                 )}
               </Popover.Button>
-              <Popover.Panel className="absolute left-0 right-0 mt-2 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 rounded-md max-h-[80vh] overflow-y-auto">
+              <Popover.Panel className="absolute right-0 md:left-0 md:right-auto mt-2 w-48 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 rounded-md max-h-[80vh] overflow-y-auto">
                 <div className="p-4 space-y-6">
                   {filters.map(filter => (
                     <FilterMenu
