@@ -119,7 +119,7 @@ export function DashboardNav({ user }: { user: any }) {
                 </Menu>
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-clay-400 hover:bg-clay-100 hover:text-clay-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-clay-500">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-brand hover:bg-clay-100 hover:text-clay-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-clay-500">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -140,35 +140,42 @@ export function DashboardNav({ user }: { user: any }) {
                   href={item.href}
                   className={classNames(
                     pathname === item.href
-                      ? 'bg-clay-50 border-clay-500 text-clay-700'
-                      : 'border-transparent text-clay-500 hover:bg-clay-50 hover:text-clay-700',
-                    'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
+                      ? 'text-brand bg-brand/5'
+                      : 'text-clay-800 hover:bg-sand-light hover:text-brand',
+                    'block relative border border-transparent rounded-md pl-5 pr-4 py-2 text-base font-medium'
                   )}
                 >
+                  {pathname === item.href ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
                   {item.name}
                 </Disclosure.Button>
               ))}
             </div>
-            <div className="border-t border-clay-200 pb-3 pt-4">
+            <div className="border-t border-clay-200 py-4">
               <div className="flex items-center px-4">
                 <ProfileImage />
                 <div className="ml-3">
                   <div className="text-base font-medium text-clay-800">{user?.username}</div>
-                  <div className="text-base font-medium text-clay-500">{user?.email}</div>
+                  <div className="text-base font-medium text-clay-600">{user?.email}</div>
                 </div>
               </div>
               <div className="mt-3 space-y-1">
                 <Disclosure.Button
                   as={Link}
                   href="/profile"
-                  className="block px-4 py-2 text-base font-medium text-clay-500 hover:bg-clay-100 hover:text-clay-800"
+                  className={classNames(
+                    pathname === '/profile'
+                      ? 'text-brand bg-brand/5'
+                      : 'text-clay-800 hover:bg-sand-light hover:text-brand',
+                    'block relative border border-transparent rounded-md px-5 py-2 text-base font-medium'
+                  )}
                 >
+                  {pathname === '/profile' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
                   Profile Settings
                 </Disclosure.Button>
                 <Disclosure.Button
                   as="button"
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="block w-full px-4 py-2 text-left text-base font-medium text-clay-500 hover:bg-clay-100 hover:text-clay-800"
+                  className="block w-full px-5 py-2 text-left text-base font-medium text-clay-800 hover:bg-sand-light hover:text-brand"
                 >
                   Sign out
                 </Disclosure.Button>

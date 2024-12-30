@@ -19,8 +19,8 @@ export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-y-4 md:gap-y-0 px-2">
-      <div className="flex flex-col md:flex-row items-center sm:items-start md:items-center gap-y-4 md:gap-y-0 space-x-0 md:space-x-3">
+    <div className="text-sm lg:text-base flex flex-col md:flex-row items-center justify-between gap-y-4 md:gap-y-0">
+      <div className="flex flex-col w-full md:w-auto justify-between sm:flex-row items-center gap-y-4 md:gap-y-0 space-x-0 md:space-x-3">
         <div className="font-medium text-clay-800 translate-y-[-2px]">
           Showing {table.getRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} items
@@ -58,7 +58,7 @@ export function DataTablePagination<TData>({
           </Listbox>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row items-center sm:items-end md:items-center gap-y-4 md:gap-y-0 space-x-0 md:space-x-6">
+      <div className="flex flex-col sm:flex-row items-center w-full justify-between md:w-auto sm:items-end md:items-center gap-y-4 md:gap-y-0 space-x-0 md:space-x-6">
 
         <div className="flex items-center space-x-2">
           <Listbox
