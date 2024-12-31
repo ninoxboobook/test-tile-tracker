@@ -22,9 +22,10 @@ export default async function RegisterPage() {
         <div className="flex items-center justify-center pb-12">
           <div className="max-w-md w-full space-y-8">
             <div>
-              <h2 className="mt-6 text-center text-3xl font-extrabold text-clay-900">
+              <h1 className="mt-6 text-center text-3xl font-extrabold text-clay-900">
                 Create your account
-              </h2>
+              </h1>
+              <p className="mt-2 text-center text-clay-700">Test Tile Tracker is free to use.</p>
             </div>
             <RegisterForm />
           </div>
