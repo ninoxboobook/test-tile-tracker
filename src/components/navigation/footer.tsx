@@ -11,7 +11,7 @@ const footerSections = {
   connect: {
     title: 'Connect',
     links: [
-      { name: 'Instagram', href: '#' },
+      { name: 'Instagram', href: 'http://instagram.com/test.tile.tracker' },
       { name: 'hello@testtiletracker.com', href: 'mailto:hello@testtiletracker.com' },
     ],
   },

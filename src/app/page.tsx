@@ -3,11 +3,11 @@ import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import Image from 'next/image'
 import splashImg from 'public/images/splash.jpg'
-import testTile1 from 'public/images/test-tile-1.png'
-import testTile2 from 'public/images/test-tile-2.png'
-import testTile3 from 'public/images/test-tile-3.png'
-import testTile4 from 'public/images/test-tile-4.png'
-import testTile5 from 'public/images/test-tile-5.png'
+import celadon from 'public/images/celadon.jpg'
+import fieldGrey from 'public/images/field-grey.jpg'
+import satinBlack from 'public/images/satin-black-tin-white.jpg'
+import tenmoku from 'public/images/tenmoku.jpg'
+import sandstorm from 'public/images/sandstorm.jpg'
 import { UnauthNav } from '@/components/navigation/unauth-nav-menu'
 import { Footer } from '@/components/navigation/footer'
 import { DemoTilesView } from '@/components/ui/demo-tiles-view'
@@ -103,63 +103,63 @@ export default async function HomePage() {
         <DemoTilesView
           tiles={[
             {
-              title: 'Frozen pond test',
-              subtitle: 'Keane Midfire',
-              images: [testTile1.src],
-              lozenges: [
-                { label: 'Cone 6', lozengeVariant: 'brand' },
-                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
-              ],
-              metadata: [
-                { value: 'Honey Flux, Mayco Green Tea' },
-              ],
-            },
-            {
-              title: 'Chrome red',
-              subtitle: 'Keane Midfire',
-              images: [testTile2.src],
-              lozenges: [
-                { label: 'Cone 6', lozengeVariant: 'brand' },
-                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
-              ],
-              metadata: [
-                { value: 'Martin\'s Chrome Red' },
-              ],
-            },
-            {
-              title: 'Matte over slips',
+              title: 'Celadon',
               subtitle: 'Studio Reclaim',
-              images: [testTile3.src],
+              images: [celadon.src],
               lozenges: [
                 { label: 'Cone 10', lozengeVariant: 'brand' },
                 { label: 'Reduction', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { value: 'Porcelain slip, Terracotta slip, Iron oxide, Base matte' },
+                { value: 'New Celadon' },
               ],
             },
             {
-              title: 'Green brush-on',
-              subtitle: 'Walkers PB103',
-              images: [testTile4.src],
+              title: 'Field Grey in reduction',
+              subtitle: 'Studio Reclaim',
+              images: [fieldGrey.src],
               lozenges: [
                 { label: 'Cone 10', lozengeVariant: 'brand' },
                 { label: 'Reduction', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { value: 'Studio teal' },
+                { value: 'Field Grey' },
               ],
             },
             {
-              title: 'Butterscotch',
-              subtitle: 'Feeneys Dark Stoneware',
-              images: [testTile5.src],
+              title: 'Tin White over Satin Black',
+              subtitle: 'Terrapotter Redwoods',
+              images: [satinBlack.src],
               lozenges: [
                 { label: 'Cone 10', lozengeVariant: 'brand' },
                 { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
               ],
               metadata: [
-                { value: 'Porcelain slip, Butterscotch' },
+                { value: 'Satin Black, Tin White' },
+              ],
+            },
+            {
+              title: 'Tenmoku',
+              subtitle: 'Walkers PB103',
+              images: [tenmoku.src],
+              lozenges: [
+                { label: 'Cone 10', lozengeVariant: 'brand' },
+                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { value: 'New Tenmoku' },
+              ],
+            },
+            {
+              title: 'Sandstorm over texture',
+              subtitle: 'Studio Reclaim',
+              images: [sandstorm.src],
+              lozenges: [
+                { label: 'Cone 10', lozengeVariant: 'brand' },
+                { label: 'Oxidation', lozengeVariant: 'brand-emphasis' }
+              ],
+              metadata: [
+                { value: 'Sandstorm' },
               ],
             }
           ]}
