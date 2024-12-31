@@ -11,29 +11,16 @@ async function getTestTiles() {
           email: true
         }
       },
-      clayBody: {
-        select: {
-          name: true
+      clayBody: true,
+      decorationLayers: {
+        include: {
+          decorations: true
         }
       },
-      decoration: {
-        select: {
-          name: true
-        }
-      },
-      cone: {
-        select: {
-          name: true
-        }
-      },
-      atmosphere: {
-        select: {
-          name: true
-        }
-      },
+      cone: true,
+      atmosphere: true,
       _count: {
         select: {
-          images: true,
           collections: true
         }
       }
@@ -86,7 +73,9 @@ export default async function TestTilesPage() {
                     {testTile.clayBody.name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-clay-500">
-                    {testTile.decoration.name}
+                    {testTile.decorationLayers.map(layer => 
+                      layer.decorations.map(d => d.name).join(', ')
+                    ).join(' + ')}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-clay-500">
                     {testTile.cone.name}, {testTile.atmosphere.name}
@@ -95,7 +84,7 @@ export default async function TestTilesPage() {
                     {testTile.user.username || testTile.user.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-clay-500">
-                    {testTile._count.images}
+                    {testTile.imageUrl.length}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-clay-500">
                     {testTile._count.collections}

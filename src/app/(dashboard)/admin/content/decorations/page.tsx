@@ -14,7 +14,7 @@ async function getDecorations() {
       type: true,
       _count: {
         select: {
-          testTiles: true
+          decorationLayers: true
         }
       }
     },
@@ -46,7 +46,7 @@ export default async function DecorationsPage() {
                   Created By
                 </th>
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-clay-900">
-                  Test Tiles
+                  Decoration Layers
                 </th>
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-clay-900">
                   Created
@@ -69,7 +69,7 @@ export default async function DecorationsPage() {
                     {decoration.user.username || decoration.user.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-clay-500">
-                    {decoration._count.testTiles}
+                    {decoration._count.decorationLayers}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-clay-500">
                     {new Date(decoration.createdAt).toLocaleDateString()}
