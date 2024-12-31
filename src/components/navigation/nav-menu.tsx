@@ -21,7 +21,6 @@ function classNames(...classes: string[]) {
 
 export function DashboardNav({ user }: { user: any }) {
   const pathname = usePathname()
-  console.log('Navigation user:', user)
 
   const ProfileImage = () => (
     user?.imageUrl ? (
@@ -71,16 +70,16 @@ export function DashboardNav({ user }: { user: any }) {
                 ))}
                 {user.role === 'ADMIN' && (
                   <Link
-                    href="/dashboard/admin"
+                    href="/admin"
                     className={classNames(
-                      pathname === '/dashboard/admin'
+                      pathname === '/admin'
                         ? 'text-brand relative'
                         : 'text-clay-800 hover:text-clay-900',
                       'inline-flex items-center px-1 py-1 text-base font-medium'
                     )}
                   >
                     Admin Dashboard
-                    {pathname === '/dashboard/admin' ? <div className="h-2 w-4 bg-brand absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-full"></div> : null}
+                    {pathname === '/admin' ? <div className="h-2 w-4 bg-brand absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-full"></div> : null}
                   </Link>
                 )}
               </div>
@@ -166,15 +165,15 @@ export function DashboardNav({ user }: { user: any }) {
               {user.role === 'ADMIN' && (
                 <Disclosure.Button
                   as={Link}
-                  href="/dashboard/admin"
+                  href="/admin"
                   className={classNames(
-                    pathname === '/dashboard/admin'
+                    pathname === '/admin'
                       ? 'text-brand bg-brand/5'
                       : 'text-clay-800 hover:bg-sand-light hover:text-brand',
                     'block relative border border-transparent rounded-md pl-5 pr-4 py-2 text-base font-medium'
                   )}
                 >
-                  {pathname === '/dashboard/admin' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
+                  {pathname === '/admin' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
                   Admin Dashboard
                 </Disclosure.Button>
               )}
@@ -204,15 +203,15 @@ export function DashboardNav({ user }: { user: any }) {
                 {user.role === 'ADMIN' && (
                   <Disclosure.Button
                     as={Link}
-                    href="/dashboard/admin"
+                    href="/admin"
                     className={classNames(
-                      pathname === '/dashboard/admin'
+                      pathname === '/admin'
                         ? 'text-brand bg-brand/5'
                         : 'text-clay-800 hover:bg-sand-light hover:text-brand',
                       'block relative border border-transparent rounded-md px-5 py-2 text-base font-medium'
                     )}
                   >
-                    {pathname === '/dashboard/admin' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
+                    {pathname === '/admin' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
                     Admin Dashboard
                   </Disclosure.Button>
                 )}
