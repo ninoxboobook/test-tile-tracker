@@ -32,16 +32,11 @@ export async function updateCone(formData: FormData) {
   redirect('/admin/reference-data/cones')
 }
 
-export async function deleteCone(formData: FormData) {
+export async function deleteCone(id: string) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
-  }
-
-  const id = formData.get('id')
-  if (!id || typeof id !== 'string') {
-    throw new Error('Cone ID is required')
   }
 
   // Check if the cone is being used

@@ -3,7 +3,8 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { DeleteConeButton } from './delete-cone-button'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteCone } from './actions'
 
 async function getCones() {
   const cones = await prisma.cone.findMany({
@@ -53,7 +54,13 @@ export default async function ConesPage() {
                   Edit
                 </Link>
                 {(cone._count.clayBodies === 0 && cone._count.testTiles === 0) && (
-                  <DeleteConeButton id={cone.id} />
+                  <DeleteButton
+                    onDelete={async () => {
+                      'use server'
+                      await deleteCone(cone.id)
+                    }}
+                    itemName="Cone"
+                  />
                 )}
                 {(cone._count.clayBodies > 0 || cone._count.testTiles > 0) && (
                   <button
