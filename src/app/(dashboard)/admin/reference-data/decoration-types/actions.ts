@@ -32,16 +32,11 @@ export async function updateDecorationType(formData: FormData) {
   redirect('/admin/reference-data/decoration-types')
 }
 
-export async function deleteDecorationType(formData: FormData) {
+export async function deleteDecorationType(id: string) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
-  }
-
-  const id = formData.get('id')
-  if (!id || typeof id !== 'string') {
-    throw new Error('Decoration type ID is required')
   }
 
   // Check if the decoration type is being used

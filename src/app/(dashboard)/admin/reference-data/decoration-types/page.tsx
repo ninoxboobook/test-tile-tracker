@@ -3,7 +3,8 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { DeleteDecorationTypeButton } from './delete-decoration-type-button'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteDecorationType } from './actions'
 
 async function getDecorationTypes() {
   const types = await prisma.decorationType.findMany({
@@ -53,7 +54,13 @@ export default async function DecorationTypesPage() {
                   Edit
                 </Link>
                 {type._count.decorations === 0 && (
-                  <DeleteDecorationTypeButton id={type.id} />
+                  <DeleteButton
+                    onDelete={async () => {
+                      'use server'
+                      await deleteDecorationType(type.id)
+                    }}
+                    itemName="Decoration Type"
+                  />
                 )}
                 {type._count.decorations > 0 && (
                   <button
