@@ -2,8 +2,10 @@ import { prisma } from '@/lib/prisma'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DecorationsTable } from './decorations-table'
 import { Suspense } from 'react'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export async function getDecorations() {
+  // No need to check isAdmin here since middleware already ensures this is an admin route
   const decorations = await prisma.decoration.findMany({
     include: {
       user: {

@@ -7,11 +7,12 @@ import { redirect } from 'next/navigation'
 import { decorationSchema } from '@/lib/schemas/decoration'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export async function updateDecoration(formData: FormData) {
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
-  if (!session?.user?.id) {
+  if (!isAdmin && !session?.user?.id) {
     throw new Error('Unauthorized')
   }
 
@@ -86,25 +87,34 @@ export async function updateDecoration(formData: FormData) {
   await prisma.decoration.update({
     where: {
       id,
-      userId: session.user.id
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     data: updateData
   })
 
   revalidatePath('/decorations')
+  revalidatePath('/admin/content/decorations')
   redirect(`/decorations/${id}`)
 }
 
-export async function getDecoration(id: string, userId: string) {
+export async function getDecoration(id: string, userId?: string) {
+  const { isAdmin } = await getSessionWithAuth()
+
   return prisma.decoration.findUnique({
     where: {
       id,
-      userId
+      ...(isAdmin ? {} : { userId: userId! })
     },
     include: {
       type: true,
       cone: true,
-      atmosphere: true
+      atmosphere: true,
+      user: {
+        select: {
+          username: true,
+          email: true
+        }
+      }
     }
   })
 }

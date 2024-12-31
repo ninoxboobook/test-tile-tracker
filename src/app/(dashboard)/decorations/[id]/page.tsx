@@ -11,6 +11,7 @@ import { deleteDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
 import { DecorationTestTiles } from '@/components/decorations/decoration-test-tiles'
 import { TestTileWithRelations } from '@/types/test-tile'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export default async function DecorationPage(
   props: {
@@ -18,16 +19,16 @@ export default async function DecorationPage(
   }
 ) {
   const params = await props.params;
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
-  if (!session?.user?.id) {
+  if (!session?.user?.id && !isAdmin) {
     redirect('/login')
   }
 
   const decoration = await prisma.decoration.findUnique({
     where: {
       id: params.id,
-      userId: session.user.id
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       type: true,

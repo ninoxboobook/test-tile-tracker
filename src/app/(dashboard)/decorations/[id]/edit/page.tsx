@@ -6,6 +6,7 @@ import { DecorationForm } from '@/components/decorations/decoration-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export default async function EditDecorationPage(
   props: {
@@ -13,9 +14,9 @@ export default async function EditDecorationPage(
   }
 ) {
   const params = await props.params;
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
-  if (!session?.user?.id) {
+  if (!session?.user?.id && !isAdmin) {
     redirect('/login')
   }
 
@@ -23,7 +24,7 @@ export default async function EditDecorationPage(
     prisma.decoration.findUnique({
       where: {
         id: params.id,
-        userId: session.user.id,
+        ...(isAdmin ? {} : { userId: session.user.id })
       },
       include: {
         type: true,
