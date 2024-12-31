@@ -54,7 +54,7 @@ export default async function EditCollectionPage(
       <CollectionForm 
         action={updateCollection}
         initialData={formData}
-        submitButtonText="Update Collection"
+        submitButtonText="Update collection"
         testTiles={testTiles}
       />
     </FormLayout>

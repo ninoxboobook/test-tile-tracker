@@ -55,7 +55,7 @@ export default async function EditClayBodyPage(
       <ClayBodyForm 
         action={updateClayBody}
         initialData={formData}
-        submitButtonText="Update Clay Body"
+        submitButtonText="Update clay body"
         clayBodyTypes={clayBodyTypes}
         cones={cones}
       />

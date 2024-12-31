@@ -46,7 +46,7 @@ interface TestTileFormProps {
 export function TestTileForm({
   initialData,
   action,
-  submitButtonText = 'Create Test Tile',
+  submitButtonText = 'Create test tile',
   clayBodies: initialClayBodies,
   decorations: initialDecorations,
   collections,

@@ -94,7 +94,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
       <TestTileForm 
         action={updateTestTile}
         initialData={formData}
-        submitButtonText="Update Test Tile"
+        submitButtonText="Update test tile"
         cones={cones}
         atmospheres={atmospheres}
         clayBodies={clayBodies as ClayBody[]}

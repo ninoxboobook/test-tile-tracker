@@ -65,10 +65,10 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
     header: 'Manufacturer',
   },
   {
-    accessorKey: 'firingTemperature',
-    header: 'Firing Temperature',
+    accessorKey: 'firingRange',
+    header: 'Firing Range',
     cell: ({ row }) => {
-      const temp = row.getValue('firingTemperature')
+      const temp = row.getValue('firingRange')
       return temp ? `${temp}°C` : ''
     },
   },

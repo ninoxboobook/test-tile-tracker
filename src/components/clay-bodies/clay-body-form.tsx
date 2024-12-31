@@ -30,7 +30,7 @@ interface ClayBodyFormProps {
 export function ClayBodyForm({
   initialData,
   action,
-  submitButtonText = 'Create Clay Body',
+  submitButtonText = 'Create clay body',
   clayBodyTypes,
   cones,
   isInModal = false,

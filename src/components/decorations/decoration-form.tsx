@@ -33,7 +33,7 @@ interface DecorationFormProps {
 export function DecorationForm({
   initialData,
   action,
-  submitButtonText = 'Create Decoration',
+  submitButtonText = 'Create decoration',
   decorationTypes,
   cones,
   atmospheres,

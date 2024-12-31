@@ -72,7 +72,7 @@ export default async function EditDecorationPage(
       <DecorationForm 
         action={updateDecoration}
         initialData={decorationWithRelations}
-        submitButtonText="Update Decoration"
+        submitButtonText="Update decoration"
         decorationTypes={decorationTypes}
         cones={cones}
         atmospheres={atmospheres}

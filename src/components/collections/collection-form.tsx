@@ -22,7 +22,7 @@ interface CollectionFormProps {
 export function CollectionForm({
   initialData,
   action,
-  submitButtonText = 'Create Collection',
+  submitButtonText = 'Create collection',
   testTiles
 }: CollectionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
