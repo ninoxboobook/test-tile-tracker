@@ -32,16 +32,11 @@ export async function updateClayBodyType(formData: FormData) {
   redirect('/admin/reference-data/clay-body-types')
 }
 
-export async function deleteClayBodyType(formData: FormData) {
+export async function deleteClayBodyType(id: string) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
-  }
-
-  const id = formData.get('id')
-  if (!id || typeof id !== 'string') {
-    throw new Error('Clay body type ID is required')
   }
 
   // Check if the clay body type is being used
@@ -69,6 +64,7 @@ export async function deleteClayBodyType(formData: FormData) {
   })
 
   revalidatePath('/admin/reference-data/clay-body-types')
+  redirect('/admin/reference-data/clay-body-types')
 }
 
 export async function createClayBodyType(formData: FormData) {

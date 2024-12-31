@@ -3,7 +3,8 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { DeleteAtmosphereButton } from './delete-atmosphere-button'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteAtmosphere } from './actions'
 
 async function getAtmospheres() {
   const atmospheres = await prisma.atmosphere.findMany({
@@ -53,7 +54,13 @@ export default async function AtmospheresPage() {
                   Edit
                 </Link>
                 {atmosphere._count.testTiles === 0 && (
-                  <DeleteAtmosphereButton id={atmosphere.id} />
+                  <DeleteButton
+                    onDelete={async () => {
+                      'use server'
+                      await deleteAtmosphere(atmosphere.id)
+                    }}
+                    itemName="Atmosphere"
+                  />
                 )}
                 {atmosphere._count.testTiles > 0 && (
                   <button

@@ -3,7 +3,8 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
-import { DeleteClayBodyTypeButton } from './delete-clay-body-type-button'
+import { DeleteButton } from '@/components/ui/buttons/delete-button'
+import { deleteClayBodyType } from './actions'
 
 async function getClayBodyTypes() {
   const types = await prisma.clayBodyType.findMany({
@@ -30,8 +31,8 @@ export default async function ClayBodyTypesPage() {
       title="Clay Body Types"
       action={
         <Link href="/admin/reference-data/clay-body-types/new">
-        <ActionButton>Add new type</ActionButton>
-      </Link>
+          <ActionButton>Add new clay body type</ActionButton>
+        </Link>
       }
     >
       <div className="space-y-6">
@@ -53,7 +54,13 @@ export default async function ClayBodyTypesPage() {
                   Edit
                 </Link>
                 {type._count.clayBodies === 0 && (
-                  <DeleteClayBodyTypeButton id={type.id} />
+                  <DeleteButton
+                    onDelete={async () => {
+                      'use server'
+                      await deleteClayBodyType(type.id)
+                    }}
+                    itemName="Clay Body Type"
+                  />
                 )}
                 {type._count.clayBodies > 0 && (
                   <button

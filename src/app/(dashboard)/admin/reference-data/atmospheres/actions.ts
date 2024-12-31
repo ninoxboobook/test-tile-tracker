@@ -32,16 +32,11 @@ export async function updateAtmosphere(formData: FormData) {
   redirect('/admin/reference-data/atmospheres')
 }
 
-export async function deleteAtmosphere(formData: FormData) {
+export async function deleteAtmosphere(id: string) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
-  }
-
-  const id = formData.get('id')
-  if (!id || typeof id !== 'string') {
-    throw new Error('Atmosphere ID is required')
   }
 
   // Check if the atmosphere is being used
@@ -69,6 +64,7 @@ export async function deleteAtmosphere(formData: FormData) {
   })
 
   revalidatePath('/admin/reference-data/atmospheres')
+  redirect('/admin/reference-data/atmospheres')
 }
 
 export async function createAtmosphere(formData: FormData) {
