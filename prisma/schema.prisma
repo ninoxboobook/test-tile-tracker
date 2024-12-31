@@ -15,6 +15,8 @@ model User {
   firstName   String?       @db.VarChar(255)
   lastName    String?       @db.VarChar(255)
   imageUrl    String?       @db.VarChar(255)
+  role        Role          @default(USER)
+  isPublic    Boolean       @default(false)
   lastAutoId  String?       @default("0A") @db.VarChar(255)
   createdAt   DateTime      @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
@@ -22,6 +24,8 @@ model User {
   decorations  Decoration[]
   testTiles   TestTile[]
   collections  Collection[]
+  followedBy   User[]   @relation("UserFollows")
+  following   User[]   @relation("UserFollows")
 
   @@map("users")
 }
@@ -46,12 +50,16 @@ model ClayBody {
   type              ClayBodyType         @relation(fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   manufacturer      String?              @db.VarChar(255)
   cone              Cone[]
-  firingTemperature String?              @db.VarChar(255)
+  firingRange       String?              @db.VarChar(255)
+  bisqueTemperature String?              @db.VarChar(255)
+  vitreousTemperature String?            @db.VarChar(255)
   texture           String?              @db.VarChar(255)
   plasticity        String?              @db.VarChar(255)
   colourOxidation  String?              @db.VarChar(255)
   colourReduction  String?              @db.VarChar(255)
-  shrinkage         Float?               @db.Real
+  shrinkageWetToDry         Float?               @db.Real
+  shrinkageWetToBisque      Float?               @db.Real
+  shrinkageWetToFired       Float?               @db.Real
   absorption        Float?               @db.Real
   meshSize          Int?                 @db.Integer
   imageUrl          String[]             @default([])
@@ -187,4 +195,9 @@ createdAt   DateTime      @default(now()) @db.Timestamptz(6)
 updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
 
 @@map("clay_body_types")
+}
+
+enum Role {
+  ADMIN
+  USER
 }
