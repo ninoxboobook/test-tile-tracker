@@ -21,6 +21,7 @@ function classNames(...classes: string[]) {
 
 export function DashboardNav({ user }: { user: any }) {
   const pathname = usePathname()
+  console.log('Navigation user:', user)
 
   const ProfileImage = () => (
     user?.imageUrl ? (
@@ -68,7 +69,20 @@ export function DashboardNav({ user }: { user: any }) {
                     {pathname === item.href ? <div className="h-2 w-4 bg-brand absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-full"></div> : null}
                   </Link>
                 ))}
-
+                {user.role === 'ADMIN' && (
+                  <Link
+                    href="/dashboard/admin"
+                    className={classNames(
+                      pathname === '/dashboard/admin'
+                        ? 'text-brand relative'
+                        : 'text-clay-800 hover:text-clay-900',
+                      'inline-flex items-center px-1 py-1 text-base font-medium'
+                    )}
+                  >
+                    Admin Dashboard
+                    {pathname === '/dashboard/admin' ? <div className="h-2 w-4 bg-brand absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-full"></div> : null}
+                  </Link>
+                )}
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 <Menu as="div" className="relative ml-3">
@@ -94,10 +108,10 @@ export function DashboardNav({ user }: { user: any }) {
                             href="/profile"
                             className={classNames(
                               active ? 'bg-clay-100' : '',
-                              'block px-4 py-2 text-base text-clay-700'
+                              'block px-4 py-2 text-sm text-clay-700'
                             )}
                           >
-                            Profile Settings
+                            Profile
                           </Link>
                         )}
                       </Menu.Item>
@@ -107,7 +121,7 @@ export function DashboardNav({ user }: { user: any }) {
                             onClick={() => signOut({ callbackUrl: '/' })}
                             className={classNames(
                               active ? 'bg-clay-100' : '',
-                              'block w-full px-4 py-2 text-left text-base text-clay-700'
+                              'block w-full px-4 py-2 text-left text-sm text-clay-700'
                             )}
                           >
                             Sign out
@@ -149,6 +163,21 @@ export function DashboardNav({ user }: { user: any }) {
                   {item.name}
                 </Disclosure.Button>
               ))}
+              {user.role === 'ADMIN' && (
+                <Disclosure.Button
+                  as={Link}
+                  href="/dashboard/admin"
+                  className={classNames(
+                    pathname === '/dashboard/admin'
+                      ? 'text-brand bg-brand/5'
+                      : 'text-clay-800 hover:bg-sand-light hover:text-brand',
+                    'block relative border border-transparent rounded-md pl-5 pr-4 py-2 text-base font-medium'
+                  )}
+                >
+                  {pathname === '/dashboard/admin' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
+                  Admin Dashboard
+                </Disclosure.Button>
+              )}
             </div>
             <div className="border-t border-clay-200 py-4">
               <div className="flex items-center px-4">
@@ -172,6 +201,21 @@ export function DashboardNav({ user }: { user: any }) {
                   {pathname === '/profile' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
                   Profile Settings
                 </Disclosure.Button>
+                {user.role === 'ADMIN' && (
+                  <Disclosure.Button
+                    as={Link}
+                    href="/dashboard/admin"
+                    className={classNames(
+                      pathname === '/dashboard/admin'
+                        ? 'text-brand bg-brand/5'
+                        : 'text-clay-800 hover:bg-sand-light hover:text-brand',
+                      'block relative border border-transparent rounded-md px-5 py-2 text-base font-medium'
+                    )}
+                  >
+                    {pathname === '/dashboard/admin' ? <div className="h-4 w-2 bg-brand absolute left-0 top-1/2 -translate-y-1/2 rounded-r-full mt-[1px]"></div> : null}
+                    Admin Dashboard
+                  </Disclosure.Button>
+                )}
                 <Disclosure.Button
                   as="button"
                   onClick={() => signOut({ callbackUrl: '/' })}

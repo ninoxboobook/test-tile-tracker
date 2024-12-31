@@ -25,6 +25,7 @@ export default async function DashboardLayout({
       firstName: true,
       lastName: true,
       imageUrl: true,
+      role: true,
     },
   })
 

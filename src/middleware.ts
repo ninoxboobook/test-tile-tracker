@@ -26,6 +26,23 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Handle admin routes
+  if (request.nextUrl.pathname.startsWith('/dashboard/admin')) {
+    console.log('🔒 Admin route accessed:', request.nextUrl.pathname)
+    console.log('🔑 Token:', JSON.stringify(token, null, 2))
+    if (!token) {
+      console.log('❌ No token found, redirecting to login')
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+    console.log('👤 User role:', token.role)
+    if (token.role !== 'ADMIN') {
+      console.log('⛔ User is not admin, redirecting to dashboard')
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+    console.log('✅ Admin access granted')
+    return NextResponse.next()
+  }
+
   // Protect API routes
   if (request.nextUrl.pathname.startsWith('/api')) {
     // Allow public access to auth-related endpoints
@@ -73,5 +90,6 @@ export const config = {
      * 4. public folder
      */
     '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/dashboard/admin/:path*'
   ],
 }
