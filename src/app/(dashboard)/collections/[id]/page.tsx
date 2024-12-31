@@ -57,7 +57,7 @@ export default async function CollectionPage(
       action={
         <div className="flex space-x-3">
           <Link href={`/collections/${collection.id}/edit`}>
-            <ActionButton>Edit Collection</ActionButton>
+            <ActionButton>Edit collection</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {

@@ -33,7 +33,7 @@ export function ActionButton({
   };
   
   const variants = {
-    primary: "text-clay-50 bg-brand hover:bg-clay-700 focus:ring-clay-500 disabled:opacity-50",
+    primary: "text-clay-50 bg-brand border-brand hover:bg-clay-700 focus:ring-clay-500 disabled:opacity-50",
     secondary: "text-brand bg-sand-light border-brand hover:bg-clay-50 focus:ring-clay-500 disabled:opacity-50",
     tertiary: "!px-0 text-brand border-transparent bg-transparent hover:text-clay-600 focus:ring-clay-500 disabled:opacity-50",
     tertiaryDanger: "!px-0 text-red-600 border-transparent bg-transparent hover:text-red-800 focus:ring-clay-500 disabled:opacity-50",

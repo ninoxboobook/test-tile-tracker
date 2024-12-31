@@ -88,7 +88,7 @@ export default async function TestTilePage({ params }: PageProps) {
       action={
         <div className="flex space-x-3">
           <Link href={`/test-tiles/${testTile.id}/edit`}>
-            <ActionButton>Edit Test Tile</ActionButton>
+            <ActionButton>Edit test tile</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {

@@ -75,18 +75,18 @@ export default async function ClayBodyPage(
     { label: 'Type', value: clayBody.type?.name },
     { label: 'Manufacturer', value: clayBody.manufacturer },
     { label: 'Cone', value: clayBody.cone.length > 0 ? clayBody.cone.map(c => c.name).join(', ') : undefined },
-    { label: 'Firing Range (°C)', value: clayBody.firingRange },
-    { label: 'Bisque Temperature (°C)', value: clayBody.bisqueTemperature },
-    { label: 'Vitreous Temperature (°C)', value: clayBody.vitreousTemperature },
-    { label: 'Colour (Oxidation)', value: clayBody.colourOxidation },
-    { label: 'Colour (Reduction)', value: clayBody.colourReduction },
+    { label: 'Firing range (°C/°F)', value: clayBody.firingRange },
+    { label: 'Bisque temperature (°C/°F)', value: clayBody.bisqueTemperature },
+    { label: 'Vitreous temperature (°C/°F)', value: clayBody.vitreousTemperature },
+    { label: 'Colour (oxidation)', value: clayBody.colourOxidation },
+    { label: 'Colour (reduction)', value: clayBody.colourReduction },
     { label: 'Texture', value: clayBody.texture },
     { label: 'Plasticity', value: clayBody.plasticity },
-    { label: 'Shrinkage (Wet to Dry) (%)', value: clayBody.shrinkageWetToDry?.toString() },
-    { label: 'Shrinkage (Wet to Bisque) (%)', value: clayBody.shrinkageWetToBisque?.toString() },
-    { label: 'Shrinkage (Wet to Fired) (%)', value: clayBody.shrinkageWetToFired?.toString() },
+    { label: 'Shrinkage % (wet to dry)', value: clayBody.shrinkageWetToDry?.toString() },
+    { label: 'Shrinkage % (wet to bisque)', value: clayBody.shrinkageWetToBisque?.toString() },
+    { label: 'Shrinkage % (wet to fired)', value: clayBody.shrinkageWetToFired?.toString() },
     { label: 'Absorption (%)', value: clayBody.absorption?.toString() },
-    { label: 'Mesh Size', value: clayBody.meshSize?.toString() },
+    { label: 'Mesh size', value: clayBody.meshSize?.toString() },
     { label: 'Notes', value: clayBody.notes },
   ]
 
@@ -96,7 +96,7 @@ export default async function ClayBodyPage(
       action={
         <div className="flex space-x-3">
           <Link href={`/clay-bodies/${clayBody.id}/edit`}>
-            <ActionButton>Edit Clay Body</ActionButton>
+            <ActionButton>Edit clay body</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {

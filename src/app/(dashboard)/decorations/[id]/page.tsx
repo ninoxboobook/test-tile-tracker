@@ -95,7 +95,7 @@ export default async function DecorationPage(
       action={
         <div className="flex space-x-3">
           <Link href={`/decorations/${decorationWithRelations.id}/edit`}>
-            <ActionButton>Edit Decoration</ActionButton>
+            <ActionButton>Edit decoration</ActionButton>
           </Link>
           <DeleteButton
             onDelete={async () => {
