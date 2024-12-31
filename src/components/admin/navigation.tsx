@@ -26,7 +26,6 @@ const navigation = [
       { name: 'Collections', href: '/admin/content/collections' },
     ]
   },
-  { name: 'Settings', href: '/admin/settings' },
 ]
 
 export function Navigation() {
