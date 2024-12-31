@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { testTileSchema } from '@/lib/schemas/test-tile'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 async function validateSession() {
   const session = await getServerSession(authOptions)
@@ -17,23 +18,32 @@ async function validateSession() {
 }
 
 export async function getTestTile(id: string) {
-  const session = await validateSession()
+  const { session, isAdmin } = await getSessionWithAuth()
 
   const testTile = await prisma.testTile.findUnique({
-    where: { 
+    where: {
       id,
-      userId: session.user.id 
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
+      clayBody: true,
+      cone: true,
+      atmosphere: true,
       decorationLayers: {
         include: {
           decorations: true
+        },
+        orderBy: {
+          order: 'asc'
         }
       },
       collections: true,
-      clayBody: true,
-      cone: true,
-      atmosphere: true
+      user: isAdmin ? {
+        select: {
+          username: true,
+          email: true
+        }
+      } : false
     }
   })
 
@@ -45,7 +55,7 @@ export async function getTestTile(id: string) {
 }
 
 export async function updateTestTile(formData: FormData) {
-  const session = await validateSession()
+  const { session, isAdmin } = await getSessionWithAuth()
 
   const id = formData.get('id')
   if (!id || typeof id !== 'string') {
@@ -116,7 +126,7 @@ export async function updateTestTile(formData: FormData) {
   await prisma.testTile.update({
     where: {
       id,
-      userId: session.user.id
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     data: updateData,
     include: {
@@ -133,6 +143,7 @@ export async function updateTestTile(formData: FormData) {
   })
 
   revalidatePath('/test-tiles')
+  revalidatePath('/admin/content/test-tiles')
   redirect(`/test-tiles/${id}`)
 }
 
@@ -148,4 +159,4 @@ export async function deleteTestTile(id: string) {
 
   revalidatePath('/test-tiles')
   redirect('/test-tiles')
-} 
+}

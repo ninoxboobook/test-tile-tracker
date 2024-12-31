@@ -8,6 +8,7 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { deleteTestTile } from './actions'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 import { TestTileCollections } from '@/components/test-tiles/test-tile-collections'
 
 interface PageProps {
@@ -15,7 +16,7 @@ interface PageProps {
 }
 
 export default async function TestTilePage({ params }: PageProps) {
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
   const { id } = await params
 
   if (!session?.user?.id) {
@@ -25,7 +26,7 @@ export default async function TestTilePage({ params }: PageProps) {
   const testTile = await prisma.testTile.findUnique({
     where: {
       id,
-      userId: session.user.id,
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       clayBody: true,
@@ -48,8 +49,14 @@ export default async function TestTilePage({ params }: PageProps) {
         }
       },
       cone: true,
-      atmosphere: true
-    },
+      atmosphere: true,
+      user: isAdmin ? {
+        select: {
+          username: true,
+          email: true
+        }
+      } : false
+    }
   })
 
   if (!testTile) {

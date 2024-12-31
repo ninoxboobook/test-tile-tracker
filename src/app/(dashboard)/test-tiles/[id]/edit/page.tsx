@@ -5,6 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { TestTileForm } from '@/components/test-tiles/test-tile-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateTestTile } from './actions'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 import type { TestTileFormData } from '@/lib/schemas/test-tile'
 import { ClayBody, Collection, Decoration } from '@prisma/client'
 
@@ -13,7 +14,7 @@ interface PageProps {
 }
 
 export default async function EditTestTilePage({ params }: PageProps) {
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
   const { id } = await params
 
   if (!session?.user?.id) {
@@ -23,7 +24,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
   const testTile = await prisma.testTile.findUnique({
     where: {
       id,
-      userId: session.user.id,
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       clayBody: true,
@@ -105,4 +106,4 @@ export default async function EditTestTilePage({ params }: PageProps) {
       />
     </FormLayout>
   )
-} 
+}
