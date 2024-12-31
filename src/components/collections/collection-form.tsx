@@ -90,7 +90,7 @@ export function CollectionForm({
 
         <FormMultiSelect
           name="testTileIds"
-          label="Test Tiles"
+          label="Test tiles"
           control={control}
           options={testTiles.map(testTile => ({
             value: testTile.id,

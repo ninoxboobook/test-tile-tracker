@@ -113,7 +113,7 @@ export function ClayBodyForm({
     <Form onSubmit={handleSubmit}>
       <div className="grid grid-cols-12 gap-8">
         <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-7 p-8'} bg-sand-light space-y-6 rounded-2xl`}>
-        <h2 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Clay body details</h2>
+          <h2 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold'} text-clay-800`}>Clay body details</h2>
           {initialData?.id && (
             <input type="hidden" name="id" value={initialData.id} />
           )}
@@ -157,14 +157,31 @@ export function ClayBodyForm({
             />
 
             <FormField
-              label="Firing Temperature"
-              name="firingTemperature"
+              label="Firing range (°C/°F)"
+              name="firingRange"
               register={register}
-              error={errors.firingTemperature}
+              error={errors.firingRange}
             />
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormField
+              label="Bisque temperature (°C/°F)"
+              name="bisqueTemperature"
+              register={register}
+              error={errors.bisqueTemperature}
+            />
+
+            <FormField
+              label="Vitreous temperature (°C/°F)"
+              name="vitreousTemperature"
+              register={register}
+              error={errors.vitreousTemperature}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
             <FormSelect
               label="Texture"
               name="texture"
@@ -191,18 +208,20 @@ export function ClayBodyForm({
               ]}
               error={errors.plasticity}
             />
+
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+
             <FormField
-              label="Colour (Oxidation)"
+              label="Colour (oxidation)"
               name="colourOxidation"
               register={register}
               error={errors.colourOxidation}
             />
 
             <FormField
-              label="Colour (Reduction)"
+              label="Colour (reduction)"
               name="colourReduction"
               register={register}
               error={errors.colourReduction}
@@ -211,25 +230,47 @@ export function ClayBodyForm({
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormField
-              label="Shrinkage (%)"
-              name="shrinkage"
+              label="Shrinkage % (wet to dry)"
+              name="shrinkageWetToDry"
               type="number"
               step="0.1"
               register={register}
-              error={errors.shrinkage}
+              error={errors.shrinkageWetToDry}
             />
 
             <FormField
-              label="Absorption (%)"
+              label="Shrinkage % (wet to bisque)"
+              name="shrinkageWetToBisque"
+              type="number"
+              step="0.1"
+              register={register}
+              error={errors.shrinkageWetToBisque}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <FormField
+              label="Shrinkage % (wet to fired)"
+              name="shrinkageWetToFired"
+              type="number"
+              step="0.1"
+              register={register}
+              error={errors.shrinkageWetToFired}
+            />
+
+            <FormField
+              label="Absorption %"
               name="absorption"
               type="number"
               step="0.1"
               register={register}
               error={errors.absorption}
             />
+          </div>
 
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormField
-              label="Mesh Size"
+              label="Mesh size"
               name="meshSize"
               type="number"
               register={register}
@@ -248,7 +289,7 @@ export function ClayBodyForm({
         </div>
         <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-5 p-8'} bg-sand-light rounded-2xl`}>
           <div>
-          <h3 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Clay body images</h3>
+            <h3 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold'} text-clay-800`}>Clay body images</h3>
             <ImageDropzone
               currentImageUrl={initialData?.imageUrl}
               onImagesSelected={(urls) => {
@@ -273,7 +314,12 @@ export function ClayBodyForm({
                 !!values.manufacturer ||
                 !!values.typeId ||
                 (values.cone?.length ?? 0) > 0 ||
-                !!values.shrinkage ||
+                !!values.firingRange ||
+                !!values.bisqueTemperature ||
+                !!values.vitreousTemperature ||
+                !!values.shrinkageWetToDry ||
+                !!values.shrinkageWetToBisque ||
+                !!values.shrinkageWetToFired ||
                 !!values.absorption ||
                 !!values.meshSize ||
                 !!values.notes ||

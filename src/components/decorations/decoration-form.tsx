@@ -227,7 +227,7 @@ export function DecorationForm({
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <FormColorPicker
-              label="Color"
+              label="Colour"
               name="colour"
               control={control}
               error={errors.colour}

@@ -31,7 +31,9 @@ export async function createClayBody(formData: FormData, redirectOnSuccess = tru
   // Convert string numbers to actual numbers before validation
   const processedData = {
     ...rawData,
-    shrinkage: rawData.shrinkage ? parseFloat(rawData.shrinkage as string) : null,
+    shrinkageWetToDry: rawData.shrinkageWetToDry ? parseFloat(rawData.shrinkageWetToDry as string) : null,
+    shrinkageWetToBisque: rawData.shrinkageWetToBisque ? parseFloat(rawData.shrinkageWetToBisque as string) : null,
+    shrinkageWetToFired: rawData.shrinkageWetToFired ? parseFloat(rawData.shrinkageWetToFired as string) : null,
     absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
     meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
     imageUrl: rawData.imageUrl?.filter((url: any) => typeof url === 'string') || []
@@ -48,12 +50,16 @@ export async function createClayBody(formData: FormData, redirectOnSuccess = tru
     cone: validatedData.cone?.length ? {
       connect: validatedData.cone.map(id => ({ id }))
     } : undefined,
-    firingTemperature: validatedData.firingTemperature,
+    firingRange: validatedData.firingRange,
+    bisqueTemperature: validatedData.bisqueTemperature,
+    vitreousTemperature: validatedData.vitreousTemperature,
     texture: validatedData.texture,
     plasticity: validatedData.plasticity,
     colourOxidation: validatedData.colourOxidation,
     colourReduction: validatedData.colourReduction,
-    shrinkage: validatedData.shrinkage,
+    shrinkageWetToDry: validatedData.shrinkageWetToDry,
+    shrinkageWetToBisque: validatedData.shrinkageWetToBisque,
+    shrinkageWetToFired: validatedData.shrinkageWetToFired,
     absorption: validatedData.absorption,
     meshSize: validatedData.meshSize,
     imageUrl: validatedData.imageUrl || [],
