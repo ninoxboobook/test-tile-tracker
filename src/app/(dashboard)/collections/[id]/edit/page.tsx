@@ -5,6 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { CollectionForm } from '@/components/collections/collection-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateCollection } from './actions'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 import type { CollectionFormData } from '@/lib/schemas/collection'
 
 export default async function EditCollectionPage(
@@ -13,7 +14,7 @@ export default async function EditCollectionPage(
   }
 ) {
   const params = await props.params;
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
   if (!session?.user?.id) {
     redirect('/login')
@@ -22,7 +23,7 @@ export default async function EditCollectionPage(
   const collection = await prisma.collection.findUnique({
     where: {
       id: params.id,
-      userId: session.user.id,
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       testTiles: true,
@@ -59,4 +60,4 @@ export default async function EditCollectionPage(
       />
     </FormLayout>
   )
-} 
+}

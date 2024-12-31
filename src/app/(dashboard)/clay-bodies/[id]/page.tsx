@@ -9,6 +9,7 @@ import { deleteClayBody } from './actions'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { ClayBodyTestTiles } from '@/components/clay-bodies/clay-body-test-tiles'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
   if (!imageUrl?.length) return null
@@ -34,7 +35,7 @@ export default async function ClayBodyPage(
   }
 ) {
   const params = await props.params;
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
   if (!session?.user?.id) {
     return notFound()
@@ -43,7 +44,7 @@ export default async function ClayBodyPage(
   const clayBody = await prisma.clayBody.findUnique({
     where: {
       id: params.id,
-      userId: session.user.id,
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       testTiles: {
@@ -63,8 +64,14 @@ export default async function ClayBodyPage(
         }
       },
       type: true,
-      cone: true
-    },
+      cone: true,
+      user: isAdmin ? {
+        select: {
+          username: true,
+          email: true
+        }
+      } : false
+    }
   })
 
   if (!clayBody) {

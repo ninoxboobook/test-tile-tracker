@@ -8,6 +8,7 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { deleteCollection } from './actions'
 import { CollectionTestTiles } from '@/components/collections/collection-test-tiles'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export default async function CollectionPage(
   props: {
@@ -15,7 +16,7 @@ export default async function CollectionPage(
   }
 ) {
   const params = await props.params;
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
   if (!session?.user?.id) {
     redirect('/login')
@@ -24,7 +25,7 @@ export default async function CollectionPage(
   const collection = await prisma.collection.findUnique({
     where: {
       id: params.id,
-      userId: session.user.id,
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       testTiles: {
@@ -42,8 +43,14 @@ export default async function CollectionPage(
           cone: true,
           atmosphere: true
         }
-      }
-    },
+      },
+      user: isAdmin ? {
+        select: {
+          username: true,
+          email: true
+        }
+      } : false
+    }
   })
 
   if (!collection) {
@@ -69,8 +76,8 @@ export default async function CollectionPage(
         </div>
       }
     >
-        <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles in this collection</h2>
-        <CollectionTestTiles testTiles={collection.testTiles} collectionId={collection.id} />
+      <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles in this collection</h2>
+      <CollectionTestTiles testTiles={collection.testTiles} collectionId={collection.id} />
     </PageLayout>
   )
 }

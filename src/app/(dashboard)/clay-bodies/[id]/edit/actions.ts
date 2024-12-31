@@ -7,9 +7,10 @@ import { redirect } from 'next/navigation'
 import { clayBodySchema } from '@/lib/schemas/clay-body'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export async function updateClayBody(formData: FormData) {
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
@@ -76,26 +77,27 @@ export async function updateClayBody(formData: FormData) {
   await prisma.clayBody.update({
     where: {
       id,
-      userId: session.user.id
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     data: updateData
   })
 
   revalidatePath('/clay-bodies')
+  revalidatePath('/admin/content/clay-bodies')
   redirect(`/clay-bodies/${id}`)
 }
 
 export async function getClayBody(id: string) {
- const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
   if (!session?.user?.id) {
     throw new Error('Unauthorized')
   }
 
   const clayBody = await prisma.clayBody.findUnique({
-    where: { 
+    where: {
       id,
-      userId: session.user.id 
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
       type: true,

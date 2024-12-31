@@ -47,13 +47,32 @@ const columns: ColumnDef<Collection>[] = [
     ),
   },
   {
+    accessorKey: 'createdAt',
+    header: 'Created At',
+    cell: ({ row }) => {
+      const date = new Date(row.original.createdAt)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+    },
+  },
+  {
     accessorKey: '_count.testTiles',
     header: 'Test Tiles',
   },
   {
-    accessorKey: 'createdAt',
-    header: 'Created',
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+    accessorKey: 'updatedAt',
+    header: 'Updated',
+    cell: ({ row }) => {
+      const date = new Date(row.original.updatedAt)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      })
+    },
   },
 ]
 

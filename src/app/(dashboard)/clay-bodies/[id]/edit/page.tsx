@@ -5,6 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { updateClayBody } from './actions'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 export default async function EditClayBodyPage(
   props: {
@@ -12,7 +13,7 @@ export default async function EditClayBodyPage(
   }
 ) {
   const params = await props.params;
-  const session = await getServerSession(authOptions)
+  const { session, isAdmin } = await getSessionWithAuth()
 
   if (!session?.user?.id) {
     redirect('/login')
@@ -22,7 +23,7 @@ export default async function EditClayBodyPage(
     prisma.clayBody.findUnique({
       where: {
         id: params.id,
-        userId: session.user.id,
+        ...(isAdmin ? {} : { userId: session.user.id })
       },
       include: {
         type: true,

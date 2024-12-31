@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { collectionSchema } from '@/lib/schemas/collection'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
+import { getSessionWithAuth } from '@/lib/auth/admin'
 
 async function validateSession() {
   const session = await getServerSession(authOptions)
@@ -17,13 +18,27 @@ async function validateSession() {
 }
 
 export async function getCollection(id: string) {
-  const session = await validateSession()
+  const { session, isAdmin } = await getSessionWithAuth()
 
   const collection = await prisma.collection.findUnique({
-    where: { 
+    where: {
       id,
-      userId: session.user.id 
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
+    include: {
+      testTiles: {
+        include: {
+          clayBody: true,
+          cone: true,
+          atmosphere: true,
+          decorationLayers: {
+            include: {
+              decorations: true
+            }
+          }
+        }
+      }
+    }
   })
 
   if (!collection) {
@@ -58,7 +73,7 @@ export async function createCollection(formData: FormData) {
 }
 
 export async function updateCollection(formData: FormData) {
-  const session = await validateSession()
+  const { session, isAdmin } = await getSessionWithAuth()
 
   const id = formData.get('id')
   if (!id || typeof id !== 'string') {
@@ -84,12 +99,13 @@ export async function updateCollection(formData: FormData) {
   await prisma.collection.update({
     where: {
       id,
-      userId: session.user.id,
+      ...(isAdmin ? {} : { userId: session.user.id })
     },
     data: updateData,
   })
 
   revalidatePath('/collections')
+  revalidatePath('/admin/content/collections')
   revalidatePath(`/collections/${id}`)
   redirect(`/collections/${id}`)
 }
