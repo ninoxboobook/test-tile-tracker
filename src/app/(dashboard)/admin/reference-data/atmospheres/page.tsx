@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { DeleteAtmosphereButton } from './delete-atmosphere-button'
 
 async function getAtmospheres() {
   const atmospheres = await prisma.atmosphere.findMany({
@@ -45,19 +46,25 @@ export default async function AtmospheresPage() {
                 Used in {atmosphere._count.testTiles} test {atmosphere._count.testTiles === 1 ? 'tile' : 'tiles'}
               </p>
               <div className="mt-4 flex space-x-3">
-                <button
-                  type="button"
+                <Link
+                  href={`/admin/reference-data/atmospheres/${atmosphere.id}/edit`}
                   className="inline-flex items-center px-3 py-1.5 border border-clay-300 shadow-sm text-sm font-medium rounded text-clay-700 bg-white hover:bg-clay-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-clay-500"
                 >
                   Edit
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  disabled={atmosphere._count.testTiles > 0}
-                >
-                  Delete
-                </button>
+                </Link>
+                {atmosphere._count.testTiles === 0 && (
+                  <DeleteAtmosphereButton id={atmosphere.id} />
+                )}
+                {atmosphere._count.testTiles > 0 && (
+                  <button
+                    type="button"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                    title="Cannot delete atmosphere that is being used by test tiles"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           ))}

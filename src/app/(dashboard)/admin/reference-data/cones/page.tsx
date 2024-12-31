@@ -3,13 +3,15 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { DeleteConeButton } from './delete-cone-button'
 
 async function getCones() {
   const cones = await prisma.cone.findMany({
     include: {
       _count: {
         select: {
-          testTiles: true
+          testTiles: true,
+          clayBodies: true
         }
       }
     },
@@ -44,19 +46,25 @@ export default async function ConesPage() {
                 Used in {cone._count.testTiles} test {cone._count.testTiles === 1 ? 'tile' : 'tiles'}
               </p>
               <div className="mt-4 flex space-x-3">
-                <button
-                  type="button"
+                <Link
+                  href={`/admin/reference-data/cones/${cone.id}/edit`}
                   className="inline-flex items-center px-3 py-1.5 border border-clay-300 shadow-sm text-sm font-medium rounded text-clay-700 bg-white hover:bg-clay-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-clay-500"
                 >
                   Edit
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  disabled={cone._count.testTiles > 0}
-                >
-                  Delete
-                </button>
+                </Link>
+                {(cone._count.clayBodies === 0 && cone._count.testTiles === 0) && (
+                  <DeleteConeButton id={cone.id} />
+                )}
+                {(cone._count.clayBodies > 0 || cone._count.testTiles > 0) && (
+                  <button
+                    type="button"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                    title="Cannot delete cone that is being used by clay bodies or test tiles"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           ))}

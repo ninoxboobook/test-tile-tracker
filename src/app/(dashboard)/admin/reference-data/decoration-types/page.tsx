@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DashboardCard } from '@/components/dashboard/dashboard-card'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
+import { DeleteDecorationTypeButton } from './delete-decoration-type-button'
 
 async function getDecorationTypes() {
   const types = await prisma.decorationType.findMany({
@@ -45,19 +46,25 @@ export default async function DecorationTypesPage() {
                 Used in {type._count.decorations} {type._count.decorations === 1 ? 'decoration' : 'decorations'}
               </p>
               <div className="mt-4 flex space-x-3">
-                <button
-                  type="button"
+                <Link
+                  href={`/admin/reference-data/decoration-types/${type.id}/edit`}
                   className="inline-flex items-center px-3 py-1.5 border border-clay-300 shadow-sm text-sm font-medium rounded text-clay-700 bg-white hover:bg-clay-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-clay-500"
                 >
                   Edit
-                </button>
-                <button
-                  type="button"
-                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  disabled={type._count.decorations > 0}
-                >
-                  Delete
-                </button>
+                </Link>
+                {type._count.decorations === 0 && (
+                  <DeleteDecorationTypeButton id={type.id} />
+                )}
+                {type._count.decorations > 0 && (
+                  <button
+                    type="button"
+                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                    title="Cannot delete decoration type that is being used by decorations"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           ))}
