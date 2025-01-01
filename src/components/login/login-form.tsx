@@ -19,10 +19,12 @@ type LoginFormData = z.infer<typeof loginSchema>
 export function LoginForm() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const [isResettingPassword, setIsResettingPassword] = useState(false)
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -58,6 +60,35 @@ export function LoginForm() {
     }
   }
 
+  const handleForgotPassword = async () => {
+    const email = watch('email')
+    if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    setIsResettingPassword(true)
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      if (response.ok) {
+        setError(null)
+        // Show success message in the error div with a different style
+        setError('If an account exists with this email, you will receive password reset instructions shortly.')
+      } else {
+        setError('Failed to send reset email. Please try again.')
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+    } finally {
+      setIsResettingPassword(false)
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FormField
@@ -70,21 +101,33 @@ export function LoginForm() {
         required
       />
 
-      <FormField
-        label="Password"
-        name="password"
-        type="password"
-        register={register}
-        error={errors.password}
-        autoComplete="current-password"
-        required
-      />
+      <div>
+        <FormField
+          label="Password"
+          name="password"
+          type="password"
+          register={register}
+          error={errors.password}
+          autoComplete="current-password"
+          required
+        />
+        <button
+          type="button"
+          onClick={handleForgotPassword}
+          disabled={isResettingPassword}
+          className="text-sm text-brand hover:text-clay-500 font-medium"
+        >
+          {isResettingPassword ? 'Sending reset email...' : 'Forgot your password?'}
+        </button>
+      </div>
 
       {error && (
-        <div className="rounded-md bg-red-50 p-4">
+        <div className={`rounded-md p-4 ${error.includes('receive password reset instructions') ? 'bg-green-50' : 'bg-red-50'}`}>
           <div className="flex">
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">{error}</h3>
+              <h3 className={`text-sm font-medium ${error.includes('receive password reset instructions') ? 'text-green-800' : 'text-red-800'}`}>
+                {error}
+              </h3>
             </div>
           </div>
         </div>
@@ -97,12 +140,12 @@ export function LoginForm() {
       >
         {isSubmitting ? 'Signing in...' : 'Sign in'}
       </ActionButton>
-      <p className="text-center">
+
+      <div className="text-center">
         <a href="/register" className="font-medium text-brand hover:text-clay-500">
           Or create a new account
         </a>
-      </p>
-
+      </div>
     </form>
   )
 }

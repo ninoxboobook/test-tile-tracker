@@ -20,6 +20,8 @@ model User {
   lastAutoId  String?       @default("0A") @db.VarChar(255)
   createdAt   DateTime      @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime      @updatedAt @db.Timestamptz(6)
+  resetToken  String?       @db.VarChar(255)
+  resetTokenExpiry DateTime? @db.Timestamptz(6)
   clayBodies  ClayBody[]
   decorations  Decoration[]
   testTiles   TestTile[]
