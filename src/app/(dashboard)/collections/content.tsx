@@ -12,6 +12,7 @@ import { DataViewToolbar } from '@/components/ui/data/data-view-toolbar'
 import { DataTablePagination } from '@/components/ui/data/data-pagination'
 import Link from 'next/link'
 import { SearchConfig } from '@/types/search'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 type CollectionWithTiles = Collection & {
   testTiles: Pick<TestTile, 'id' | 'imageUrl'>[]
@@ -76,35 +77,57 @@ export function CollectionsContent({ collections }: CollectionsContentProps) {
         </Link>
       }
     >
-      <div className="space-y-8">
-        <DataViewToolbar
-          view={view}
-          onViewChange={setView}
-          search={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search collections..."
-          table={view === 'table' ? table : undefined}
-          activeFilters={activeFilters}
-          onFilterChange={(filterId, values) => {
-            setActiveFilters(prev => ({
-              ...prev,
-              [filterId]: values
-            }))
-          }}
+      {collections.length === 0 ? (
+        <EmptyState
+          title="No collections"
+          description="Create a collection to start organising your test tiles"
+          action={
+            <Link href="/collections/new">
+              <ActionButton>Create collection</ActionButton>
+            </Link>
+          }
         />
-        {view === 'table' ? (
-          <CollectionsTable 
-            collections={filteredCollections}
-            table={table}
+      ) : (
+        <div className="space-y-8">
+          <DataViewToolbar
+            view={view}
+            onViewChange={setView}
+            search={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search collections..."
+            table={view === 'table' ? table : undefined}
+            activeFilters={activeFilters}
+            onFilterChange={(filterId, values) => {
+              setActiveFilters(prev => ({
+                ...prev,
+                [filterId]: values
+              }))
+            }}
           />
-        ) : (
-          <CollectionsGrid 
-            collections={filteredCollections}
-            table={table}
-          />
-        )}
-        <DataTablePagination table={table} />
-      </div>
+          {filteredCollections.length === 0 ? (
+            <EmptyState
+              title="No results found"
+              description="Try adjusting your search or filters"
+              size="small"
+            />
+          ) : (
+            <>
+              {view === 'table' ? (
+                <CollectionsTable 
+                  collections={filteredCollections}
+                  table={table}
+                />
+              ) : (
+                <CollectionsGrid 
+                  collections={filteredCollections}
+                  table={table}
+                />
+              )}
+              <DataTablePagination table={table} />
+            </>
+          )}
+        </div>
+      )}
     </PageLayout>
   )
 }

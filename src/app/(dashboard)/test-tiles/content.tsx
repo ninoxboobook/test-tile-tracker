@@ -14,6 +14,7 @@ import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { SearchConfig } from '@/types/search'
 import { DataTablePagination } from '@/components/ui/data/data-pagination'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 interface TestTilesContentProps {
   testTiles: TestTileWithRelations[]
@@ -64,7 +65,6 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
     const generatedFilters = filterConfig.columns.map(columnId => {
       let uniqueValues: string[] = []
 
-      // Handle different relation types
       switch (columnId) {
         case 'clayBody':
           uniqueValues = Array.from(new Set(
@@ -225,36 +225,58 @@ export function TestTilesContent({ testTiles }: TestTilesContentProps) {
         </Link>
       }
     >
-      <div className="space-y-8">
-        <DataViewToolbar
-          view={view}
-          onViewChange={setView}
-          search={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search test tiles..."
-          table={view === 'table' ? table : undefined}
-          filters={filters}
-          activeFilters={activeFilters}
-          onFilterChange={(filterId, values) => {
-            setActiveFilters(prev => ({
-              ...prev,
-              [filterId]: values
-            }))
-          }}
+      {testTiles.length === 0 ? (
+        <EmptyState
+          title="No test tiles"
+          description="Add your first test tile to start documenting your ceramic experiments"
+          action={
+            <Link href="/test-tiles/new">
+              <ActionButton>Add test tile</ActionButton>
+            </Link>
+          }
         />
-        {view === 'table' ? (
-          <TestTilesTable 
-            testTiles={filteredTestTiles}
-            table={table}
+      ) : (
+        <div className="space-y-8">
+          <DataViewToolbar
+            view={view}
+            onViewChange={setView}
+            search={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search test tiles..."
+            table={view === 'table' ? table : undefined}
+            filters={filters}
+            activeFilters={activeFilters}
+            onFilterChange={(filterId, values) => {
+              setActiveFilters(prev => ({
+                ...prev,
+                [filterId]: values
+              }))
+            }}
           />
-        ) : (
-          <TestTilesGrid 
-            testTiles={filteredTestTiles}
-            table={table}
-          />
-        )}
-        <DataTablePagination table={table} />
-      </div>
+          {filteredTestTiles.length === 0 ? (
+            <EmptyState
+              title="No results found"
+              description="Try adjusting your search or filters"
+              size="small"
+            />
+          ) : (
+            <>
+              {view === 'table' ? (
+                <TestTilesTable 
+                  testTiles={filteredTestTiles}
+                  table={table}
+                />
+              ) : (
+                <TestTilesGrid 
+                  testTiles={filteredTestTiles}
+                  table={table}
+                />
+              )}
+              <DataTablePagination table={table} />
+            </>
+          )}
+        </div>
+      )}
     </PageLayout>
   )
-} 
+}

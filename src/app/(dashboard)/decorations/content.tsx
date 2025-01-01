@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { SearchConfig } from '@/types/search'
 import { DataTablePagination } from '@/components/ui/data/data-pagination'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 interface DecorationsContentProps {
   decorations: DecorationWithRelations[]
@@ -256,36 +257,58 @@ export function DecorationsContent({ decorations }: DecorationsContentProps) {
         </Link>
       }
     >
-      <div className="space-y-8">
-        <DataViewToolbar
-          view={view}
-          onViewChange={setView}
-          search={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search decorations..."
-          table={view === 'table' ? table : undefined}
-          filters={filters}
-          activeFilters={activeFilters}
-          onFilterChange={(filterId, values) => {
-            setActiveFilters(prev => ({
-              ...prev,
-              [filterId]: values
-            }))
-          }}
+      {decorations.length === 0 ? (
+        <EmptyState
+          title="No decorations"
+          description="Add your first decoration to start tracking your glazes, oxides, slips and more"
+          action={
+            <Link href="/decorations/new">
+              <ActionButton>Add decoration</ActionButton>
+            </Link>
+          }
         />
-        {view === 'table' ? (
-          <DecorationsTable 
-            decorations={filteredDecorations}
-            table={table}
+      ) : (
+        <div className="space-y-8">
+          <DataViewToolbar
+            view={view}
+            onViewChange={setView}
+            search={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search decorations..."
+            table={view === 'table' ? table : undefined}
+            filters={filters}
+            activeFilters={activeFilters}
+            onFilterChange={(filterId, values) => {
+              setActiveFilters(prev => ({
+                ...prev,
+                [filterId]: values
+              }))
+            }}
           />
-        ) : (
-          <DecorationsGrid 
-            decorations={filteredDecorations}
-            table={table}
-          />
-        )}
-        <DataTablePagination table={table} />
-      </div>
+          {filteredDecorations.length === 0 ? (
+            <EmptyState
+              title="No results found"
+              description="Try adjusting your search or filters"
+              size="small"
+            />
+          ) : (
+            <>
+              {view === 'table' ? (
+                <DecorationsTable 
+                  decorations={filteredDecorations}
+                  table={table}
+                />
+              ) : (
+                <DecorationsGrid 
+                  decorations={filteredDecorations}
+                  table={table}
+                />
+              )}
+              <DataTablePagination table={table} />
+            </>
+          )}
+        </div>
+      )}
     </PageLayout>
   )
 }

@@ -14,6 +14,7 @@ import { SearchConfig } from '@/types/search'
 import Link from 'next/link'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { DataTablePagination } from '@/components/ui/data/data-pagination'
+import { EmptyState } from '@/components/ui/data/data-empty-state'
 
 interface ClayBodiesContentProps {
   clayBodies: (ClayBody & {
@@ -180,36 +181,58 @@ export function ClayBodiesContent({ clayBodies }: ClayBodiesContentProps) {
         </Link>
       }
     >
-      <div className="space-y-8">
-        <DataViewToolbar
-          view={view}
-          onViewChange={setView}
-          search={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search clay bodies..."
-          table={view === 'table' ? table : undefined}
-          filters={filters}
-          activeFilters={activeFilters}
-          onFilterChange={(filterId, values) => {
-            setActiveFilters(prev => ({
-              ...prev,
-              [filterId]: values
-            }))
-          }}
+      {clayBodies.length === 0 ? (
+        <EmptyState
+          title="No clay bodies"
+          description="Add your first clay body to start tracking your clay bodies"
+          action={
+            <Link href="/clay-bodies/new">
+              <ActionButton>Add clay body</ActionButton>
+            </Link>
+          }
         />
-        {view === 'table' ? (
-          <ClayBodiesTable 
-            clayBodies={filteredClayBodies}
-            table={table}
+      ) : (
+        <div className="space-y-8">
+          <DataViewToolbar
+            view={view}
+            onViewChange={setView}
+            search={search}
+            onSearchChange={setSearch}
+            searchPlaceholder="Search clay bodies..."
+            table={view === 'table' ? table : undefined}
+            filters={filters}
+            activeFilters={activeFilters}
+            onFilterChange={(filterId, values) => {
+              setActiveFilters(prev => ({
+                ...prev,
+                [filterId]: values
+              }))
+            }}
           />
-        ) : (
-          <ClayBodiesGrid 
-            clayBodies={filteredClayBodies}
-            table={table}
-          />
-        )}
-        <DataTablePagination table={table} />
-      </div>
+          {filteredClayBodies.length === 0 ? (
+            <EmptyState
+              title="No results found"
+              description="Try adjusting your search or filters"
+              size="small"
+            />
+          ) : (
+            <>
+              {view === 'table' ? (
+                <ClayBodiesTable 
+                  clayBodies={filteredClayBodies}
+                  table={table}
+                />
+              ) : (
+                <ClayBodiesGrid 
+                  clayBodies={filteredClayBodies}
+                  table={table}
+                />
+              )}
+              <DataTablePagination table={table} />
+            </>
+          )}
+        </div>
+      )}
     </PageLayout>
   )
-} 
+}
