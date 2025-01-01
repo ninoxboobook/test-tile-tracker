@@ -17,10 +17,17 @@ export async function middleware(request: NextRequest) {
   if (
     request.nextUrl.pathname.startsWith('/login') ||
     request.nextUrl.pathname.startsWith('/register') ||
-    request.nextUrl.pathname === '/'
+    request.nextUrl.pathname === '/' ||
+    request.nextUrl.pathname.startsWith('/privacy-policy') ||
+    request.nextUrl.pathname.startsWith('/terms-of-service') ||
+    request.nextUrl.pathname.startsWith('/account-deleted')
   ) {
     // Redirect to dashboard if already authenticated
-    if (token) {
+    if (token && 
+        !request.nextUrl.pathname.startsWith('/privacy-policy') && 
+        !request.nextUrl.pathname.startsWith('/terms-of-service') &&
+        !request.nextUrl.pathname.startsWith('/account-deleted')
+    ) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
     return NextResponse.next()
