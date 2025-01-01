@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { PageLayout } from '@/components/ui/layout/page-layout'
-import { ClayBodiesTable } from './clay-bodies-table'
 import { Suspense } from 'react'
+import { ClayBodiesContent } from './content'
 
-export async function getClayBodies() {
+async function getClayBodies() {
   const clayBodies = await prisma.clayBody.findMany({
     include: {
       user: {
@@ -35,9 +35,12 @@ export default async function ClayBodiesPage() {
   const clayBodies = await getClayBodies()
 
   return (
-    <PageLayout title="Clay Bodies">
+    <PageLayout 
+      title="Clay Bodies"
+      description="View and manage all clay bodies across the platform"
+    >
       <Suspense fallback={<div>Loading...</div>}>
-        <ClayBodiesTable clayBodies={clayBodies} />
+        <ClayBodiesContent clayBodies={clayBodies} />
       </Suspense>
     </PageLayout>
   )

@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { PageLayout } from '@/components/ui/layout/page-layout'
-import { CollectionsTable } from './collections-table'
 import { Suspense } from 'react'
+import { CollectionsContent } from './content'
 
-export async function getCollections() {
+async function getCollections() {
   const collections = await prisma.collection.findMany({
     include: {
       user: {
@@ -35,9 +35,12 @@ export default async function CollectionsPage() {
   const collections = await getCollections()
 
   return (
-    <PageLayout title="Collections">
+    <PageLayout 
+      title="Collections"
+      description="View and manage all collections across the platform"
+    >
       <Suspense fallback={<div>Loading...</div>}>
-        <CollectionsTable collections={collections} />
+        <CollectionsContent collections={collections} />
       </Suspense>
     </PageLayout>
   )

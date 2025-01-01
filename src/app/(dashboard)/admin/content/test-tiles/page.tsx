@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { PageLayout } from '@/components/ui/layout/page-layout'
-import { TestTilesTable } from './test-tiles-table'
 import { Suspense } from 'react'
+import { TestTilesContent } from './content'
 
 async function getTestTiles() {
   const testTiles = await prisma.testTile.findMany({
@@ -43,9 +43,12 @@ export default async function TestTilesPage() {
   const testTiles = await getTestTiles()
 
   return (
-    <PageLayout title="Test Tiles">
+    <PageLayout 
+      title="Test Tiles"
+      description="View and manage all test tiles across the platform"
+    >
       <Suspense fallback={<div>Loading...</div>}>
-        <TestTilesTable testTiles={testTiles} />
+        <TestTilesContent testTiles={testTiles} />
       </Suspense>
     </PageLayout>
   )
