@@ -10,6 +10,7 @@ import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
 import { ProfileImage } from '@/components/profile/profile-image'
+import Link from 'next/link'
 
 interface ProfileFormProps {
   initialData?: Partial<ProfileUpdateFormData>
@@ -149,7 +150,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             />
           </div>
 
-          <div className="border-t pt-10 space-y-6">
+          <div className="border-t pt-10 space-y-6 pb-12">
             <h3 className="text-xl font-semibold  mb-4 text-clay-800">Change password</h3>
 
             <FormField
@@ -178,6 +179,18 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               error={errors.confirmNewPassword}
               placeholder="Confirm your new password"
             />
+          </div>
+
+          <div className="border-t pt-10">
+            <h3 className="text-xl font-semibold text-clay-800 mb-1">Delete account</h3>
+            <p className="text-clay-700 mb-6">Account deletion is permanent and cannot be undone. Please be certain before proceeding - all of your data will be lost.</p>
+            <div>
+              <Link href="/profile/delete">
+                <ActionButton variant="danger" type="button">
+                  Delete account
+                </ActionButton>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="col-span-12">

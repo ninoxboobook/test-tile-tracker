@@ -50,7 +50,6 @@ export async function updateProfile(formData: FormData) {
     imageUrl: imageUrl || null,
   }
 
-  // Only update password if both current and new password are provided
   if (currentPassword && newPassword) {
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
@@ -77,4 +76,41 @@ export async function updateProfile(formData: FormData) {
 
   revalidatePath('/profile')
   revalidatePath(`/profile/${session.user.id}`)
+}
+
+export async function deleteAccount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  // Delete all related records in the correct order
+  await prisma.$transaction(async (tx) => {
+    // First, delete all test tiles as they might have decoration layers
+    await tx.testTile.deleteMany({
+      where: { userId: session.user.id! },
+    })
+
+    // Delete collections
+    await tx.collection.deleteMany({
+      where: { userId: session.user.id! },
+    })
+
+    // Delete decorations
+    await tx.decoration.deleteMany({
+      where: { userId: session.user.id! },
+    })
+
+    // Delete clay bodies
+    await tx.clayBody.deleteMany({
+      where: { userId: session.user.id! },
+    })
+
+    // Finally, delete the user
+    await tx.user.delete({
+      where: { id: session.user.id! },
+    })
+  })
+  
+  revalidatePath('/')
 }
