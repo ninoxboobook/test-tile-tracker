@@ -42,7 +42,7 @@ const columns: ColumnDef<User>[] = [
       const userId = row.original.id
       return username ? (
         <Link 
-          href={`/users/${userId}`}
+          href={`/admin/users/${userId}`}
           className="text-brand underline"
         >
           {username}

@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { notFound } from 'next/navigation'
+import { formatDate } from '@/lib/utils'
 
 async function getUser(id: string) {
   const user = await prisma.user.findUnique({
@@ -104,13 +105,13 @@ export default async function UserPage({ params }: { params: { id: string } }) {
                 <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                   <dt className="text-sm font-medium text-clay-500">Created</dt>
                   <dd className="mt-1 text-sm text-clay-900 sm:col-span-2 sm:mt-0">
-                    {new Date(user.createdAt).toLocaleDateString()}
+                    {formatDate(new Date(user.createdAt))}
                   </dd>
                 </div>
                 <div className="py-4 sm:grid sm:grid-cols-3 sm:gap-4">
                   <dt className="text-sm font-medium text-clay-500">Last Updated</dt>
                   <dd className="mt-1 text-sm text-clay-900 sm:col-span-2 sm:mt-0">
-                    {new Date(user.updatedAt).toLocaleDateString()}
+                    {formatDate(new Date(user.updatedAt))}
                   </dd>
                 </div>
               </dl>
