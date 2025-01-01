@@ -36,7 +36,8 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
                 <Image
                   src={imageUrl}
                   alt=""
-                  fill
+                  height={56}
+                  width={56}
                   className="rounded-md object-cover"
                 />
               ) : (

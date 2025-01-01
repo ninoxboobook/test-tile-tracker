@@ -25,6 +25,7 @@ export function UnauthNav() {
                     alt="Test Tile Tracker" 
                     width={40} 
                     height={28}
+                    priority
                   />
                 </Link>
               </div>

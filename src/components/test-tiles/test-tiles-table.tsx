@@ -32,7 +32,8 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
                 <Image
                   src={imageUrl}
                   alt=""
-                  fill
+                  height={56}
+                  width={56}
                   className="rounded-md object-cover"
                 />
               ) : (

@@ -50,7 +50,8 @@ export function ProfileImage({ currentImageUrl, onImageSelected, initials = 'U' 
             <Image
               src={currentImageUrl}
               alt="Profile picture"
-              fill
+              height={160}
+              width={160}
               className="object-cover"
             />
           </div>

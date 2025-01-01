@@ -35,7 +35,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                   <Image
                     src={user.imageUrl}
                     alt={`${user.username}'s profile picture`}
-                    fill
+                    height={160}
+                    width={160}
                     className="object-cover"
                   />
                 </div>
