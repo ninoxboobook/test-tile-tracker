@@ -78,7 +78,7 @@ export function DashboardNav({ user }: { user: any }) {
                       'inline-flex items-center px-1 py-1 text-base font-medium'
                     )}
                   >
-                    Admin Dashboard
+                    Admin
                     {pathname === '/admin' ? <div className="h-2 w-4 bg-brand absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-full"></div> : null}
                   </Link>
                 )}
