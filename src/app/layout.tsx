@@ -3,6 +3,7 @@ import './globals.css'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { SessionProvider } from '@/components/providers/session-provider'
+import { CookieConsentBanner } from '@/components/ui/cookie-consent'
 import Script from 'next/script'
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default async function RootLayout({
       <body className="bg-sand antialiased">
         <SessionProvider session={session}>
           {children}
+          <CookieConsentBanner />
         </SessionProvider>
       </body>
     </html>
