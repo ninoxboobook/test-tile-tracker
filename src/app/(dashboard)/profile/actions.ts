@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
+import { deleteBlob } from '@/lib/blob'
 
 export async function getUserProfile() {
   const session = await getServerSession(authOptions)
@@ -78,11 +79,44 @@ export async function updateProfile(formData: FormData) {
   revalidatePath(`/profile/${session.user.id}`)
 }
 
+async function getImageUrlsForUser(userId: string) {
+  const [user, testTiles, clayBodies, decorations] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { imageUrl: true }
+    }),
+    prisma.testTile.findMany({
+      where: { userId },
+      select: { imageUrl: true }
+    }),
+    prisma.clayBody.findMany({
+      where: { userId },
+      select: { imageUrl: true }
+    }),
+    prisma.decoration.findMany({
+      where: { userId },
+      select: { imageUrl: true }
+    })
+  ])
+
+  const imageUrls: string[] = []
+  
+  if (user?.imageUrl) imageUrls.push(user.imageUrl)
+  testTiles.forEach(t => t.imageUrl && imageUrls.push(...t.imageUrl))
+  clayBodies.forEach(c => c.imageUrl && imageUrls.push(...c.imageUrl))
+  decorations.forEach(d => d.imageUrl && imageUrls.push(...d.imageUrl))
+
+  return imageUrls
+}
+
 export async function deleteAccount() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) {
     throw new Error('Not authenticated')
   }
+
+  // Get all image URLs before deleting the content
+  const imageUrls = await getImageUrlsForUser(session.user.id)
 
   // Delete all related records in the correct order
   await prisma.$transaction(async (tx) => {
@@ -111,6 +145,17 @@ export async function deleteAccount() {
       where: { id: session.user.id! },
     })
   })
+
+  // Delete all associated images from blob storage
+  await Promise.all(
+    imageUrls.map(async (url) => {
+      try {
+        await deleteBlob(url)
+      } catch (error) {
+        console.error('Failed to delete blob:', url, error)
+      }
+    })
+  )
   
   revalidatePath('/')
 }
