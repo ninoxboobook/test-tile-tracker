@@ -15,11 +15,12 @@ async function getAtmosphere(id: string) {
   return atmosphere
 }
 
-export default async function EditAtmospherePage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function EditAtmospherePage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const atmosphere = await getAtmosphere(params.id)
 
   return (

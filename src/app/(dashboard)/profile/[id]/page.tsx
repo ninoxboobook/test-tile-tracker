@@ -12,12 +12,13 @@ function formatDate(date: Date | string) {
 }
 
 interface ProfilePageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default async function ProfilePage({ params }: ProfilePageProps) {
+export default async function ProfilePage(props: ProfilePageProps) {
+  const params = await props.params;
   const user = await getUserProfileById(params.id)
 
   return (

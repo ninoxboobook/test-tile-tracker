@@ -15,11 +15,12 @@ async function getDecorationType(id: string) {
   return decorationType
 }
 
-export default async function EditDecorationTypePage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function EditDecorationTypePage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const decorationType = await getDecorationType(params.id)
 
   return (

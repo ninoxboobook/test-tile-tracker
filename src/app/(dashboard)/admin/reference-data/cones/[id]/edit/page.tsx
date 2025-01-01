@@ -15,11 +15,12 @@ async function getCone(id: string) {
   return cone
 }
 
-export default async function EditConePage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function EditConePage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const cone = await getCone(params.id)
 
   return (

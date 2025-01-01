@@ -15,11 +15,12 @@ async function getClayBodyType(id: string) {
   return clayBodyType
 }
 
-export default async function EditClayBodyTypePage({
-  params
-}: {
-  params: { id: string }
-}) {
+export default async function EditClayBodyTypePage(
+  props: {
+    params: Promise<{ id: string }>
+  }
+) {
+  const params = await props.params;
   const clayBodyType = await getClayBodyType(params.id)
 
   return (

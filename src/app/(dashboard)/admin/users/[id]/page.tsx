@@ -34,7 +34,8 @@ async function getUser(id: string) {
   return user
 }
 
-export default async function UserPage({ params }: { params: { id: string } }) {
+export default async function UserPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const user = await getUser(params.id)
 
   return (
