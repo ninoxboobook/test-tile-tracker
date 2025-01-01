@@ -2,6 +2,7 @@
 
 import { DataTable } from '@/components/ui/data/data-table'
 import { DataTablePagination } from '@/components/ui/data/data-pagination'
+import { ActionButton } from '@/components/ui/buttons/action-button'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -13,6 +14,9 @@ import {
   ColumnFiltersState,
 } from '@tanstack/react-table'
 import { useState } from 'react'
+import { deleteUser, updateUserRole } from './actions'
+import { formatDate } from '@/lib/utils'
+import Link from 'next/link'
 
 type User = {
   id: string
@@ -33,9 +37,18 @@ const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'username',
     header: 'Username',
-    cell: ({ row }) => (
-      <span>{row.original.username || row.original.email}</span>
-    ),
+    cell: ({ row }) => {
+      const username = row.original.username
+      const userId = row.original.id
+      return username ? (
+        <Link 
+          href={`/users/${userId}`}
+          className="text-brand underline"
+        >
+          {username}
+        </Link>
+      ) : '—'
+    }
   },
   {
     accessorKey: 'email',
@@ -64,7 +77,68 @@ const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Created',
-    cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
+    cell: ({ row }) => formatDate(new Date(row.original.createdAt)),
+  },
+  {
+    id: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => {
+      const user = row.original
+      const [isDeleting, setIsDeleting] = useState(false)
+      const [isUpdating, setIsUpdating] = useState(false)
+
+      const handleDelete = async () => {
+        if (!confirm(`Are you sure you want to delete user ${user.email}? This will delete all their content.`)) {
+          return
+        }
+        setIsDeleting(true)
+        try {
+          await deleteUser(user.id)
+        } catch (error) {
+          console.error('Failed to delete user:', error)
+          alert('Failed to delete user')
+        } finally {
+          setIsDeleting(false)
+        }
+      }
+
+      const handleRoleToggle = async () => {
+        const newRole = user.role === 'ADMIN' ? 'USER' : 'ADMIN'
+        if (!confirm(`Are you sure you want to change ${user.email}'s role to ${newRole}?`)) {
+          return
+        }
+        setIsUpdating(true)
+        try {
+          await updateUserRole(user.id, newRole)
+        } catch (error) {
+          console.error('Failed to update user role:', error)
+          alert('Failed to update user role')
+        } finally {
+          setIsUpdating(false)
+        }
+      }
+
+      return (
+        <div className="flex gap-2">
+          <ActionButton
+            variant="secondary"
+            size="compact"
+            onClick={handleRoleToggle}
+            disabled={isUpdating}
+          >
+            {isUpdating ? 'Updating...' : `Make ${user.role === 'ADMIN' ? 'User' : 'Admin'}`}
+          </ActionButton>
+          <ActionButton
+            variant="danger"
+            size="compact"
+            onClick={handleDelete}
+            isLoading={isDeleting}
+          >
+            Delete
+          </ActionButton>
+        </div>
+      )
+    }
   },
 ]
 
