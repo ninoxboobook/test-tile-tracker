@@ -31,7 +31,9 @@ export default async function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-CGNF8CNWSD');
+            gtag('config', 'G-CGNF8CNWSD', {
+              'analytics_storage': 'denied'  // Default to denied until consent is given
+            });
           `}
         </Script>
       </head>
