@@ -128,7 +128,7 @@ export default async function DashboardPage() {
               action={
                 <Link
                   href="/test-tiles/new"
-                  className="inline-flex items-center rounded-md bg-brand px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-emphasis focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  className={classNames(baseButtonStyles, buttonSizes.compact, buttonVariants.primary)}
                 >
                   Create test tile
                 </Link>

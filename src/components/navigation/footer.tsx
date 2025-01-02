@@ -18,8 +18,7 @@ const footerSections = {
   support: {
     title: 'Support',
     links: [
-      { name: 'Ko-fi', href: '#' },
-      { name: 'PayPal', href: '#' },
+      { name: 'Ko-fi', href: 'https://ko-fi.com/testtiletracker' },
     ],
   },
 }
