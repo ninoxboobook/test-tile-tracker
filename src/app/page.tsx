@@ -64,7 +64,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl py-10">
           <div className="bg-sand-light rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
             <div className="mx-auto p-10 lg:p-16 col-span-1 order-2 md:order-1">
-              <h1 className="text-2xl font-display font-semibold text-brand mb-2">Test Tile Tracker <span className="text-xs font-sans font-medium inline-block translate-y-[-12px]"><em>beta</em></span></h1>
+              <h1 className="text-2xl font-display font-semibold text-brand-dark mb-2">Test Tile Tracker <span className="text-xs font-sans font-medium inline-block translate-y-[-12px]"><em>beta</em></span></h1>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-clay-900">
                 Make every glaze day a good day
               </h2>
@@ -199,7 +199,7 @@ export default async function HomePage() {
 
                   <dt>
                     {/* Step number */}
-                    <span className="inline-block text-sm font-medium text-brand">Step {index + 1}</span>
+                    <span className="inline-block text-sm font-medium text-brand-dark">Step {index + 1}</span>
                     {/* Heading */}
                     <div className="font-display text-2xl font-semibold text-clay-800">
                       {feature.name}
