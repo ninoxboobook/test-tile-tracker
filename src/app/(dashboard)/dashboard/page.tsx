@@ -83,7 +83,7 @@ export default async function DashboardPage() {
 
   return (
     <PageLayout
-      title={`${greeting}, ${firstName}!`}
+      title={`Welcome, ${firstName}!`}
       description="Here&rsquo;s an overview of your test tiles, collections, clay bodies, and decorations."
       variant="detail"
     >
