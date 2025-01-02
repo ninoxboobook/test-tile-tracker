@@ -22,12 +22,18 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://use.typekit.net/zmu6flc.css"></link>
+        <meta name="apple-mobile-web-app-title" content="Test Tile Tracker" />
+        <meta property="og:title" content="Test Tile Tracker" />
+        <meta property="og:site_name" content="Test Tile Tracker" />
+        <meta property="og:url" content="https://testtiletracker.com" />
+        <meta property="og:description" content="Build, organise and search your personal library of test tiles, decorations and clay." />
+        <meta property="og:type" content="website" />
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-CGNF8CNWSD"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
+              src="https://www.googletagmanager.com/gtag/js?id=G-CGNF8CNWSD"
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -35,14 +41,14 @@ export default async function RootLayout({
               'analytics_storage': 'denied'  // Default to denied until consent is given
             });
           `}
-        </Script>
-      </head>
-      <body className="bg-sand antialiased">
-        <SessionProvider session={session}>
-          {children}
-          <CookieConsentBanner />
-        </SessionProvider>
-      </body>
-    </html>
-  )
+            </Script>
+          </head>
+          <body className="bg-sand antialiased">
+            <SessionProvider session={session}>
+              {children}
+              <CookieConsentBanner />
+            </SessionProvider>
+          </body>
+        </html>
+        )
 }
