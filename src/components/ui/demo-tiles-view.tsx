@@ -37,8 +37,8 @@ export function DemoTilesView({ tiles }: DemoTilesViewProps) {
             onClick={() => setView('grid')}
             className={`rounded-sm px-3 py-1 inline-flex items-center gap-2 ${
               view === 'grid'
-                ? 'bg-clay-100 text-clay-700'
-                : 'text-clay-500 hover:text-clay-700'
+                ? 'bg-clay-100 text-clay-800'
+                : 'text-clay-700 hover:text-clay-700'
             }`}
             aria-label="Switch to grid view"
             aria-pressed={view === 'grid'}
@@ -50,8 +50,8 @@ export function DemoTilesView({ tiles }: DemoTilesViewProps) {
             onClick={() => setView('table')}
             className={`rounded-sm px-3 py-1 inline-flex items-center gap-2 ${
               view === 'table'
-                ? 'bg-clay-100 text-clay-700'
-                : 'text-clay-500 hover:text-clay-700'
+                ? 'bg-clay-100 text-clay-800'
+                : 'text-clay-700 hover:text-clay-700'
             }`}
             aria-label="Switch to table view"
             aria-pressed={view === 'table'}

@@ -16,8 +16,8 @@ export function Lozenge({ variant = 'neutral', className = '', ...props }: Lozen
   const baseClasses = 'inline-flex items-center justify-center rounded-full px-2 py-0.5 text-sm ring-1 ring-inset transition-colors'
 
   const variantClasses = {
-    'brand': 'bg-clay-50 text-brand ring-brand',
-    'brand-emphasis': 'bg-brand text-clay-50 ring-brand',
+    'brand': 'bg-clay-50 text-brand-dark ring-brand-dark',
+    'brand-emphasis': 'bg-brand-dark text-clay-50 ring-brand-dark',
     'positive': 'bg-emerald-50 text-emerald-700 ring-emerald-600/20',
     'positive-emphasis': 'bg-emerald-600 text-white ring-emerald-600',
     'negative': 'bg-red-50 text-red-700 ring-red-600/20',

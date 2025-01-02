@@ -31,6 +31,8 @@ module.exports = {
         },
         brand: {
           DEFAULT: '#C5705D',
+          dark: '#B35844',
+          // dark: '#AB5B49'
         }
       },
     },

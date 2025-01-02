@@ -30,11 +30,11 @@ export function Footer() {
       <div className="py-8 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* First Column - About */}
         <div>
-          <h2 className="text-xl font-display font-bold text-brand">Test Tile Tracker</h2>
+          <h2 className="text-xl font-display font-bold text-brand-dark">Test Tile Tracker</h2>
           <p className="text-clay-800 mt-1">
             Build, organise and search your personal library of test tiles, decorations and clay.
           </p>
-          <p className="text-sm text-clay-600 mt-6">© {new Date().getFullYear()} Test Tile Tracker</p>
+          <p className="text-sm text-clay-700 mt-6">© {new Date().getFullYear()} Test Tile Tracker</p>
         </div>
 
         {/* Other Columns */}
@@ -46,7 +46,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-brand underline hover:text-brand transition-colors"
+                    className="text-brand-dark underline hover:text-brand-dark transition-colors"
                   >
                     {link.name}
                   </Link>

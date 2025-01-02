@@ -51,12 +51,12 @@ export function Breadcrumbs({ title }: BreadcrumbsProps) {
   if (breadcrumbs.length === 0 && !mainRoutes.includes(pathname)) return null
 
   return (
-    <nav className="flex text-clay-500 mb-2" aria-label="Breadcrumb">
+    <nav className="flex text-clay-600 mb-2" aria-label="Breadcrumb">
       <ol role="list" className="flex items-center space-x-2">
         <li className="translate-y-[-2px]">
           <Link
             href="/"
-            className="text-clay-500 hover:text-clay-600"
+            className="text-clay-600 hover:text-clay-700"
           >
             {/* <HomeIcon className="h-4 w-4" aria-hidden="true" /> */}
             Home

@@ -18,7 +18,7 @@ export function DashboardCard({ title, count, href, description }: DashboardCard
         </div>
         </div>
         <div className="border-t border-clay-200 px-6 pt-4 pb-5">
-          <Link href={href} className="font-medium text-brand hover:text-clay-800">
+          <Link href={href} className="font-medium text-brand-dark hover:text-clay-800">
             {description}
             <span className="sr-only"> {title}</span>
           </Link>

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { Modal } from '@/components/ui/modal'
+import { baseButtonStyles, buttonSizes, buttonVariants } from '@/components/ui/buttons/action-button'
 
 interface DeleteButtonProps {
   onDelete: () => Promise<void>
@@ -44,7 +45,7 @@ export function DeleteButton({ onDelete, itemName }: DeleteButtonProps) {
         title={`Delete ${itemName}`}
       >
         <div className="mt-2">
-          <p className="text-base text-clay-500">
+          <p className="text-base text-clay-800">
             Are you sure you want to delete this {itemName.toLowerCase()}? This action cannot be undone.
           </p>
         </div>
@@ -52,14 +53,14 @@ export function DeleteButton({ onDelete, itemName }: DeleteButtonProps) {
         <div className="mt-4 flex justify-end space-x-3">
           <button
             type="button"
-            className="inline-flex justify-center rounded-md border border-clay-300 bg-white px-4 py-2 text-base font-medium text-clay-700 hover:bg-clay-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-clay-500 focus-visible:ring-offset-2"
+            className= {baseButtonStyles + " " + buttonSizes.default + " " + buttonVariants.secondary }
             onClick={() => setIsOpen(false)}
           >
             Cancel
           </button>
           <button
             type="button"
-            className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+            className= {baseButtonStyles + " " + buttonSizes.default + " " + buttonVariants.danger }
             onClick={handleDelete}
             disabled={isDeleting}
           >
