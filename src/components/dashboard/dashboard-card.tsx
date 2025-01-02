@@ -11,7 +11,7 @@ export function DashboardCard({ title, count, href, description }: DashboardCard
   return (
     <div className="rounded-2xl bg-sand-light">
         <div className="flex items-center gap-4 px-6 pt-6 pb-5">
-        <div className="rounded-md bg-clay-500 h-12 w-12"></div>
+        {/* <div className="rounded-md bg-clay-500 h-12 w-12"></div> */}
         <div>
         <h3 className="font-medium text-clay-700 text-sm">{title}</h3>
         <p className="text-2xl font-semibold text-clay-900">{count}</p>
