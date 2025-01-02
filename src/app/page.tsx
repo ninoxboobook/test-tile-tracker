@@ -66,7 +66,7 @@ export default async function HomePage() {
             <div className="mx-auto p-10 lg:p-16 col-span-1 order-2 md:order-1">
               <h1 className="text-2xl font-display font-semibold text-brand-dark mb-2">Test Tile Tracker <span className="text-xs font-sans font-medium inline-block translate-y-[-12px]"><em>beta</em></span></h1>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-clay-900">
-                Make every glaze day a good day
+                Make every glaze day a great day
               </h2>
               <p className="mt-4 md:mt-6 lg:mt-8 pr-4 text-lg lg:text-xl text-clay-700">
                 Document and organise your test tiles, decorations and clay bodies. Keep track of your experiments, build your personal library, and access it anywhere, anytime.
