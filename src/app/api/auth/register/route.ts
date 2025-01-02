@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { registerSchema } from '@/lib/schemas/auth'
+import { sendWelcomeEmail } from '@/lib/email-templates'
 
 export async function POST(req: Request) {
   try {
@@ -48,6 +49,8 @@ export async function POST(req: Request) {
         username: true,
       }
     })
+
+    await sendWelcomeEmail(user.email, user.username);
 
     return NextResponse.json(
       { message: 'Registration successful', user },

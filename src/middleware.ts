@@ -20,13 +20,15 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname === '/' ||
     request.nextUrl.pathname.startsWith('/privacy-policy') ||
     request.nextUrl.pathname.startsWith('/terms-of-service') ||
-    request.nextUrl.pathname.startsWith('/account-deleted')
+    request.nextUrl.pathname.startsWith('/account-deleted') ||
+    request.nextUrl.pathname.startsWith('/reset-password')
   ) {
-    // Redirect to dashboard if already authenticated
+    // Redirect to dashboard if already authenticated (except for specific pages)
     if (token && 
         !request.nextUrl.pathname.startsWith('/privacy-policy') && 
         !request.nextUrl.pathname.startsWith('/terms-of-service') &&
-        !request.nextUrl.pathname.startsWith('/account-deleted')
+        !request.nextUrl.pathname.startsWith('/account-deleted') &&
+        !request.nextUrl.pathname.startsWith('/reset-password')
     ) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
