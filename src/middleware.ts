@@ -23,7 +23,8 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/account-deleted') ||
     request.nextUrl.pathname.startsWith('/reset-password') ||
     request.nextUrl.pathname.includes('web-app-manifest-192x192.png') ||
-    request.nextUrl.pathname.includes('web-app-manifest-512x512.png')
+    request.nextUrl.pathname.includes('web-app-manifest-512x512.png') ||
+    request.nextUrl.pathname.includes('apple-icon.png')
   ) {
     // Redirect to dashboard if already authenticated (except for specific pages)
     if (token && 
@@ -32,7 +33,8 @@ export async function middleware(request: NextRequest) {
         !request.nextUrl.pathname.startsWith('/account-deleted') &&
         !request.nextUrl.pathname.startsWith('/reset-password') &&
         !request.nextUrl.pathname.includes('web-app-manifest-192x192.png') &&
-        !request.nextUrl.pathname.includes('web-app-manifest-512x512.png')
+        !request.nextUrl.pathname.includes('web-app-manifest-512x512.png') &&
+        !request.nextUrl.pathname.includes('apple-icon.png')
     ) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
