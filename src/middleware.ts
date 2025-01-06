@@ -21,14 +21,18 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/privacy-policy') ||
     request.nextUrl.pathname.startsWith('/terms-of-service') ||
     request.nextUrl.pathname.startsWith('/account-deleted') ||
-    request.nextUrl.pathname.startsWith('/reset-password')
+    request.nextUrl.pathname.startsWith('/reset-password') ||
+    request.nextUrl.pathname.includes('web-app-manifest-192x192.png') ||
+    request.nextUrl.pathname.includes('web-app-manifest-512x512.png')
   ) {
     // Redirect to dashboard if already authenticated (except for specific pages)
     if (token && 
         !request.nextUrl.pathname.startsWith('/privacy-policy') && 
         !request.nextUrl.pathname.startsWith('/terms-of-service') &&
         !request.nextUrl.pathname.startsWith('/account-deleted') &&
-        !request.nextUrl.pathname.startsWith('/reset-password')
+        !request.nextUrl.pathname.startsWith('/reset-password') &&
+        !request.nextUrl.pathname.includes('web-app-manifest-192x192.png') &&
+        !request.nextUrl.pathname.includes('web-app-manifest-512x512.png')
     ) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
