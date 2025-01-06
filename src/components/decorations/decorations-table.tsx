@@ -34,7 +34,7 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
                   alt=""
                   height={56}
                   width={56}
-                  className="rounded-md object-cover"
+                  className="rounded-md object-cover h-14"
                 />
               ) : (
                 <div className="h-full w-full rounded-md bg-sand border border-clay-200" />
