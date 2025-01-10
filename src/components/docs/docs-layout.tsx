@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { PageLayout } from '@/components/ui/layout/page-layout'
@@ -62,20 +62,40 @@ const sections: Section[] = [
   }
 ]
 
-function NavLink({ section, level = 0 }: { section: Section; level?: number }) {
-  const pathname = usePathname()
-  const currentSection = pathname.split('#')[1]
-  const isActive = currentSection === section.id
+function NavLink({ section, level = 0, activeSection, containerRef }: { 
+  section: Section
+  level?: number
+  activeSection: string
+  containerRef: React.RefObject<HTMLDivElement>
+}) {
+  const isActive = activeSection === section.id
+  const linkRef = useRef<HTMLAnchorElement>(null)
+
+  // Scroll active link into view when it changes
+  useEffect(() => {
+    if (isActive && linkRef.current && containerRef.current) {
+      const container = containerRef.current
+      const link = linkRef.current
+      const containerRect = container.getBoundingClientRect()
+      const linkRect = link.getBoundingClientRect()
+
+      // Check if link is outside the visible area
+      if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
+        link.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+  }, [isActive])
 
   return (
     <li>
       <Link
-        href={`/docs#${section.id}`}
+        ref={linkRef}
+        href={`#${section.id}`}
         className={`
-          block font-medium py-2
+          block py-2 font-medium transition-colors duration-200
           ${level > 0 ? `pl-${level * 4}` : ''}
           ${isActive 
-            ? 'text-brand' 
+            ? 'text-brand underline' 
             : 'text-clay-700 hover:text-brand'
           }
         `}
@@ -88,7 +108,9 @@ function NavLink({ section, level = 0 }: { section: Section; level?: number }) {
             <NavLink 
               key={subsection.id} 
               section={subsection} 
-              level={level + 1} 
+              level={level + 1}
+              activeSection={activeSection}
+              containerRef={containerRef}
             />
           ))}
         </ul>
@@ -103,24 +125,38 @@ interface DocsLayoutProps {
 
 export function DocsLayout({ children }: DocsLayoutProps) {
   const [activeSection, setActiveSection] = useState('')
+  const navContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
             setActiveSection(entry.target.id)
           }
         })
       },
-      { threshold: 0.5 }
+      {
+        rootMargin: '-20% 0px -35% 0px', // Adjust these values to change when sections become active
+        threshold: [0.5]
+      }
     )
 
-    document.querySelectorAll('h1[id], h2[id], h3[id]').forEach((heading) => {
-      observer.observe(heading)
-    })
+    // Observe all section headings
+    const headings = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id]')
+    headings.forEach((heading) => observer.observe(heading))
 
-    return () => observer.disconnect()
+    return () => {
+      headings.forEach((heading) => observer.unobserve(heading))
+    }
+  }, [])
+
+  // Handle initial section on page load
+  useEffect(() => {
+    const hash = window.location.hash.slice(1)
+    if (hash) {
+      setActiveSection(hash)
+    }
   }, [])
 
   return (
@@ -132,11 +168,19 @@ export function DocsLayout({ children }: DocsLayoutProps) {
       <div className="grid grid-cols-12 gap-8">
         {/* Sidebar Navigation */}
         <div className="col-span-3">
-          <div className="sticky top-8 bg-sand border border-clay-300 rounded-2xl py-4 px-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div 
+            ref={navContainerRef}
+            className="sticky top-8 bg-sand border border-clay-300 rounded-2xl p-6 max-h-[calc(100vh-8rem)] overflow-y-auto scroll-smooth"
+          >
             <nav aria-label="Documentation">
               <ul className="space-y-1">
                 {sections.map((section) => (
-                  <NavLink key={section.id} section={section} />
+                  <NavLink 
+                    key={section.id} 
+                    section={section}
+                    activeSection={activeSection}
+                    containerRef={navContainerRef}
+                  />
                 ))}
               </ul>
             </nav>
@@ -145,7 +189,7 @@ export function DocsLayout({ children }: DocsLayoutProps) {
 
         {/* Main Content */}
         <div className="col-span-9">
-          <div className="bg-sand-light rounded-2xl py-14 px-16 prose prose-clay max-w-none">
+          <div className="bg-sand-light rounded-2xl p-8 prose prose-clay max-w-none">
             {children}
           </div>
         </div>
