@@ -8,6 +8,11 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   })
 
+  // Allow access to docs regardless of auth status
+  if (request.nextUrl.pathname.startsWith('/docs')) {
+    return NextResponse.next()
+  }
+
   // Allow access to images regardless of auth status
   if (request.nextUrl.pathname.startsWith('/images')) {
     return NextResponse.next()
