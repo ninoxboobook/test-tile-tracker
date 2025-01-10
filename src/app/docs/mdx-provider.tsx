@@ -25,6 +25,12 @@ const components = {
   li: (props: PropsWithChildren) => (
     <li {...props} className="text-lg mb-2 max-w-prose leading-snug" />
   ),
+  a: (props: PropsWithChildren) => (
+    <a {...props} className="text-brand underline hover:text-clay-700" />
+  ),
+  hr: () => (
+    <hr className="mt-12 mb-6 border-t border-clay-300" />
+  ),
 }
 
 export function MDXProviderWrapper({ children }: PropsWithChildren) {
