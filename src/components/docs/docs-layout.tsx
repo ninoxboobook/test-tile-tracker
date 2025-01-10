@@ -24,7 +24,7 @@ const sections: Section[] = [
   },
   {
     title: 'Using Test Tile Tracker',
-    id: 'guide',
+    id: 'using-test-tile-tracker',
     subsections: [
       { 
         title: 'Getting started', 
@@ -45,19 +45,19 @@ const sections: Section[] = [
           { title: 'Advanced', id: 'advanced' },
         ]
       },
-      { title: 'Clay bodies: your foundation library', id: 'clay-bodies-your-foundation-library' },
-      { title: 'Decorations: building your surface treatment library', id: 'decorations-building-your-surface-treatment-library' },
-      { title: 'Test tiles: bringing it all together', id: 'test-tiles-bringing-it-all-together' },
-      { title: 'Collections: organising your experiments', id: 'collections-organising-your-experiments' },
+      { title: 'Clay bodies: your foundation library', id: 'clay-bodies' },
+      { title: 'Decorations: building your surface treatment library', id: 'decorations' },
+      { title: 'Test tiles: bringing it all together', id: 'test-tiles' },
+      { title: 'Collections: organising your experiments', id: 'collections' },
     ]
   },
   {
     title: 'Getting the most out of your library',
     id: 'getting-the-most-out-of-your-library',
     subsections: [
-      { title: 'Sort, filter and search', id: 'sort-filter-and-search' },
-      { title: 'Table and grid view', id: 'table-and-grid-view' },
-      { title: 'Showing and hiding columns', id: 'showing-and-hiding-columns' },
+      { title: 'Sort, filter and search', id: 'sort-filter-search' },
+      { title: 'Table and grid view', id: 'table-grid-view' },
+      { title: 'Showing and hiding columns', id: 'showing-hiding-columns' },
     ]
   }
 ]

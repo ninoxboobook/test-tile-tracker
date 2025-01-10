@@ -1,5 +1,16 @@
+const { remarkHeadingId } = require('remark-custom-heading-id')
+
+const withMDX = require('@next/mdx')({
+  options: {
+    remarkPlugins: [[remarkHeadingId]],
+    rehypePlugins: [],
+    providerImportSource: "@mdx-js/react",
+  },
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
       {
@@ -19,4 +30,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withMDX(nextConfig)

@@ -1,10 +1,15 @@
+'use client'
+
 import { DocsLayout } from '@/components/docs/docs-layout'
-import { DocsContent } from '@/components/docs/docs-content'
+import Content from './content.mdx'
+import { MDXProviderWrapper } from './mdx-provider'
 
 export default function DocsPage() {
   return (
     <DocsLayout>
-      <DocsContent />
+      <MDXProviderWrapper>
+        <Content />
+      </MDXProviderWrapper>
     </DocsLayout>
   )
 } 
