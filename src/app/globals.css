@@ -1,3 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add documentation styles */
+@layer components {
+  .docs-content {
+    @apply text-clay-900;
+  }
+
+
+  h2#about {
+    @apply mt-0;
+  }
+
+  .docs-content h2 {
+    @apply text-3xl font-display font-semibold text-clay-600 mt-12 mb-4;
+  }
+
+  .docs-content h3 {
+    @apply text-2xl font-display font-semibold text-clay-700 mt-8 mb-3;
+  }
+
+  .docs-content h4 {
+    @apply text-xl font-display font-semibold text-clay-800 mt-6 mb-2;
+  }
+
+  .docs-content p {
+    @apply text-lg mb-4 leading-relaxed max-w-prose;
+  }
+
+  .docs-content ul,
+  .docs-content ol {
+    @apply mt-5 mb-6 ml-4 pl-6;
+  }
+
+  .docs-content ul {
+    @apply list-disc;
+  }
+
+  .docs-content ol {
+    @apply list-decimal;
+  }
+
+  .docs-content li {
+    @apply text-lg mb-2 max-w-prose leading-snug;
+  }
+
+  .docs-content a {
+    @apply text-brand hover:text-brand-dark underline;
+  }
+
+  /* Add smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+}

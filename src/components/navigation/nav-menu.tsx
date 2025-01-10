@@ -2,7 +2,7 @@
 
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -84,6 +84,13 @@ export function DashboardNav({ user }: { user: any }) {
                 )}
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                <Link
+                  href="/docs"
+                  className="mr-4 p-2 text-clay-800 hover:text-brand rounded-full hover:bg-sand-light"
+                  aria-label="Documentation"
+                >
+                  <QuestionMarkCircleIcon className="h-6 w-6" />
+                </Link>
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-base focus:outline-none focus:ring-2 focus:ring-clay-500 focus:ring-offset-2">
