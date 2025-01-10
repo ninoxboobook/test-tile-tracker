@@ -168,28 +168,36 @@ export function DocsLayout({ children }: DocsLayoutProps) {
       <div className="grid grid-cols-12 gap-8">
         {/* Sidebar Navigation */}
         <div className="col-span-3">
-          <div 
-            ref={navContainerRef}
-            className="sticky top-8 bg-sand border border-clay-300 rounded-2xl p-6 max-h-[calc(100vh-8rem)] overflow-y-auto scroll-smooth"
-          >
-            <nav aria-label="Documentation">
-              <ul className="space-y-1">
-                {sections.map((section) => (
-                  <NavLink 
-                    key={section.id} 
-                    section={section}
-                    activeSection={activeSection}
-                    containerRef={navContainerRef}
-                  />
-                ))}
-              </ul>
-            </nav>
+          <div className="sticky top-8 bg-sand border border-clay-300 rounded-2xl overflow-hidden">
+            {/* Gradient overlays */}
+            <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-sand to-transparent z-10" />
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-sand to-transparent z-10" />
+            
+            {/* Scrollable content */}
+            <div 
+              ref={navContainerRef}
+              className="relative max-h-[calc(100vh-4rem)] overflow-y-auto scroll-smooth py-4 px-6"
+            >
+				<h2 className="uppercase text-clay-500 font-medium mt-2 mb-4">Contents</h2>
+              <nav aria-label="Documentation">
+                <ul className="space-y-1">
+                  {sections.map((section) => (
+                    <NavLink 
+                      key={section.id} 
+                      section={section}
+                      activeSection={activeSection}
+                      containerRef={navContainerRef}
+                    />
+                  ))}
+                </ul>
+              </nav>
+            </div>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="col-span-9">
-          <div className="bg-sand-light rounded-2xl p-8 prose prose-clay max-w-none">
+          <div className="bg-sand-light rounded-2xl py-14 px-16 prose prose-clay max-w-none">
             {children}
           </div>
         </div>
