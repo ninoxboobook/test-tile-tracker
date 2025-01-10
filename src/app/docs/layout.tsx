@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { DashboardNav } from '@/components/navigation/nav-menu'
 import { Footer } from '@/components/navigation/footer'
 import { prisma } from '@/lib/prisma'
+import { UnauthNav } from '@/components/navigation/unauth-nav-menu'
 
 export default async function DocsLayout({
   children,
@@ -31,7 +32,7 @@ export default async function DocsLayout({
 
   return (
     <div className="min-h-full px-4 sm:px-6">
-      <DashboardNav user={user} />
+      {user ? <DashboardNav user={user} /> : <UnauthNav />}
       <div className="py-6">
         {children}
       </div>
