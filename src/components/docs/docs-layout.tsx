@@ -8,6 +8,7 @@ import { PageLayout } from '@/components/ui/layout/page-layout'
 interface Section {
 	title: string
 	id: string
+	defaultCollapsed?: boolean
 	subsections?: Section[]
 }
 
@@ -15,6 +16,7 @@ const sections: Section[] = [
 	{
 		title: 'About',
 		id: 'about',
+		defaultCollapsed: true,
 		subsections: [
 			{ title: 'Changelog', id: 'changelog' },
 			{ title: 'Roadmap and suggestions', id: 'roadmap-and-suggestions' },
@@ -63,8 +65,21 @@ function NavLink({ section, level = 0, activeSection, containerRef }: {
 }) {
 	const isActive = activeSection === section.id
 	const linkRef = useRef<HTMLAnchorElement>(null)
+	const [isCollapsed, setIsCollapsed] = useState(section.defaultCollapsed || false)
 
-	// Scroll active link into view when it changes
+	useEffect(() => {
+		if (section.subsections) {
+			const isChildActive = section.subsections.some(subsection => subsection.id === activeSection)
+			
+			if (isChildActive) {
+				setIsCollapsed(false)
+			} else if (section.defaultCollapsed) {
+				setIsCollapsed(true)
+			}
+		}
+	}, [activeSection, section.subsections, section.defaultCollapsed])
+
+	// Scroll active link into view
 	useEffect(() => {
 		if (isActive && linkRef.current && containerRef.current) {
 			const container = containerRef.current
@@ -72,9 +87,8 @@ function NavLink({ section, level = 0, activeSection, containerRef }: {
 			const containerRect = container.getBoundingClientRect()
 			const linkRect = link.getBoundingClientRect()
 
-			// Check if link is outside the visible area
 			if (linkRect.top < containerRect.top || linkRect.bottom > containerRect.bottom) {
-				link.scrollIntoView({ behavior: 'smooth', block: 'center' })
+				link.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 			}
 		}
 	}, [isActive])
@@ -85,28 +99,33 @@ function NavLink({ section, level = 0, activeSection, containerRef }: {
 				ref={linkRef}
 				href={`#${section.id}`}
 				className={`
-          block py-2 font-medium transition-colors duration-200
-          ${level > 0 ? `pl-${level * 4}` : ''}
-          ${isActive
+					block py-2 font-medium transition-colors duration-200
+					${level > 0 ? `pl-${level * 4}` : ''}
+					${isActive
 						? 'text-brand underline'
 						: 'text-clay-700 hover:text-brand'
 					}
-        `}
+				`}
 			>
 				{section.title}
 			</Link>
 			{section.subsections && (
-				<ul className="ml-4">
-					{section.subsections.map((subsection) => (
-						<NavLink
-							key={subsection.id}
-							section={subsection}
-							level={level + 1}
-							activeSection={activeSection}
-							containerRef={containerRef}
-						/>
-					))}
-				</ul>
+				<div className={`
+					overflow-hidden transition-all duration-500 ease-in-out
+					${isCollapsed ? 'max-h-0' : 'max-h-[500px]'}
+				`}>
+					<ul className="ml-4">
+						{section.subsections.map((subsection) => (
+							<NavLink
+								key={subsection.id}
+								section={subsection}
+								level={level + 1}
+								activeSection={activeSection}
+								containerRef={containerRef}
+							/>
+						))}
+					</ul>
+				</div>
 			)}
 		</li>
 	)
