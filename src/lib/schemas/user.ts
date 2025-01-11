@@ -7,6 +7,7 @@ export const userSchema = z.object({
   firstName: z.string().optional().nullable(),
   lastName: z.string().optional().nullable(),
   imageUrl: z.union([z.string().url('Invalid URL format'), z.string().length(0)]).optional().nullable(),
+  isPublic: z.boolean().optional(),
 })
 
 export const profileUpdateSchema = z
@@ -16,6 +17,7 @@ export const profileUpdateSchema = z
     firstName: z.string().optional().nullable(),
     lastName: z.string().optional().nullable(),
     imageUrl: z.string().optional().nullable(),
+    isPublic: z.boolean().optional(),
     currentPassword: z.string().optional().nullable(),
     newPassword: z.string().optional().nullable()
       .refine((val) => !val || val.length >= 6, {
