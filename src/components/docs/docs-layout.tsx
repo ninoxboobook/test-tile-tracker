@@ -308,7 +308,7 @@ export function DocsLayout({ children }: DocsLayoutProps) {
 
 				{/* Main Content */}
 				<div className="col-span-12 lg:col-span-9">
-					<div className="bg-sand-light rounded-2xl py-14 px-16 prose prose-clay max-w-none">
+					<div className="bg-sand-light rounded-2xl p-8 md:py-14 md:px-16 prose prose-clay max-w-none">
 						{children}
 					</div>
 				</div>
