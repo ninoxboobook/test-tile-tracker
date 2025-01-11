@@ -161,8 +161,8 @@ export function DataViewToolbar<TData>({
       </div>
 
       <div className="flex items-center space-x-2 w-full md:w-auto justify-between md:justify-start">
-        <ViewToggle view={view} onChange={onViewChange} />
         {table && <DataTableColumnOptions table={table} />}
+        <ViewToggle view={view} onChange={onViewChange} />
       </div>
     </div>
   )

@@ -17,7 +17,7 @@ export function DataTableColumnOptions<TData>({
         Columns
         <ChevronDownIcon className="h-4 w-4 pt-[1px]" aria-hidden="true" />
       </Popover.Button>
-      <Popover.Panel className="absolute right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+      <Popover.Panel className="absolute z-10 right-0 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
         <div className="p-2">
           <div className="space-y-2">
             {table
