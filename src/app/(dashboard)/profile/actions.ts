@@ -23,6 +23,7 @@ export async function getUserProfile() {
       firstName: true,
       lastName: true,
       imageUrl: true,
+      isPublic: true,
     },
   })
 
@@ -42,7 +43,10 @@ export async function updateProfile(formData: FormData) {
   const currentPassword = formData.get('currentPassword') as string
   const newPassword = formData.get('newPassword') as string
   const imageUrl = formData.get('imageUrl') as string
-  const isPublic = formData.get('isPublic') === 'true'
+  const isPublicRaw = formData.get('isPublic')
+  console.log('Raw isPublic value:', isPublicRaw)
+  const isPublic = isPublicRaw === 'true'
+  console.log('Processed isPublic value:', isPublic)
 
   const updateData: any = {
     email,

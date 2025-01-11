@@ -24,6 +24,7 @@ export default async function ProfilePage() {
     firstName: user.firstName || undefined,
     lastName: user.lastName || undefined,
     imageUrl: user.imageUrl || undefined,
+    isPublic: user.isPublic,
   }
 
   return (
