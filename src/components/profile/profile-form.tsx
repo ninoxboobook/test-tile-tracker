@@ -21,6 +21,10 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [imageUrl, setImageUrl] = useState(initialData?.imageUrl)
+  const [initialPublicTestTiles, setInitialPublicTestTiles] = useState(initialData?.publicTestTiles)
+  const [initialPublicCollections, setInitialPublicCollections] = useState(initialData?.publicCollections)
+  const [initialPublicDecorations, setInitialPublicDecorations] = useState(initialData?.publicDecorations)
+  const [initialPublicClayBodies, setInitialPublicClayBodies] = useState(initialData?.publicClayBodies)
 
   const {
     register,
@@ -43,6 +47,23 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
     try {
       setIsSubmitting(true)
       setMessage(null)
+
+      if (initialPublicTestTiles !== data.publicTestTiles) {
+        console.log('test tiles visibility changed!', data.publicTestTiles)
+      }
+
+      if (initialPublicCollections !== data.publicCollections) {
+        console.log('collections visibility changed!', data.publicCollections)
+      }
+
+      if (initialPublicDecorations !== data.publicDecorations) {
+        console.log('decorations visibility changed!', data.publicDecorations)
+      }
+
+      if (initialPublicClayBodies !== data.publicClayBodies) {
+        console.log('clay bodies visibility changed!', data.publicClayBodies)
+      }
+
       const formData = new FormData()
 
       Object.entries(data).forEach(([key, value]) => {
@@ -51,18 +72,15 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         }
       })
 
-      // Add the image URL if it exists
       if (imageUrl) {
         formData.append('imageUrl', imageUrl)
       }
 
       await updateProfile(formData)
-
-      // Only trigger test tiles server action if publicTestTiles was actually changed
-      if (dirtyFields.publicTestTiles) {
-        console.log('test')
-      }
-
+      setInitialPublicTestTiles(data.publicTestTiles)
+      setInitialPublicCollections(data.publicCollections)
+      setInitialPublicDecorations(data.publicDecorations)
+      setInitialPublicClayBodies(data.publicClayBodies)
       setMessage({ type: 'success', text: 'Profile updated successfully' })
     } catch (error) {
       setMessage({
@@ -75,9 +93,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   }
 
   const handleFormSubmit = async (formData: FormData) => {
-    // Extract form data and convert to object
     const formDataObj = Object.fromEntries(formData.entries())
-    // Call react-hook-form's handleSubmit with the form data
     await handleSubmit(onSubmit)(formDataObj as any)
   }
 
