@@ -38,6 +38,7 @@ model Collection {
   name        String                 @db.VarChar(255)
   description String?
   userId      String                 @db.Uuid
+  isPublic    Boolean                @default(false)
   createdAt   DateTime               @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime               @updatedAt @db.Timestamptz(6)
   user        User                 @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -67,6 +68,7 @@ model ClayBody {
   meshSize          Int?                 @db.Integer
   imageUrl          String[]             @default([])
   notes             String?              @db.Text
+  isPublic          Boolean              @default(false)
   userId            String               @db.Uuid
   createdAt         DateTime             @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime             @updatedAt @db.Timestamptz(6)
@@ -93,6 +95,7 @@ model Decoration {
   imageUrl          String[]                  @default([])
   recipe            String?                   @db.Text
   notes             String?                   @db.Text
+  isPublic          Boolean                   @default(false)
   userId            String                    @db.Uuid
   createdAt         DateTime                  @default(now()) @db.Timestamptz(6)
   updatedAt         DateTime                  @updatedAt @db.Timestamptz(6)
@@ -111,6 +114,7 @@ model TestTile {
   imageUrl         String[]          @default([])
   createdAt        DateTime          @default(now()) @db.Timestamptz(6)
   updatedAt        DateTime          @updatedAt @db.Timestamptz(6)
+  isPublic         Boolean           @default(false)
   userId           String            @db.Uuid
   clayBodyId       String            @db.Uuid
   coneId           String            @db.Uuid

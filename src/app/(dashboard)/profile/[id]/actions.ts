@@ -7,10 +7,6 @@ import { redirect } from 'next/navigation'
 
 export async function getUserProfileById(id: string) {
   const session = await getServerSession(authOptions)
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
-
   const user = await prisma.user.findUnique({
     where: { id },
     select: {
@@ -20,6 +16,7 @@ export async function getUserProfileById(id: string) {
       firstName: true,
       lastName: true,
       imageUrl: true,
+      isPublic: true,
       testTiles: {
         select: {
           id: true,
@@ -54,5 +51,18 @@ export async function getUserProfileById(id: string) {
     redirect('/404')
   }
 
-  return user
+  if (user?.isPublic) {
+    console.log('Public user:', user)
+    return user
+  } else {
+    if (!session?.user?.id) {
+      redirect('/login')
+    } else if (session?.user.id === user.id) {
+      return user
+    } else if (session?.user.role === 'ADMIN') {
+      return user
+    } else {
+      redirect('/dashboard')
+    }
+  }
 }

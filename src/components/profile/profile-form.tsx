@@ -11,6 +11,7 @@ import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
 import { ProfileImage } from '@/components/profile/profile-image'
 import Link from 'next/link'
+import { Switch } from '@headlessui/react'
 
 interface ProfileFormProps {
   initialData?: Partial<ProfileUpdateFormData>
@@ -26,10 +27,13 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
     formState: { errors, dirtyFields },
     handleSubmit,
     setValue,
+    watch,
   } = useForm<ProfileUpdateFormData>({
     resolver: zodResolver(profileUpdateSchema),
     defaultValues: initialData,
   })
+
+  const isPublic = watch('isPublic')
 
   const onSubmit = async (data: ProfileUpdateFormData) => {
     try {
@@ -38,8 +42,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       const formData = new FormData()
 
       Object.entries(data).forEach(([key, value]) => {
-        if (value) {
-          formData.append(key, value)
+        if (value !== null && value !== undefined) {
+          formData.append(key, value.toString())
         }
       })
 
@@ -47,6 +51,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       if (imageUrl) {
         formData.append('imageUrl', imageUrl)
       }
+
+      console.log('Form data values:', Object.fromEntries(formData.entries()))
 
       await updateProfile(formData)
       setMessage({ type: 'success', text: 'Profile updated successfully' })
@@ -115,6 +121,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         <div className="col-span-12 md:col-span-8 bg-sand-light rounded-2xl p-8">
           <div className="space-y-6 pb-12">
             <h3 className="text-xl font-semibold mb-4 text-clay-800">Your details</h3>
+
             <FormField
               label="Username"
               name="username"
@@ -148,6 +155,28 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               error={errors.email}
               placeholder="Enter your email"
             />
+          </div>
+
+          <div className="border-t pt-10 space-y-6 pb-12">
+            <h3 className="text-xl font-semibold  mb-4 text-clay-800">Privacy and visibility</h3>
+            <div className="flex items-center justify-between p-4 border border-solid border-clay-300 rounded-md">
+              <div>
+                <h4 className="font-medium text-clay-800">Make profile public</h4>
+                <p className="text-sm text-clay-600 mb-[2px]">Your profile will be visible to all Test Tile Tracker visitors</p>
+              </div>
+              <Switch
+                checked={isPublic ?? false}
+                onChange={(checked) => setValue('isPublic', checked)}
+                className={`${isPublic ? 'bg-brand' : 'bg-clay-300'
+                  } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
+              >
+                <span className="sr-only">Enable public profile</span>
+                <span
+                  className={`${isPublic ? 'translate-x-6' : 'translate-x-1'
+                    } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                />
+              </Switch>
+            </div>
           </div>
 
           <div className="border-t pt-10 space-y-6 pb-12">
