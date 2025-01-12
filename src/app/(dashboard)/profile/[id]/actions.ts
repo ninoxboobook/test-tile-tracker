@@ -59,6 +59,8 @@ export async function getUserProfileById(id: string) {
       redirect('/login')
     } else if (session?.user.id === user.id) {
       return user
+    } else if (session?.user.role === 'ADMIN') {
+      return user
     } else {
       redirect('/dashboard')
     }
