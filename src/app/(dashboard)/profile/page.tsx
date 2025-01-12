@@ -25,6 +25,10 @@ export default async function ProfilePage() {
     lastName: user.lastName || undefined,
     imageUrl: user.imageUrl || undefined,
     isPublic: user.isPublic,
+    publicTestTiles: user.publicTestTiles,
+    publicCollections: user.publicCollections,
+    publicDecorations: user.publicDecorations,
+    publicClayBodies: user.publicClayBodies,
   }
 
   return (

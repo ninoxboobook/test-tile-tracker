@@ -24,6 +24,10 @@ export async function getUserProfile() {
       lastName: true,
       imageUrl: true,
       isPublic: true,
+      publicTestTiles: true,
+      publicCollections: true,
+      publicDecorations: true,
+      publicClayBodies: true,
     },
   })
 
@@ -44,9 +48,15 @@ export async function updateProfile(formData: FormData) {
   const newPassword = formData.get('newPassword') as string
   const imageUrl = formData.get('imageUrl') as string
   const isPublicRaw = formData.get('isPublic')
-  console.log('Raw isPublic value:', isPublicRaw)
   const isPublic = isPublicRaw === 'true'
-  console.log('Processed isPublic value:', isPublic)
+  const publicTestTilesRaw = formData.get('publicTestTiles')
+  const publicTestTiles = publicTestTilesRaw === 'true'
+  const publicCollectionsRaw = formData.get('publicCollections')
+  const publicCollections = publicCollectionsRaw === 'true'
+  const publicDecorationsRaw = formData.get('publicDecorations')
+  const publicDecorations = publicDecorationsRaw === 'true'
+  const publicClayBodiesRaw = formData.get('publicClayBodies')
+  const publicClayBodies = publicClayBodiesRaw === 'true'
 
   const updateData: any = {
     email,
@@ -55,6 +65,10 @@ export async function updateProfile(formData: FormData) {
     lastName: lastName || null,
     imageUrl: imageUrl || null,
     isPublic,
+    publicTestTiles,
+    publicCollections,
+    publicDecorations,
+    publicClayBodies,
   }
 
   if (currentPassword && newPassword) {
