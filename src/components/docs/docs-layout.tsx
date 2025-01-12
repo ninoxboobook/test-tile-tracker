@@ -54,6 +54,7 @@ const sections: Section[] = [
 			{ title: 'Sort, filter and search', id: 'sort-filter-search' },
 			{ title: 'Table and grid view', id: 'table-grid-view' },
 			{ title: 'Showing and hiding columns', id: 'showing-hiding-columns' },
+			{ title: 'Adding Test Tile Tracker to your mobile device', id: 'mobile-home-screen' },
 		]
 	}
 ]
