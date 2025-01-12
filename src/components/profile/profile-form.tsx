@@ -162,12 +162,12 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             <div className="flex items-center justify-between p-4 border border-solid border-clay-300 rounded-md">
               <div>
                 <h4 className="font-medium text-clay-800">Make profile public</h4>
-                <p className="text-sm text-clay-700 mb-[2px]">Your profile will be visible to other users</p>
+                <p className="text-sm text-clay-600 mb-[2px]">Your profile will be visible to all Test Tile Tracker visitors</p>
               </div>
               <Switch
                 checked={isPublic ?? false}
                 onChange={(checked) => setValue('isPublic', checked)}
-                className={`${isPublic ? 'bg-brand' : 'bg-clay-400'
+                className={`${isPublic ? 'bg-brand' : 'bg-clay-300'
                   } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
               >
                 <span className="sr-only">Enable public profile</span>

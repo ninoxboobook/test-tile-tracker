@@ -7,11 +7,18 @@ export async function middleware(request: NextRequest) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   })
+  const headers = new Headers(request.headers);
 
   // Allow access to docs regardless of auth status
   if (request.nextUrl.pathname.startsWith('/docs')) {
     return NextResponse.next()
   }
+
+    // Allow access to public profile regardless of auth status
+    if (request.nextUrl.pathname.startsWith('/profile/')) {
+      headers.set("x-current-path", request.nextUrl.pathname);
+      return NextResponse.next({headers})
+    }
 
   // Allow access to images regardless of auth status
   if (request.nextUrl.pathname.startsWith('/images')) {
