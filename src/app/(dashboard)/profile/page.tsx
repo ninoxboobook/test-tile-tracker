@@ -32,9 +32,11 @@ export default async function ProfilePage() {
       title="Profile Settings"
       description="Manage your account settings and profile information"
       additionalActions={
-        <Link href={`/profile/${user.id}`}>
-          <ActionButton variant="secondary">View public profile</ActionButton>
-        </Link>
+        profileData.isPublic && (
+          <Link href={`/profile/${user.id}`}>
+            <ActionButton variant="secondary">View public profile</ActionButton>
+          </Link>
+        )
       }
       backHref="/dashboard"
     >
