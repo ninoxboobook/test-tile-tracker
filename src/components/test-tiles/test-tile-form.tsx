@@ -76,10 +76,12 @@ export function TestTileForm({
     resolver: zodResolver(testTileSchema),
     defaultValues: {
       ...initialData,
-      decorationLayers: initialData?.decorationLayers || [{
-        order: 1,
-        decorationIds: []
-      }]
+      decorationLayers: initialData?.decorationLayers?.length ? initialData.decorationLayers : [
+        {
+          order: 1,
+          decorationIds: []
+        }
+      ]
     }
   })
 
