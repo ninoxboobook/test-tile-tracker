@@ -204,12 +204,12 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             </div>
 
             <h4 className="text-lg font-semibold mb-2 text-clay-800">Content visibility</h4>
-            <p className="text-clay-800 mb-6">Making a content type public will make it visible to all Test Tile Tracker visitors. If you don't want to make all content of that type public, you can also manage visibility on individual items.</p>
+            <p className="text-clay-800 mb-6">Public content is visible to all Test Tile Tracker visitors. You can also manage visibility on individual items.</p>
             <div className="border border-solid border-clay-300 rounded-md">
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
-                  <h4 className="font-medium text-clay-800">Make test tiles public</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">Your test tiles will be visible to all Test Tile Tracker visitors. If you don't want to make all of your test tiles public, you can manage visibility on individual tiles.</p>
+                  <h4 className="font-medium text-clay-800">Make test tiles public by default</h4>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New test tiles will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicTestTiles ?? false}
@@ -217,7 +217,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                   className={`${publicTestTiles ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
-                  <span className="sr-only">Enable public test tiles</span>
+                  <span className="sr-only">Enable public test tiles by default</span>
                   <span
                     className={`${publicTestTiles ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
@@ -227,8 +227,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
-                  <h4 className="font-medium text-clay-800">Make collections public</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">Your collections will be visible to all Test Tile Tracker visitors. If you don't want to make all of your collections public, you can manage visibility on individual collections.</p>
+                  <h4 className="font-medium text-clay-800">Make collections public by default</h4>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New collections will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicCollections ?? false}
@@ -236,7 +236,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                   className={`${publicCollections ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
-                  <span className="sr-only">Enable public collections</span>
+                  <span className="sr-only">Enable public collections by default</span>
                   <span
                     className={`${publicCollections ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
@@ -246,8 +246,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
-                  <h4 className="font-medium text-clay-800">Make clay bodies public</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">Your clay bodies will be visible to all Test Tile Tracker visitors. If you don't want to make all of your clay bodies public, you can manage visibility on individual clay bodies.</p>
+                  <h4 className="font-medium text-clay-800">Make clay bodies public by default</h4>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New clay bodies will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicClayBodies ?? false}
@@ -255,7 +255,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                   className={`${publicClayBodies ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
-                  <span className="sr-only">Enable public clay bodies</span>
+                  <span className="sr-only">Enable public clay bodies by default</span>
                   <span
                     className={`${publicClayBodies ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
@@ -265,8 +265,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
               <div className="flex items-center justify-between p-4">
                 <div>
-                  <h4 className="font-medium text-clay-800">Make decorations public</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">Your decorations will be visible to all Test Tile Tracker visitors. If you don't want to make all of your decorations public, you can manage visibility on individual decorations.</p>
+                  <h4 className="font-medium text-clay-800">Make decorations public by default</h4>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New decorations will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicDecorations ?? false}
