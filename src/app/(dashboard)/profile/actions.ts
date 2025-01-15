@@ -157,6 +157,90 @@ export async function getUserTestTilesCount() {
   }
 }
 
+export async function getUserCollectionsCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.collection.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.collection.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
+export async function getUserDecorationsCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.decoration.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.decoration.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
+export async function getUserClayBodiesCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.clayBody.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.clayBody.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
 export async function deleteAccount() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) {

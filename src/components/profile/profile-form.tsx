@@ -9,7 +9,7 @@ import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
-import { getUserTestTilesCount } from '@/app/(dashboard)/profile/actions'
+import { getUserTestTilesCount, getUserCollectionsCount, getUserDecorationsCount, getUserClayBodiesCount } from '@/app/(dashboard)/profile/actions'
 import { ProfileImage } from '@/components/profile/profile-image'
 import Link from 'next/link'
 import { Switch } from '@headlessui/react'
@@ -27,10 +27,18 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [initialPublicCollections, setInitialPublicCollections] = useState(initialData?.publicCollections)
   const [initialPublicDecorations, setInitialPublicDecorations] = useState(initialData?.publicDecorations)
   const [initialPublicClayBodies, setInitialPublicClayBodies] = useState(initialData?.publicClayBodies)
-  const [showDialog, setShowDialog] = useState(false)
+  const [showTestTilesDialog, setShowTestTilesDialog] = useState(false)
+  const [showCollectionsDialog, setShowCollectionsDialog] = useState(false)
+  const [showDecorationsDialog, setShowDecorationsDialog] = useState(false)
+  const [showClayBodiesDialog, setShowClayBodiesDialog] = useState(false)
   const [testTilesCount, setTestTilesCount] = useState<{ public: number; private: number; total: number } | null>(null)
-  const [switchingToPublic, setSwitchingToPublic] = useState<boolean | null>(null)
-  const [pendingSwitchState, setPendingSwitchState] = useState<boolean | null>(null)
+  const [collectionsCount, setCollectionsCount] = useState<{ public: number; private: number; total: number } | null>(null)
+  const [decorationsCount, setDecorationsCount] = useState<{ public: number; private: number; total: number } | null>(null)
+  const [clayBodiesCount, setClayBodiesCount] = useState<{ public: number; private: number; total: number } | null>(null)
+  const [switchingTestTilesToPublic, setSwitchingTestTilesToPublic] = useState<boolean | null>(null)
+  const [switchingCollectionsToPublic, setSwitchingCollectionsToPublic] = useState<boolean | null>(null)
+  const [switchingDecorationsToPublic, setSwitchingDecorationsToPublic] = useState<boolean | null>(null)
+  const [switchingClayBodiesToPublic, setSwitchingClayBodiesToPublic] = useState<boolean | null>(null)
 
   const {
     register,
@@ -224,8 +232,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                     const counts = await getUserTestTilesCount()
                     setTestTilesCount(counts)
                     if ((checked && counts.private > 0) || (!checked && counts.public > 0)) {
-                      setSwitchingToPublic(checked)
-                      setShowDialog(true)
+                      setSwitchingTestTilesToPublic(checked)
+                      setShowTestTilesDialog(true)
                     }
                   }}
                   className={`${publicTestTiles ? 'bg-brand' : 'bg-clay-300'
@@ -246,7 +254,15 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 </div>
                 <Switch
                   checked={publicCollections ?? false}
-                  onChange={(checked) => setValue('publicCollections', checked)}
+                  onChange={async (checked) => {
+                    setValue('publicCollections', checked)
+                    const counts = await getUserCollectionsCount()
+                    setCollectionsCount(counts)
+                    if ((checked && counts.private > 0) || (!checked && counts.public > 0)) {
+                      setSwitchingCollectionsToPublic(checked)
+                      setShowCollectionsDialog(true)
+                    }
+                  }}
                   className={`${publicCollections ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
@@ -260,18 +276,26 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
-                  <h4 className="font-medium text-clay-800">Make clay bodies public by default</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New clay bodies will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
+                  <h4 className="font-medium text-clay-800">Make decorations public by default</h4>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New decorations will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
-                  checked={publicClayBodies ?? false}
-                  onChange={(checked) => setValue('publicClayBodies', checked)}
-                  className={`${publicClayBodies ? 'bg-brand' : 'bg-clay-300'
+                  checked={publicDecorations ?? false}
+                  onChange={async (checked) => {
+                    setValue('publicDecorations', checked)
+                    const counts = await getUserDecorationsCount()
+                    setDecorationsCount(counts)
+                    if ((checked && counts.private > 0) || (!checked && counts.public > 0)) {
+                      setSwitchingDecorationsToPublic(checked)
+                      setShowDecorationsDialog(true)
+                    }
+                  }}
+                  className={`${publicDecorations ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
-                  <span className="sr-only">Enable public clay bodies by default</span>
+                  <span className="sr-only">Enable public decorations by default</span>
                   <span
-                    className={`${publicClayBodies ? 'translate-x-6' : 'translate-x-1'
+                    className={`${publicDecorations ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                   />
                 </Switch>
@@ -279,18 +303,26 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
               <div className="flex items-center justify-between p-4">
                 <div>
-                  <h4 className="font-medium text-clay-800">Make decorations public by default</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New decorations will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
+                  <h4 className="font-medium text-clay-800">Make clay bodies public by default</h4>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New clay bodies will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
-                  checked={publicDecorations ?? false}
-                  onChange={(checked) => setValue('publicDecorations', checked)}
-                  className={`${publicDecorations ? 'bg-brand' : 'bg-clay-300'
+                  checked={publicClayBodies ?? false}
+                  onChange={async (checked) => {
+                    setValue('publicClayBodies', checked)
+                    const counts = await getUserClayBodiesCount()
+                    setClayBodiesCount(counts)
+                    if ((checked && counts.private > 0) || (!checked && counts.public > 0)) {
+                      setSwitchingClayBodiesToPublic(checked)
+                      setShowClayBodiesDialog(true)
+                    }
+                  }}
+                  className={`${publicClayBodies ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
-                  <span className="sr-only">Enable public decorations</span>
+                  <span className="sr-only">Enable public clay bodies by default</span>
                   <span
-                    className={`${publicDecorations ? 'translate-x-6' : 'translate-x-1'
+                    className={`${publicClayBodies ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                   />
                 </Switch>
@@ -359,27 +391,102 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         </div>
       </div>
       <Dialog
-        open={showDialog}
+        open={showTestTilesDialog}
         onClose={() => {
-          setShowDialog(false)
-          setSwitchingToPublic(null)
+          setShowTestTilesDialog(false)
+          setSwitchingTestTilesToPublic(null)
         }}
         variant="info"
-        title={switchingToPublic 
+        title={switchingTestTilesToPublic 
           ? "Make existing private test tiles public?" 
           : "Make existing public test tiles private?"
         }
-        description={testTilesCount && switchingToPublic !== null
-          ? switchingToPublic
+        description={testTilesCount && switchingTestTilesToPublic !== null
+          ? switchingTestTilesToPublic
             ? `You have ${testTilesCount.private} private test ${testTilesCount.private === 1 ? 'tile' : 'tiles'} in your library. Would you like to make ${testTilesCount.private === 1 ? 'it' : 'these'} public as well?`
             : `You have ${testTilesCount.public} public test ${testTilesCount.public === 1 ? 'tile' : 'tiles'} in your library. Would you like to make ${testTilesCount.public === 1 ? 'it' : 'these'} private as well?`
           : 'Loading...'
         }
-        confirmLabel={switchingToPublic ? "Yes, make public" : "Yes, make private"}
+        confirmLabel={switchingTestTilesToPublic ? "Yes, make public" : "Yes, make private"}
         cancelLabel="No, keep as is"
         onConfirm={() => {
-          setShowDialog(false)
-          setSwitchingToPublic(null)
+          setShowTestTilesDialog(false)
+          setSwitchingTestTilesToPublic(null)
+        }}
+      />
+
+      <Dialog
+        open={showCollectionsDialog}
+        onClose={() => {
+          setShowCollectionsDialog(false)
+          setSwitchingCollectionsToPublic(null)
+        }}
+        variant="info"
+        title={switchingCollectionsToPublic 
+          ? "Make existing private collections public?" 
+          : "Make existing public collections private?"
+        }
+        description={collectionsCount && switchingCollectionsToPublic !== null
+          ? switchingCollectionsToPublic
+            ? `You have ${collectionsCount.private} private ${collectionsCount.private === 1 ? 'collection' : 'collections'} in your library. Would you like to make ${collectionsCount.private === 1 ? 'it' : 'these'} public as well?`
+            : `You have ${collectionsCount.public} public ${collectionsCount.public === 1 ? 'collection' : 'collections'} in your library. Would you like to make ${collectionsCount.public === 1 ? 'it' : 'these'} private as well?`
+          : 'Loading...'
+        }
+        confirmLabel={switchingCollectionsToPublic ? "Yes, make public" : "Yes, make private"}
+        cancelLabel="No, keep as is"
+        onConfirm={() => {
+          setShowCollectionsDialog(false)
+          setSwitchingCollectionsToPublic(null)
+        }}
+      />
+
+      <Dialog
+        open={showDecorationsDialog}
+        onClose={() => {
+          setShowDecorationsDialog(false)
+          setSwitchingDecorationsToPublic(null)
+        }}
+        variant="info"
+        title={switchingDecorationsToPublic 
+          ? "Make existing private decorations public?" 
+          : "Make existing public decorations private?"
+        }
+        description={decorationsCount && switchingDecorationsToPublic !== null
+          ? switchingDecorationsToPublic
+            ? `You have ${decorationsCount.private} private ${decorationsCount.private === 1 ? 'decoration' : 'decorations'} in your library. Would you like to make ${decorationsCount.private === 1 ? 'it' : 'these'} public as well?`
+            : `You have ${decorationsCount.public} public ${decorationsCount.public === 1 ? 'decoration' : 'decorations'} in your library. Would you like to make ${decorationsCount.public === 1 ? 'it' : 'these'} private as well?`
+          : 'Loading...'
+        }
+        confirmLabel={switchingDecorationsToPublic ? "Yes, make public" : "Yes, make private"}
+        cancelLabel="No, keep as is"
+        onConfirm={() => {
+          setShowDecorationsDialog(false)
+          setSwitchingDecorationsToPublic(null)
+        }}
+      />
+
+      <Dialog
+        open={showClayBodiesDialog}
+        onClose={() => {
+          setShowClayBodiesDialog(false)
+          setSwitchingClayBodiesToPublic(null)
+        }}
+        variant="info"
+        title={switchingClayBodiesToPublic 
+          ? "Make existing private clay bodies public?" 
+          : "Make existing public clay bodies private?"
+        }
+        description={clayBodiesCount && switchingClayBodiesToPublic !== null
+          ? switchingClayBodiesToPublic
+            ? `You have ${clayBodiesCount.private} private clay ${clayBodiesCount.private === 1 ? 'body' : 'bodies'} in your library. Would you like to make ${clayBodiesCount.private === 1 ? 'it' : 'these'} public as well?`
+            : `You have ${clayBodiesCount.public} public clay ${clayBodiesCount.public === 1 ? 'body' : 'bodies'} in your library. Would you like to make ${clayBodiesCount.public === 1 ? 'it' : 'these'} private as well?`
+          : 'Loading...'
+        }
+        confirmLabel={switchingClayBodiesToPublic ? "Yes, make public" : "Yes, make private"}
+        cancelLabel="No, keep as is"
+        onConfirm={() => {
+          setShowClayBodiesDialog(false)
+          setSwitchingClayBodiesToPublic(null)
         }}
       />
     </Form>
