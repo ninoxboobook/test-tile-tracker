@@ -53,7 +53,7 @@ export function Dialog({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <HeadlessDialog.Panel className={`relative transform overflow-hidden rounded-lg bg-sand-light border-t-4 ${variant === 'danger' ? 'border-red-600' : 'border-blue-600'} px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md sm:p-6`}>
-                <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                <div className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${variant === 'danger' ? 'bg-red-100' : 'bg-blue-100'} sm:mx-0 sm:h-10 sm:w-10`}>
                   {variant === 'danger' ? <ExclamationTriangleIcon className="h-6 w-6 text-red-600" aria-hidden="true" /> : <InformationCircleIcon className="h-6 w-6 text-blue-600" aria-hidden="true" />}
                 </div>
                 <div className="sm:flex sm:items-start">

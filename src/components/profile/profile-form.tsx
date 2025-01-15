@@ -12,6 +12,7 @@ import { updateProfile } from '@/app/(dashboard)/profile/actions'
 import { ProfileImage } from '@/components/profile/profile-image'
 import Link from 'next/link'
 import { Switch } from '@headlessui/react'
+import { Dialog } from '@/components/ui/dialog'
 
 interface ProfileFormProps {
   initialData?: Partial<ProfileUpdateFormData>
@@ -25,6 +26,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [initialPublicCollections, setInitialPublicCollections] = useState(initialData?.publicCollections)
   const [initialPublicDecorations, setInitialPublicDecorations] = useState(initialData?.publicDecorations)
   const [initialPublicClayBodies, setInitialPublicClayBodies] = useState(initialData?.publicClayBodies)
+  const [showDialog, setShowDialog] = useState(false)
 
   const {
     register,
@@ -213,7 +215,10 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 </div>
                 <Switch
                   checked={publicTestTiles ?? false}
-                  onChange={(checked) => setValue('publicTestTiles', checked)}
+                  onChange={(checked) => {
+                    setValue('publicTestTiles', checked)
+                    setShowDialog(true)
+                  }}
                   className={`${publicTestTiles ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
                 >
@@ -344,6 +349,15 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           </div>
         </div>
       </div>
+      <Dialog
+        open={showDialog}
+        onClose={() => setShowDialog(false)}
+        variant="info"
+        title="Hello World"
+        description="Hello World"
+        confirmLabel="OK"
+        onConfirm={() => setShowDialog(false)}
+      />
     </Form>
   )
 }
