@@ -241,6 +241,74 @@ export async function getUserClayBodiesCount() {
   }
 }
 
+export async function updateTestTilesVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.testTile.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic // Update tiles that have the opposite visibility
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
+export async function updateCollectionsVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.collection.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
+export async function updateDecorationsVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.decoration.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
+export async function updateClayBodiesVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.clayBody.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
 export async function deleteAccount() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) {

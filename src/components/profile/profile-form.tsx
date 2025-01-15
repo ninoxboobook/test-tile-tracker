@@ -9,7 +9,16 @@ import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
-import { getUserTestTilesCount, getUserCollectionsCount, getUserDecorationsCount, getUserClayBodiesCount } from '@/app/(dashboard)/profile/actions'
+import { 
+  getUserTestTilesCount, 
+  getUserCollectionsCount, 
+  getUserDecorationsCount, 
+  getUserClayBodiesCount,
+  updateTestTilesVisibility,
+  updateCollectionsVisibility,
+  updateDecorationsVisibility,
+  updateClayBodiesVisibility
+} from '@/app/(dashboard)/profile/actions'
 import { ProfileImage } from '@/components/profile/profile-image'
 import Link from 'next/link'
 import { Switch } from '@headlessui/react'
@@ -409,7 +418,23 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         }
         confirmLabel={switchingTestTilesToPublic ? "Yes, make public" : "Yes, make private"}
         cancelLabel="No, keep as is"
-        onConfirm={() => {
+        onConfirm={async () => {
+          if (switchingTestTilesToPublic !== null) {
+            try {
+              await updateTestTilesVisibility(switchingTestTilesToPublic)
+              const newCounts = await getUserTestTilesCount()
+              setTestTilesCount(newCounts)
+              setMessage({ 
+                type: 'success', 
+                text: `Successfully updated visibility for ${switchingTestTilesToPublic ? 'private' : 'public'} test tiles` 
+              })
+            } catch (error) {
+              setMessage({ 
+                type: 'error', 
+                text: `Failed to update test tiles visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              })
+            }
+          }
           setShowTestTilesDialog(false)
           setSwitchingTestTilesToPublic(null)
         }}
@@ -434,7 +459,23 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         }
         confirmLabel={switchingCollectionsToPublic ? "Yes, make public" : "Yes, make private"}
         cancelLabel="No, keep as is"
-        onConfirm={() => {
+        onConfirm={async () => {
+          if (switchingCollectionsToPublic !== null) {
+            try {
+              await updateCollectionsVisibility(switchingCollectionsToPublic)
+              const newCounts = await getUserCollectionsCount()
+              setCollectionsCount(newCounts)
+              setMessage({ 
+                type: 'success', 
+                text: `Successfully updated visibility for ${switchingCollectionsToPublic ? 'private' : 'public'} collections` 
+              })
+            } catch (error) {
+              setMessage({ 
+                type: 'error', 
+                text: `Failed to update collections visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              })
+            }
+          }
           setShowCollectionsDialog(false)
           setSwitchingCollectionsToPublic(null)
         }}
@@ -459,7 +500,23 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         }
         confirmLabel={switchingDecorationsToPublic ? "Yes, make public" : "Yes, make private"}
         cancelLabel="No, keep as is"
-        onConfirm={() => {
+        onConfirm={async () => {
+          if (switchingDecorationsToPublic !== null) {
+            try {
+              await updateDecorationsVisibility(switchingDecorationsToPublic)
+              const newCounts = await getUserDecorationsCount()
+              setDecorationsCount(newCounts)
+              setMessage({ 
+                type: 'success', 
+                text: `Successfully updated visibility for ${switchingDecorationsToPublic ? 'private' : 'public'} decorations` 
+              })
+            } catch (error) {
+              setMessage({ 
+                type: 'error', 
+                text: `Failed to update decorations visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              })
+            }
+          }
           setShowDecorationsDialog(false)
           setSwitchingDecorationsToPublic(null)
         }}
@@ -484,7 +541,23 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         }
         confirmLabel={switchingClayBodiesToPublic ? "Yes, make public" : "Yes, make private"}
         cancelLabel="No, keep as is"
-        onConfirm={() => {
+        onConfirm={async () => {
+          if (switchingClayBodiesToPublic !== null) {
+            try {
+              await updateClayBodiesVisibility(switchingClayBodiesToPublic)
+              const newCounts = await getUserClayBodiesCount()
+              setClayBodiesCount(newCounts)
+              setMessage({ 
+                type: 'success', 
+                text: `Successfully updated visibility for ${switchingClayBodiesToPublic ? 'private' : 'public'} clay bodies` 
+              })
+            } catch (error) {
+              setMessage({ 
+                type: 'error', 
+                text: `Failed to update clay bodies visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              })
+            }
+          }
           setShowClayBodiesDialog(false)
           setSwitchingClayBodiesToPublic(null)
         }}
