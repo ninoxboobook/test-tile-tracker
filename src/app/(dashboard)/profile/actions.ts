@@ -129,6 +129,34 @@ async function getImageUrlsForUser(userId: string) {
   return imageUrls
 }
 
+export async function getUserTestTilesCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.testTile.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.testTile.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
 export async function deleteAccount() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) {

@@ -9,6 +9,7 @@ import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
+import { getUserTestTilesCount } from '@/app/(dashboard)/profile/actions'
 import { ProfileImage } from '@/components/profile/profile-image'
 import Link from 'next/link'
 import { Switch } from '@headlessui/react'
@@ -27,6 +28,9 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [initialPublicDecorations, setInitialPublicDecorations] = useState(initialData?.publicDecorations)
   const [initialPublicClayBodies, setInitialPublicClayBodies] = useState(initialData?.publicClayBodies)
   const [showDialog, setShowDialog] = useState(false)
+  const [testTilesCount, setTestTilesCount] = useState<{ public: number; private: number; total: number } | null>(null)
+  const [switchingToPublic, setSwitchingToPublic] = useState<boolean | null>(null)
+  const [pendingSwitchState, setPendingSwitchState] = useState<boolean | null>(null)
 
   const {
     register,
@@ -215,9 +219,14 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 </div>
                 <Switch
                   checked={publicTestTiles ?? false}
-                  onChange={(checked) => {
+                  onChange={async (checked) => {
                     setValue('publicTestTiles', checked)
-                    setShowDialog(true)
+                    const counts = await getUserTestTilesCount()
+                    setTestTilesCount(counts)
+                    if ((checked && counts.private > 0) || (!checked && counts.public > 0)) {
+                      setSwitchingToPublic(checked)
+                      setShowDialog(true)
+                    }
                   }}
                   className={`${publicTestTiles ? 'bg-brand' : 'bg-clay-300'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
@@ -351,12 +360,27 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
       </div>
       <Dialog
         open={showDialog}
-        onClose={() => setShowDialog(false)}
+        onClose={() => {
+          setShowDialog(false)
+          setSwitchingToPublic(null)
+        }}
         variant="info"
-        title="Hello World"
-        description="Hello World"
-        confirmLabel="OK"
-        onConfirm={() => setShowDialog(false)}
+        title={switchingToPublic 
+          ? "Make existing private test tiles public?" 
+          : "Make existing public test tiles private?"
+        }
+        description={testTilesCount && switchingToPublic !== null
+          ? switchingToPublic
+            ? `You have ${testTilesCount.private} private test ${testTilesCount.private === 1 ? 'tile' : 'tiles'} in your library. Would you like to make ${testTilesCount.private === 1 ? 'it' : 'these'} public as well?`
+            : `You have ${testTilesCount.public} public test ${testTilesCount.public === 1 ? 'tile' : 'tiles'} in your library. Would you like to make ${testTilesCount.public === 1 ? 'it' : 'these'} private as well?`
+          : 'Loading...'
+        }
+        confirmLabel={switchingToPublic ? "Yes, make public" : "Yes, make private"}
+        cancelLabel="No, keep as is"
+        onConfirm={() => {
+          setShowDialog(false)
+          setSwitchingToPublic(null)
+        }}
       />
     </Form>
   )
