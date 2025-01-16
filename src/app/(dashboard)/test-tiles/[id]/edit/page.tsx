@@ -85,6 +85,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
       decorationIds: layer.decorations.map(d => d.id)
     })),
     collectionIds: testTile.collections.map(collection => collection.id),
+    isPublic: testTile.isPublic
   }
 
   return (

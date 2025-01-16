@@ -13,6 +13,7 @@ import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { Modal } from '@/components/ui/modal'
+import { Switch } from '@headlessui/react'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { DecorationForm } from '@/components/decorations/decoration-form'
 import { ClayBody, Collection, Decoration, DecorationType } from '@prisma/client'
@@ -186,6 +187,9 @@ export function TestTileForm({
         })
       }
 
+      // Add isPublic value from form state
+      formData.append('isPublic', String(watch('isPublic')))
+
       console.log('Form data before submission:', Object.fromEntries(formData.entries()))
       await action(formData)
     } catch (error) {
@@ -337,6 +341,30 @@ export function TestTileForm({
                 error={errors.notes}
                 placeholder="Add any additional notes about this test tile..."
               />
+
+              <div className="flex items-center justify-between p-4 border border-solid border-clay-300 rounded-md">
+                <div>
+                  <h4 className="font-medium text-clay-800">Make test tile public</h4>
+                  <p className="text-sm text-clay-600 mb-[2px]">Public test tiles are visible to all Test Tile Tracker visitors.</p>
+                </div>
+                <input
+                  type="hidden"
+                  {...register('isPublic')}
+                />
+                <Switch
+                  checked={watch('isPublic') ?? false}
+                  onChange={(checked) => setValue('isPublic', checked)}
+                  className={`${
+                    watch('isPublic') ? 'bg-brand' : 'bg-clay-300'
+                  } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
+                >
+                  <span
+                    className={`${
+                      watch('isPublic') ? 'translate-x-6' : 'translate-x-1'
+                    } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                  />
+                </Switch>
+              </div>
               </div>
             </div>
           </div>

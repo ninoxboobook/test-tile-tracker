@@ -6,6 +6,7 @@ import { TestTileForm } from '@/components/test-tiles/test-tile-form'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import { createTestTile } from './actions'
 import { ClayBody, Collection, Decoration } from '@prisma/client'
+
 export default async function NewTestTilePage() {
   const session = await getServerSession(authOptions)
 
@@ -21,7 +22,8 @@ export default async function NewTestTilePage() {
     cones, 
     atmospheres,
     clayBodyTypes,
-    decorationTypes
+    decorationTypes,
+    user
   ] = await Promise.all([
     prisma.clayBody.findMany({
       where: { userId: session.user.id },
@@ -47,6 +49,10 @@ export default async function NewTestTilePage() {
     prisma.decorationType.findMany({
       select: { id: true, name: true, createdAt: true, updatedAt: true },
     }),
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { publicTestTiles: true }
+    })
   ])
 
   return (
@@ -63,6 +69,15 @@ export default async function NewTestTilePage() {
         atmospheres={atmospheres}
         clayBodyTypes={clayBodyTypes}
         decorationTypes={decorationTypes}
+        initialData={{
+          name: '',
+          clayBodyId: '',
+          coneId: '',
+          atmosphereId: '',
+          decorationLayers: [],
+          collectionIds: [],
+          isPublic: user?.publicTestTiles ?? false
+        }}
       />
     </FormLayout>
   )
