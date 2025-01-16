@@ -16,6 +16,7 @@ import { ImageDropzone } from '@/components/ui/forms/image-dropzone'
 import { sortCones } from '@/lib/utils/sort-cones'
 import { sortClayTypes } from '@/lib/utils/sort-clay-types'
 import { useRouter } from 'next/navigation'
+import { Switch } from '@headlessui/react'
 
 interface ClayBodyFormProps {
   initialData?: any
@@ -286,6 +287,30 @@ export function ClayBodyForm({
             placeholder="Add any additional notes about this clay body..."
           />
 
+          <div className="flex items-center justify-between p-4 border border-solid border-clay-300 rounded-md">
+            <div>
+              <h4 className="font-medium text-clay-800">Make clay body public</h4>
+              <p className="text-sm text-clay-600 mb-[2px]">Public clay bodies are visible to all Test Tile Tracker visitors.</p>
+            </div>
+            <input
+              type="hidden"
+              {...register('isPublic')}
+            />
+            <Switch
+              checked={watch('isPublic') ?? false}
+              onChange={(checked) => setValue('isPublic', checked)}
+              className={`${
+                watch('isPublic') ? 'bg-brand' : 'bg-clay-300'
+              } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
+            >
+              <span
+                className={`${
+                  watch('isPublic') ? 'translate-x-6' : 'translate-x-1'
+                } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+              />
+            </Switch>
+          </div>
+
         </div>
         <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-5 p-8'} bg-sand-light rounded-2xl`}>
           <div>
@@ -323,7 +348,8 @@ export function ClayBodyForm({
                 !!values.absorption ||
                 !!values.meshSize ||
                 !!values.notes ||
-                !!values.imageUrl
+                !!values.imageUrl ||
+                !!values.isPublic
               );
             }}
             type="button"

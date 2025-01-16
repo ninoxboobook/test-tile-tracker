@@ -22,6 +22,11 @@ export default async function NewClayBodyPage() {
     })
   ])
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { publicClayBodies: true }
+  })
+
   return (
     <FormLayout 
       title="Add new clay body"
@@ -31,6 +36,7 @@ export default async function NewClayBodyPage() {
         action={createClayBodyAndRedirect}
         clayBodyTypes={clayBodyTypes}
         cones={cones}
+        initialData={{ isPublic: user?.publicClayBodies ?? false }}
       />
     </FormLayout>
   )

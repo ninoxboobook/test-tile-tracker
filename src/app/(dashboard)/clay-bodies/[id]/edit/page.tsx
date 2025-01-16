@@ -46,6 +46,7 @@ export default async function EditClayBodyPage(
   const formData = {
     ...clayBody,
     coneIds: clayBody.cone.map(c => c.id), // Transform cone array to array of IDs
+    isPublic: clayBody.isPublic
   }
 
   return (
