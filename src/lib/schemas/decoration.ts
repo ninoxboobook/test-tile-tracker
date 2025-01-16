@@ -15,6 +15,7 @@ export const decorationSchema = z.object({
   imageUrl: z.array(z.string().url('Invalid URL format')).optional().nullable(),
   recipe: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  isPublic: z.boolean().optional().default(false)
 })
 
 export type DecorationFormData = z.infer<typeof decorationSchema>
@@ -55,4 +56,5 @@ export type DecorationWithRelations = {
       name: string
     } | null
   }>
+  isPublic: boolean
 }
