@@ -210,7 +210,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
             <div className="flex items-center justify-between p-4 mb-8 border border-solid border-clay-300 rounded-md">
               <div>
                 <h4 className="font-medium text-clay-800">Make profile public</h4>
-                <p className="text-sm text-clay-600 mb-[2px]">Your profile will be visible to all Test Tile Tracker visitors</p>
+                <p className="text-sm text-clay-600 mb-[2px]">Your profile will be visible to all Test Tile Tracker visitors. Content that you haven't made public will still be hidden.</p>
               </div>
               <Switch
                 checked={isPublic ?? false}
@@ -232,7 +232,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
                   <h4 className="font-medium text-clay-800">Make test tiles public by default</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New test tiles will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New test tiles that you make will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicTestTiles ?? false}
@@ -259,7 +259,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
                   <h4 className="font-medium text-clay-800">Make collections public by default</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New collections will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New collections that you make will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicCollections ?? false}
@@ -286,7 +286,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               <div className="flex items-center justify-between p-4 border-b border-solid border-clay-200">
                 <div>
                   <h4 className="font-medium text-clay-800">Make decorations public by default</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New decorations will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New decorations that you make will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicDecorations ?? false}
@@ -313,7 +313,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               <div className="flex items-center justify-between p-4">
                 <div>
                   <h4 className="font-medium text-clay-800">Make clay bodies public by default</h4>
-                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New clay bodies will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
+                  <p className="text-sm max-w-xl text-clay-600 mb-[2px]">New clay bodies that you make will be visible to all Test Tile Tracker visitors by default, unless you choose to make them private.</p>
                 </div>
                 <Switch
                   checked={publicClayBodies ?? false}
