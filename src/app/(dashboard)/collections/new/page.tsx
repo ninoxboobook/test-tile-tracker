@@ -20,14 +20,25 @@ export default async function NewCollectionPage() {
     orderBy: { name: 'asc' }
   })
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { publicClayBodies: true }
+  })
+
   return (
-    <FormLayout 
+    <FormLayout
       title="Add new collection"
       backHref="/collections"
     >
-      <CollectionForm 
-        action={createCollection} 
+      <CollectionForm
+        action={createCollection}
         testTiles={testTiles}
+        initialData={{
+          name: '',
+          description: '',
+          isPublic: user?.publicClayBodies ?? false
+        }}
+        submitButtonText="Create collection"
       />
     </FormLayout>
   )

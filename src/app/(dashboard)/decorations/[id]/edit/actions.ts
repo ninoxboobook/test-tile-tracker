@@ -80,7 +80,7 @@ export async function updateDecoration(formData: FormData) {
     imageUrl: validatedData.imageUrl || [],
     recipe: validatedData.recipe || null,
     notes: validatedData.notes || null,
-    isPublic: validatedData.isPublic,
+    isPublic: validatedData.isPublic
   }
 
   // Log the update data being sent to the database

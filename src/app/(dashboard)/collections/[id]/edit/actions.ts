@@ -52,7 +52,7 @@ export async function createCollection(formData: FormData) {
   const session = await validateSession()
 
   const rawData = Object.fromEntries(formData.entries())
-  const validatedData = collectionSchema.parse(rawData)
+  const validatedData = collectionSchema.parse({ ...rawData, isPublic: formData.get('isPublic') === 'true' })
 
   const createData: Prisma.CollectionCreateInput = {
     name: validatedData.name,
@@ -83,9 +83,10 @@ export async function updateCollection(formData: FormData) {
   const rawData = Object.fromEntries(formData.entries())
   const processedData = {
     ...rawData,
-    testTileIds: formData.getAll('testTileIds')
+    testTileIds: formData.getAll('testTileIds'),
+    isPublic: formData.get('isPublic') === 'true'
   }
-  
+
   const validatedData = collectionSchema.parse(processedData)
 
   const updateData: Prisma.CollectionUpdateInput = {
@@ -93,7 +94,8 @@ export async function updateCollection(formData: FormData) {
     description: validatedData.description || null,
     testTiles: {
       set: validatedData.testTileIds?.map(id => ({ id })) ?? []
-    }
+    },
+    isPublic: validatedData.isPublic
   }
 
   await prisma.collection.update({

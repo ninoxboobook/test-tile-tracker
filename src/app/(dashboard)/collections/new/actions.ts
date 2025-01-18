@@ -20,7 +20,7 @@ export async function createCollection(formData: FormData) {
     testTileIds: formData.getAll('testTileIds')
   }
 
-  const validatedData = collectionSchema.parse(rawData)
+  const validatedData = collectionSchema.parse({ ...rawData, isPublic: formData.get('isPublic') === 'true' })
 
   const createData: Prisma.CollectionCreateInput = {
     name: validatedData.name,
@@ -32,7 +32,8 @@ export async function createCollection(formData: FormData) {
     },
     testTiles: validatedData.testTileIds?.length ? {
       connect: validatedData.testTileIds.map(id => ({ id }))
-    } : undefined
+    } : undefined,
+    isPublic: validatedData.isPublic,
   }
 
   const collection = await prisma.collection.create({
@@ -41,7 +42,7 @@ export async function createCollection(formData: FormData) {
 
   console.log('Raw form data:', Object.fromEntries(formData.entries()))
   console.log('All entries:', Array.from(formData.entries()))
-  
+
   revalidatePath('/collections')
   redirect(`/collections/${collection.id}`)
 } 

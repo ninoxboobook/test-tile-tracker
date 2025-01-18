@@ -329,7 +329,6 @@ export function DecorationForm({
                 !!values.surface ||
                 !!values.transparency ||
                 !!values.isPublic
-
               );
             }}
             type="button"

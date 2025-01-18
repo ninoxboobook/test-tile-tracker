@@ -45,6 +45,7 @@ export default async function EditCollectionPage(
     name: collection.name,
     description: collection.description || null,
     testTileIds: collection.testTiles.map(tile => tile.id),
+    isPublic: collection.isPublic
   }
 
   return (
