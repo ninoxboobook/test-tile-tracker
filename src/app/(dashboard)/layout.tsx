@@ -19,7 +19,8 @@ export default async function DashboardLayout({
   // Allow public access to profiles and individual test tile pages
   if (!session?.user?.id && 
       !pathname?.startsWith('/profile/') && 
-      !pathname?.match(/^\/test-tiles\/[^/]+$/)) {
+      !pathname?.match(/^\/test-tiles\/[^/]+$/) &&
+      !pathname?.match(/^\/collections\/[^/]+$/)) {
     redirect('/login')
   }
 
