@@ -14,11 +14,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-    // Allow access to public profile regardless of auth status
-    if (request.nextUrl.pathname.startsWith('/profile/')) {
-      headers.set("x-current-path", request.nextUrl.pathname);
-      return NextResponse.next({headers})
-    }
+  // Allow access to auth-related endpoints
+  if (request.nextUrl.pathname.startsWith('/api/auth')) {
+    return NextResponse.next()
+  }
+
+  // Allow access to public profile regardless of auth status
+  if (request.nextUrl.pathname.startsWith('/profile/')) {
+    headers.set("x-current-path", request.nextUrl.pathname);
+    return NextResponse.next({headers})
+  }
+
+  // Allow access to test tiles pages (except edit) regardless of auth status
+  if (request.nextUrl.pathname.match(/^\/test-tiles\/[^/]+$/)) {
+    headers.set("x-current-path", request.nextUrl.pathname);
+    return NextResponse.next({headers})
+  }
 
   // Allow access to images regardless of auth status
   if (request.nextUrl.pathname.startsWith('/images')) {
@@ -64,15 +75,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Protected routes that require authentication
+  if (!token) {
+    const callbackUrl = encodeURIComponent(request.nextUrl.pathname)
+    return NextResponse.redirect(new URL(`/login?callbackUrl=${callbackUrl}`, request.url))
+  }
+
+  // Block access to edit pages for non-owners (handled in page component)
+  if (request.nextUrl.pathname.match(/^\/test-tiles\/[^/]+\/edit$/)) {
+    return NextResponse.next({headers})
+  }
+
   // Protect API routes
   if (request.nextUrl.pathname.startsWith('/api')) {
-    // Allow public access to auth-related endpoints
-    if (
-      request.nextUrl.pathname.startsWith('/api/auth')
-    ) {
-      return NextResponse.next()
-    }
-
     if (!token) {
       return new NextResponse(
         JSON.stringify({ message: 'Authentication required' }),

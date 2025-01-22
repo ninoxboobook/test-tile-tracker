@@ -27,6 +27,11 @@ export default async function EditTestTilePage({ params }: PageProps) {
       ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
+      user: {
+        select: {
+          id: true
+        }
+      },
       clayBody: true,
       decorationLayers: {
         include: {

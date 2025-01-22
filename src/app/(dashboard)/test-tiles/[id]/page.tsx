@@ -8,25 +8,25 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { deleteTestTile } from './actions'
-import { getSessionWithAuth } from '@/lib/auth/admin'
 import { TestTileCollections } from '@/components/test-tiles/test-tile-collections'
+import { isAdmin } from '@/lib/auth/admin'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
 export default async function TestTilePage({ params }: PageProps) {
-  const { session, isAdmin } = await getSessionWithAuth()
   const { id } = await params
+  const session = await getServerSession(authOptions)
+  const userIsAdmin = session?.user?.id ? await isAdmin() : false
 
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
-
-  const testTile = await prisma.testTile.findUnique({
+  const testTile = await prisma.testTile.findFirst({
     where: {
       id,
-      ...(isAdmin ? {} : { userId: session.user.id })
+      OR: userIsAdmin ? undefined : [
+        { userId: session?.user?.id },
+        { isPublic: true }
+      ]
     },
     include: {
       clayBody: true,
@@ -39,6 +39,12 @@ export default async function TestTilePage({ params }: PageProps) {
         }
       },
       collections: {
+        where: {
+          OR: [
+            { userId: session?.user?.id }, // Show all collections if user is owner
+            { isPublic: true } // Show only public collections for other users
+          ]
+        },
         include: {
           testTiles: {
             select: {
@@ -50,18 +56,31 @@ export default async function TestTilePage({ params }: PageProps) {
       },
       cone: true,
       atmosphere: true,
-      user: isAdmin ? {
+      user: {
         select: {
-          username: true,
-          email: true
+          id: true,
+          ...(userIsAdmin ? {
+            username: true,
+            email: true
+          } : {})
         }
-      } : false
+      }
     }
   })
 
   if (!testTile) {
     return notFound()
   }
+
+  // Handle private test tiles - redirect unauthenticated users to login, others to dashboard
+  if (!testTile.isPublic && !userIsAdmin && testTile.user.id !== session?.user?.id) {
+    if (!session?.user?.id) {
+      redirect('/login')
+    }
+    redirect('/dashboard')
+  }
+
+  const isOwner = testTile.user.id === session?.user?.id || userIsAdmin
 
   const detailItems = [
     { 
@@ -92,7 +111,7 @@ export default async function TestTilePage({ params }: PageProps) {
   return (
     <PageLayout
       title={testTile.name}
-      action={
+      action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/test-tiles/${testTile.id}/edit`}>
             <ActionButton>Edit test tile</ActionButton>
@@ -105,7 +124,7 @@ export default async function TestTilePage({ params }: PageProps) {
             itemName="Test Tile"
           />
         </div>
-      }
+      ) : null}
       variant="detail"
     >
       <DetailLayout
