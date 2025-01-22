@@ -20,7 +20,7 @@ export default async function EditCollectionPage(
     redirect('/login')
   }
 
-  const collection = await prisma.collection.findFirst({
+  const collection = await prisma.collection.findUnique({
     where: {
       id: params.id,
       ...(isAdmin ? {} : { userId: session.user.id })

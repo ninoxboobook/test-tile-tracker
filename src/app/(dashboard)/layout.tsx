@@ -20,7 +20,8 @@ export default async function DashboardLayout({
   if (!session?.user?.id && 
       !pathname?.startsWith('/profile/') && 
       !pathname?.match(/^\/test-tiles\/[^/]+$/) &&
-      !pathname?.match(/^\/collections\/[^/]+$/)) {
+      !pathname?.match(/^\/collections\/[^/]+$/) &&
+      !pathname?.match(/^\/clay-bodies\/[^/]+$/)) {
     redirect('/login')
   }
 
