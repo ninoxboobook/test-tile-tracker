@@ -43,6 +43,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({headers})
   }
 
+  // Allow access to decoration pages (except edit) regardless of auth status
+  if (request.nextUrl.pathname.match(/^\/decorations\/[^/]+$/)) {
+    headers.set("x-current-path", request.nextUrl.pathname);
+    return NextResponse.next({headers})
+  }
+
   // Allow access to images regardless of auth status
   if (request.nextUrl.pathname.startsWith('/images')) {
     return NextResponse.next()

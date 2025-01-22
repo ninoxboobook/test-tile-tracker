@@ -1,17 +1,17 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
-import { deleteDecoration } from './actions'
 import { type DecorationWithRelations } from '@/lib/schemas/decoration'
 import { DecorationTestTiles } from '@/components/decorations/decoration-test-tiles'
 import { TestTileWithRelations } from '@/types/test-tile'
-import { getSessionWithAuth } from '@/lib/auth/admin'
+import { deleteDecoration } from './actions'
+import { isAdmin } from '@/lib/auth/admin'
 
 export default async function DecorationPage(
   props: {
@@ -19,16 +19,16 @@ export default async function DecorationPage(
   }
 ) {
   const params = await props.params;
-  const { session, isAdmin } = await getSessionWithAuth()
+  const session = await getServerSession(authOptions)
+  const userIsAdmin = session?.user?.id ? await isAdmin() : false
 
-  if (!session?.user?.id && !isAdmin) {
-    redirect('/login')
-  }
-
-  const decoration = await prisma.decoration.findUnique({
+  const decoration = await prisma.decoration.findFirst({
     where: {
       id: params.id,
-      ...(isAdmin ? {} : { userId: session.user.id })
+      OR: userIsAdmin ? undefined : [
+        { userId: session?.user?.id },
+        { isPublic: true }
+      ]
     },
     include: {
       type: true,
@@ -53,6 +53,15 @@ export default async function DecorationPage(
             }
           }
         }
+      },
+      user: {
+        select: {
+          id: true,
+          ...(userIsAdmin ? {
+            username: true,
+            email: true
+          } : {})
+        }
       }
     }
   })
@@ -60,6 +69,8 @@ export default async function DecorationPage(
   if (!decoration) {
     return notFound()
   }
+
+  const isOwner = decoration.user.id === session?.user?.id || userIsAdmin
 
   const decorationWithRelations: DecorationWithRelations = {
     ...decoration,
@@ -93,7 +104,7 @@ export default async function DecorationPage(
   return (
     <PageLayout
       title={decorationWithRelations.name}
-      action={
+      action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/decorations/${decorationWithRelations.id}/edit`}>
             <ActionButton>Edit decoration</ActionButton>
@@ -106,7 +117,7 @@ export default async function DecorationPage(
             itemName="Decoration"
           />
         </div>
-      }
+      ) : null}
       variant="detail"
     >
       <DetailLayout

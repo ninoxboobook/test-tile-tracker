@@ -21,7 +21,8 @@ export default async function DashboardLayout({
       !pathname?.startsWith('/profile/') && 
       !pathname?.match(/^\/test-tiles\/[^/]+$/) &&
       !pathname?.match(/^\/collections\/[^/]+$/) &&
-      !pathname?.match(/^\/clay-bodies\/[^/]+$/)) {
+      !pathname?.match(/^\/clay-bodies\/[^/]+$/) &&
+      !pathname?.match(/^\/decorations\/[^/]+$/)) {
     redirect('/login')
   }
 
