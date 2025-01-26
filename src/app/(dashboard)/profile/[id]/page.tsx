@@ -1,7 +1,11 @@
-import { getUserProfileById } from './actions'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
+import { notFound } from 'next/navigation'
 import { FormLayout } from '@/components/ui/layout/form-layout'
 import Link from 'next/link'
 import Image from 'next/image'
+import { isAdmin } from '@/lib/auth/admin'
 
 function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString('en-US', {
@@ -19,7 +23,58 @@ interface ProfilePageProps {
 
 export default async function ProfilePage(props: ProfilePageProps) {
   const params = await props.params;
-  const user = await getUserProfileById(params.id)
+  const session = await getServerSession(authOptions)
+  const userIsAdmin = session?.user?.id ? await isAdmin() : false
+
+  const user = await prisma.user.findFirst({
+    where: {
+      id: params.id,
+      OR: userIsAdmin ? undefined : [
+        { id: session?.user?.id },
+        { isPublic: true }
+      ]
+    },
+    select: {
+      id: true,
+      email: true,
+      username: true,
+      firstName: true,
+      lastName: true,
+      imageUrl: true,
+      isPublic: true,
+      testTiles: {
+        select: {
+          id: true,
+          name: true,
+          createdAt: true,
+          clayBody: {
+            select: {
+              id: true,
+              name: true,
+            }
+          },
+          decorationLayers: {
+            select: {
+              decorations: {
+                select: {
+                  id: true,
+                  name: true,
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        take: 5
+      }
+    }
+  })
+
+  if (!user) {
+    return notFound()
+  }
 
   return (
     <FormLayout
@@ -66,7 +121,6 @@ export default async function ProfilePage(props: ProfilePageProps) {
             </div>
           </div>
         </div>
-
 
         <div className="col-span-12 md:col-span-8 bg-sand-light rounded-2xl">
           <div className="p-8">
