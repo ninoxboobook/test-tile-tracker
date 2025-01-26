@@ -23,6 +23,7 @@ export async function getUserProfile() {
       firstName: true,
       lastName: true,
       imageUrl: true,
+      socials: true,
       isPublic: true,
       publicTestTiles: true,
       publicCollections: true,
@@ -47,6 +48,7 @@ export async function updateProfile(formData: FormData) {
   const currentPassword = formData.get('currentPassword') as string
   const newPassword = formData.get('newPassword') as string
   const imageUrl = formData.get('imageUrl') as string
+  const socials = formData.get('socials') as string
   const isPublicRaw = formData.get('isPublic')
   const isPublic = isPublicRaw === 'true'
   const publicTestTilesRaw = formData.get('publicTestTiles')
@@ -64,6 +66,7 @@ export async function updateProfile(formData: FormData) {
     firstName: firstName || null,
     lastName: lastName || null,
     imageUrl: imageUrl || null,
+    socials: socials || null,
     isPublic,
     publicTestTiles,
     publicCollections,

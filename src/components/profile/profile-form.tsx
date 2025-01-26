@@ -163,6 +163,9 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 </h2>
               )}
             </div>
+            <div>
+            {/* TODO: Add socials */}
+            </div>
           </div>
         </div>
         <div className="col-span-12 md:col-span-8 bg-sand-light rounded-2xl p-8">

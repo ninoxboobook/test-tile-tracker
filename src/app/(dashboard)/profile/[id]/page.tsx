@@ -42,6 +42,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
       lastName: true,
       imageUrl: true,
       isPublic: true,
+      socials: true,
       testTiles: {
         select: {
           id: true,
