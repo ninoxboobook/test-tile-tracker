@@ -96,9 +96,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
         where: {
           isPublic: true
         },
+        orderBy: {
+          createdAt: 'desc'
+        },
         select: {
           id: true,
           name: true,
+          createdAt: true,
           description: true,
           testTiles: {
             select: {
@@ -112,9 +116,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
         where: {
           isPublic: true
         },
+        orderBy: {
+          createdAt: 'desc'
+        },
         select: {
           id: true,
           name: true,
+          createdAt: true,
           imageUrl: true,
           source: true,
           manufacturer: true,
@@ -139,9 +147,13 @@ export default async function ProfilePage(props: ProfilePageProps) {
         where: {
           isPublic: true
         },
+        orderBy: {
+          createdAt: 'desc'
+        },
         select: {
           id: true,
           name: true,
+          createdAt: true,
           imageUrl: true,
           manufacturer: true,
           type: {
@@ -162,6 +174,43 @@ export default async function ProfilePage(props: ProfilePageProps) {
   if (!user) {
     return notFound()
   }
+
+  // Combine and sort recent activities
+  const recentActivities = [
+    ...user.testTiles.map(item => ({
+      type: 'test-tile',
+      id: item.id,
+      name: item.name,
+      createdAt: item.createdAt,
+      imageUrl: item.imageUrl?.[0],
+      subtitle: item.clayBody?.name
+    })),
+    ...user.collections.map(item => ({
+      type: 'collection',
+      id: item.id,
+      name: item.name,
+      createdAt: item.createdAt,
+      imageUrl: item.testTiles[0]?.imageUrl?.[0],
+      subtitle: `${item.testTiles.length} test tiles`
+    })),
+    ...user.decorations.map(item => ({
+      type: 'decoration',
+      id: item.id,
+      name: item.name,
+      createdAt: item.createdAt,
+      imageUrl: item.imageUrl?.[0],
+      subtitle: item.manufacturer || item.source
+    })),
+    ...user.clayBodies.map(item => ({
+      type: 'clay-body',
+      id: item.id,
+      name: item.name,
+      createdAt: item.createdAt,
+      imageUrl: item.imageUrl?.[0],
+      subtitle: item.manufacturer
+    }))
+  ].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 5)
 
   return (
     <FormLayout
@@ -257,38 +306,49 @@ export default async function ProfilePage(props: ProfilePageProps) {
           <div className="bg-sand-light rounded-2xl">
             <div className="p-8">
               <h3 className="text-2xl font-semibold text-clay-800">Recent activity</h3>
-              <p className="mt-2 text-clay-600">Last 5 test tiles created by {user?.username}</p>
+              <p className="mt-2 text-clay-600">{user?.username}'s latest public test tiles, collections, clay bodies and decorations</p>
             </div>
             <div className="border-t border-clay-200">
               <ul role="list" className="divide-y divide-clay-200">
-                {user.testTiles.length > 0 ? (
-                  user.testTiles.map((tile) => (
-                    <li key={tile.id} className="px-8 py-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
-                          <Link
-                            href={`/test-tiles/${tile.id}`}
-                            className="font-semibold text-brand hover:text-clay-900 truncate"
-                          >
-                            {tile.name}
+                {recentActivities.map((activity) => (
+                  <li key={activity.id} className="flex items-center justify-between gap-x-6 py-5 px-8">
+                    <div className="flex min-w-0 gap-x-4">
+                      {activity.imageUrl ? (
+                        <Image
+                          src={activity.imageUrl}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 flex-none rounded-md bg-clay-50 object-cover"
+                        />
+                      ) : (
+                        <div className="h-12 w-12 flex-none rounded-md bg-clay-50" />
+                      )}
+                      <div className="min-w-0 flex-auto">
+                        <p className="text-sm font-semibold leading-6 text-clay-900">
+                          <Link href={`/${activity.type}s/${activity.id}`} className="hover:underline">
+                            {activity.name}
                           </Link>
-                          <p className="text-clay-600 truncate">
-                            {tile.clayBody.name} • {tile.decorationLayers.reduce((total, layer) => total + layer.decorations.length, 0)} decorations
-                          </p>
-                        </div>
-                        <div className="flex-shrink-0 ml-5">
-                          <div className="text-clay-500">
-                            {formatDate(tile.createdAt)}
-                          </div>
+                        </p>
+                        <div className="mt-1 flex items-center gap-x-3 text-xs leading-5 text-clay-500">
+                          <p className="truncate capitalize">{activity.type.replace('-', ' ')}</p>
+                          <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                            <circle cx={1} cy={1} r={1} />
+                          </svg>
+                          {activity.subtitle && (
+                            <>
+                              <p className="truncate">{activity.subtitle}</p>
+                              <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                                <circle cx={1} cy={1} r={1} />
+                              </svg>
+                            </>
+                          )}
+                          <time dateTime={activity.createdAt.toISOString()}>{formatDate(activity.createdAt)}</time>
                         </div>
                       </div>
-                    </li>
-                  ))
-                ) : (
-                  <li className="px-4 py-4 sm:px-6 text-clay-500">
-                    No test tiles found
+                    </div>
                   </li>
-                )}
+                ))}
               </ul>
             </div>
           </div>
