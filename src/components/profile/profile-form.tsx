@@ -49,6 +49,25 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [switchingDecorationsToPublic, setSwitchingDecorationsToPublic] = useState<boolean | null>(null)
   const [switchingClayBodiesToPublic, setSwitchingClayBodiesToPublic] = useState<boolean | null>(null)
 
+  const [socials, setSocials] = useState<{
+    twitter?: string;
+    instagram?: string;
+    website?: string;
+  }>(() => {
+    try {
+      return initialData?.socials ? JSON.parse(initialData.socials) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const handleSocialChange = (platform: 'twitter' | 'instagram' | 'website', value: string) => {
+    setSocials(prev => ({
+      ...prev,
+      [platform]: value
+    }));
+  };
+
   const {
     register,
     formState: { errors, dirtyFields },
@@ -91,7 +110,11 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
 
       Object.entries(data).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
-          formData.append(key, value.toString())
+          if (key === 'socials') {
+            formData.append(key, JSON.stringify(socials))
+          } else {
+            formData.append(key, value.toString())
+          }
         }
       })
 
@@ -164,7 +187,35 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               )}
             </div>
             <div>
-            {/* TODO: Add socials */}
+              <div className="space-y-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Twitter URL"
+                    className="w-full px-4 py-2 border border-clay-200 rounded-md focus:outline-none focus:ring-2 focus:ring-clay-500"
+                    value={socials.twitter || ''}
+                    onChange={(e) => handleSocialChange('twitter', e.target.value)}
+                  />
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Instagram URL"
+                    className="w-full px-4 py-2 border border-clay-200 rounded-md focus:outline-none focus:ring-2 focus:ring-clay-500"
+                    value={socials.instagram || ''}
+                    onChange={(e) => handleSocialChange('instagram', e.target.value)}
+                  />
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Personal Website"
+                    className="w-full px-4 py-2 border border-clay-200 rounded-md focus:outline-none focus:ring-2 focus:ring-clay-500"
+                    value={socials.website || ''}
+                    onChange={(e) => handleSocialChange('website', e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
