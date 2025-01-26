@@ -9,10 +9,10 @@ import { FormField } from '@/components/ui/forms/form-field'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { updateProfile } from '@/app/(dashboard)/profile/actions'
-import { 
-  getUserTestTilesCount, 
-  getUserCollectionsCount, 
-  getUserDecorationsCount, 
+import {
+  getUserTestTilesCount,
+  getUserCollectionsCount,
+  getUserDecorationsCount,
   getUserClayBodiesCount,
   updateTestTilesVisibility,
   updateCollectionsVisibility,
@@ -50,7 +50,6 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [switchingClayBodiesToPublic, setSwitchingClayBodiesToPublic] = useState<boolean | null>(null)
 
   const [socials, setSocials] = useState<{
-    twitter?: string;
     instagram?: string;
     website?: string;
   }>(() => {
@@ -61,7 +60,7 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
     }
   });
 
-  const handleSocialChange = (platform: 'twitter' | 'instagram' | 'website', value: string) => {
+  const handleSocialChange = (platform: 'instagram' | 'website', value: string) => {
     setSocials(prev => ({
       ...prev,
       [platform]: value
@@ -76,7 +75,10 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
     watch,
   } = useForm<ProfileUpdateFormData>({
     resolver: zodResolver(profileUpdateSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      socials: initialData?.socials || ''
+    },
   })
 
   const isPublic = watch('isPublic')
@@ -186,36 +188,25 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
                 </h2>
               )}
             </div>
-            <div>
-              <div className="space-y-4">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Twitter URL"
-                    className="w-full px-4 py-2 border border-clay-200 rounded-md focus:outline-none focus:ring-2 focus:ring-clay-500"
-                    value={socials.twitter || ''}
-                    onChange={(e) => handleSocialChange('twitter', e.target.value)}
-                  />
-                </div>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Instagram URL"
-                    className="w-full px-4 py-2 border border-clay-200 rounded-md focus:outline-none focus:ring-2 focus:ring-clay-500"
-                    value={socials.instagram || ''}
-                    onChange={(e) => handleSocialChange('instagram', e.target.value)}
-                  />
-                </div>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Personal Website"
-                    className="w-full px-4 py-2 border border-clay-200 rounded-md focus:outline-none focus:ring-2 focus:ring-clay-500"
-                    value={socials.website || ''}
-                    onChange={(e) => handleSocialChange('website', e.target.value)}
-                  />
-                </div>
-              </div>
+            <div className="space-y-6 w-full mt-2">
+              <FormField
+                label="Instagram"
+                name="instagram"
+                register={register}
+                error={errors.socials}
+                placeholder="Instagram URL"
+                value={socials.instagram || ''}
+                onChange={(e) => handleSocialChange('instagram', e.target.value)}
+              />
+              <FormField
+                label="Website"
+                name="website"
+                register={register}
+                error={errors.socials}
+                placeholder="Personal Website URL"
+                value={socials.website || ''}
+                onChange={(e) => handleSocialChange('website', e.target.value)}
+              />
             </div>
           </div>
         </div>
@@ -460,8 +451,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           setSwitchingTestTilesToPublic(null)
         }}
         variant="info"
-        title={switchingTestTilesToPublic 
-          ? "Make existing private test tiles public?" 
+        title={switchingTestTilesToPublic
+          ? "Make existing private test tiles public?"
           : "Make existing public test tiles private?"
         }
         description={testTilesCount && switchingTestTilesToPublic !== null
@@ -478,14 +469,14 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               await updateTestTilesVisibility(switchingTestTilesToPublic)
               const newCounts = await getUserTestTilesCount()
               setTestTilesCount(newCounts)
-              setMessage({ 
-                type: 'success', 
-                text: `Successfully updated visibility for ${switchingTestTilesToPublic ? 'private' : 'public'} test tiles` 
+              setMessage({
+                type: 'success',
+                text: `Successfully updated visibility for ${switchingTestTilesToPublic ? 'private' : 'public'} test tiles`
               })
             } catch (error) {
-              setMessage({ 
-                type: 'error', 
-                text: `Failed to update test tiles visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              setMessage({
+                type: 'error',
+                text: `Failed to update test tiles visibility: ${error instanceof Error ? error.message : 'Unknown error'}`
               })
             }
           }
@@ -501,8 +492,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           setSwitchingCollectionsToPublic(null)
         }}
         variant="info"
-        title={switchingCollectionsToPublic 
-          ? "Make existing private collections public?" 
+        title={switchingCollectionsToPublic
+          ? "Make existing private collections public?"
           : "Make existing public collections private?"
         }
         description={collectionsCount && switchingCollectionsToPublic !== null
@@ -519,14 +510,14 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               await updateCollectionsVisibility(switchingCollectionsToPublic)
               const newCounts = await getUserCollectionsCount()
               setCollectionsCount(newCounts)
-              setMessage({ 
-                type: 'success', 
-                text: `Successfully updated visibility for ${switchingCollectionsToPublic ? 'private' : 'public'} collections` 
+              setMessage({
+                type: 'success',
+                text: `Successfully updated visibility for ${switchingCollectionsToPublic ? 'private' : 'public'} collections`
               })
             } catch (error) {
-              setMessage({ 
-                type: 'error', 
-                text: `Failed to update collections visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              setMessage({
+                type: 'error',
+                text: `Failed to update collections visibility: ${error instanceof Error ? error.message : 'Unknown error'}`
               })
             }
           }
@@ -542,8 +533,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           setSwitchingDecorationsToPublic(null)
         }}
         variant="info"
-        title={switchingDecorationsToPublic 
-          ? "Make existing private decorations public?" 
+        title={switchingDecorationsToPublic
+          ? "Make existing private decorations public?"
           : "Make existing public decorations private?"
         }
         description={decorationsCount && switchingDecorationsToPublic !== null
@@ -560,14 +551,14 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               await updateDecorationsVisibility(switchingDecorationsToPublic)
               const newCounts = await getUserDecorationsCount()
               setDecorationsCount(newCounts)
-              setMessage({ 
-                type: 'success', 
-                text: `Successfully updated visibility for ${switchingDecorationsToPublic ? 'private' : 'public'} decorations` 
+              setMessage({
+                type: 'success',
+                text: `Successfully updated visibility for ${switchingDecorationsToPublic ? 'private' : 'public'} decorations`
               })
             } catch (error) {
-              setMessage({ 
-                type: 'error', 
-                text: `Failed to update decorations visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              setMessage({
+                type: 'error',
+                text: `Failed to update decorations visibility: ${error instanceof Error ? error.message : 'Unknown error'}`
               })
             }
           }
@@ -583,8 +574,8 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           setSwitchingClayBodiesToPublic(null)
         }}
         variant="info"
-        title={switchingClayBodiesToPublic 
-          ? "Make existing private clay bodies public?" 
+        title={switchingClayBodiesToPublic
+          ? "Make existing private clay bodies public?"
           : "Make existing public clay bodies private?"
         }
         description={clayBodiesCount && switchingClayBodiesToPublic !== null
@@ -601,14 +592,14 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
               await updateClayBodiesVisibility(switchingClayBodiesToPublic)
               const newCounts = await getUserClayBodiesCount()
               setClayBodiesCount(newCounts)
-              setMessage({ 
-                type: 'success', 
-                text: `Successfully updated visibility for ${switchingClayBodiesToPublic ? 'private' : 'public'} clay bodies` 
+              setMessage({
+                type: 'success',
+                text: `Successfully updated visibility for ${switchingClayBodiesToPublic ? 'private' : 'public'} clay bodies`
               })
             } catch (error) {
-              setMessage({ 
-                type: 'error', 
-                text: `Failed to update clay bodies visibility: ${error instanceof Error ? error.message : 'Unknown error'}` 
+              setMessage({
+                type: 'error',
+                text: `Failed to update clay bodies visibility: ${error instanceof Error ? error.message : 'Unknown error'}`
               })
             }
           }

@@ -119,6 +119,9 @@ export default async function ProfilePage(props: ProfilePageProps) {
                   </h2>
                 )}
               </div>
+              <div>
+                {/* TODO: Add socials */}
+              </div>
             </div>
           </div>
         </div>
