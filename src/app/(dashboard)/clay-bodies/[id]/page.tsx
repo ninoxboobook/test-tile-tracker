@@ -122,9 +122,10 @@ export default async function ClayBodyPage({ params }: PageProps) {
       variant="detail"
     >
       <DetailLayout
-        title="Clay Body Details"
+        title={clayBody.name}
         items={detailItems}
         images={clayBody.imageUrl}
+        isOwner={clayBody.userId === session?.user?.id}
       />
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles featuring this clay body</h2>

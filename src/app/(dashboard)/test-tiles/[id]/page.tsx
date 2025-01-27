@@ -128,9 +128,10 @@ export default async function TestTilePage({ params }: PageProps) {
       variant="detail"
     >
       <DetailLayout
-        title="Test Tile Details"
+        title={testTile.name}
         items={detailItems}
-        images={testTile.imageUrl || undefined}
+        images={testTile.imageUrl}
+        isOwner={testTile.user.id === session?.user?.id}
       />
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Collections this tile appears in</h2>

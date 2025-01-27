@@ -15,9 +15,10 @@ interface DetailLayoutProps {
   title: string
   items: DetailItem[]
   images?: string[]
+  isOwner?: boolean
 }
 
-export function DetailLayout({ title, items, images }: DetailLayoutProps) {
+export function DetailLayout({ title, items, images, isOwner = false }: DetailLayoutProps) {
   const renderValue = (value: DetailItem['value']) => {
     if (!value) return null
     
@@ -135,7 +136,7 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
         </div>
       </div>
       <div className="col-span-12 md:col-span-5 order-1 md:order-2">
-        <DetailImage images={images} />
+        <DetailImage images={images} isOwner={isOwner} />
       </div>
     </div>
   )

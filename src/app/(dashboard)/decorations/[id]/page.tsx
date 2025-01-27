@@ -124,6 +124,7 @@ export default async function DecorationPage(
         title="Decoration Details"
         items={detailItems}
         images={decorationWithRelations.imageUrl || undefined}
+        isOwner={decorationWithRelations.userId === session?.user?.id}
       />
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles featuring this decoration</h2>
