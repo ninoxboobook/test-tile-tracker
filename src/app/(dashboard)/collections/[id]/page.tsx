@@ -88,7 +88,11 @@ export default async function CollectionPage({ params }: PageProps) {
       ) : null}
     >
       <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles in this collection</h2>
-      <CollectionTestTiles testTiles={collection.testTiles} collectionId={collection.id} />
+      <CollectionTestTiles 
+        testTiles={collection.testTiles} 
+        collectionId={collection.id}
+        isOwner={collection.userId === session?.user?.id}
+      />
     </PageLayout>
   )
 }

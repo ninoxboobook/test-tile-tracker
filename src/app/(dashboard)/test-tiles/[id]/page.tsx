@@ -136,7 +136,11 @@ export default async function TestTilePage({ params }: PageProps) {
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Collections this tile appears in</h2>
         <div className="mt-4">
-          <TestTileCollections collections={testTile.collections} testTileId={testTile.id} />
+          <TestTileCollections 
+            collections={testTile.collections} 
+            testTileId={testTile.id}
+            isOwner={testTile.userId === session?.user?.id}
+          />
         </div>
       </div>
     </PageLayout>

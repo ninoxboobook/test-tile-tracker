@@ -130,7 +130,11 @@ export default async function ClayBodyPage({ params }: PageProps) {
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles featuring this clay body</h2>
         <div className="mt-4">
-          <ClayBodyTestTiles testTiles={clayBody.testTiles} clayBodyId={clayBody.id} />
+          <ClayBodyTestTiles 
+            testTiles={clayBody.testTiles} 
+            clayBodyId={clayBody.id}
+            isOwner={clayBody.userId === session?.user?.id}
+          />
         </div>
       </div>
     </PageLayout>

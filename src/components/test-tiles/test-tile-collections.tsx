@@ -18,9 +18,10 @@ type CollectionWithTiles = Collection & {
 interface TestTileCollectionsProps {
   collections: CollectionWithTiles[]
   testTileId: string
+  isOwner?: boolean
 }
 
-export function TestTileCollections({ collections, testTileId }: TestTileCollectionsProps) {
+export function TestTileCollections({ collections, testTileId, isOwner = false }: TestTileCollectionsProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('test-tile-collections')
   const [search, setSearch] = useState('')
   const [activeFilters, setActiveFilters] = useState<Record<string, (string | number)[]>>({})
@@ -49,12 +50,14 @@ export function TestTileCollections({ collections, testTileId }: TestTileCollect
     return (
       <EmptyState
         title="No collections"
-        description="Create a collection to start organizing your test tiles"
-        action={
-          <Link href={`/test-tiles/${testTileId}/add-to-collection`}>
+        description={isOwner 
+          ? "Create a new collection and add this test tile to it, or edit the test tile to add it to an existing collection."
+          : "This test tile hasn't been added to any collections yet."}
+        action={isOwner ? (
+          <Link href={`/collections/new`}>
             <ActionButton>Create collection</ActionButton>
           </Link>
-        }
+        ) : undefined}
       />
     )
   }

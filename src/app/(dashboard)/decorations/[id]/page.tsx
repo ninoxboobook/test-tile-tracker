@@ -143,6 +143,7 @@ export default async function DecorationPage(
               ).values()
             )}
             decorationId={decorationWithRelations.id} 
+            isOwner={decorationWithRelations.userId === session?.user?.id}
           />
         </div>
       </div>
