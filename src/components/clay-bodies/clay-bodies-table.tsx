@@ -60,7 +60,7 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
     accessorKey: 'cone',
     header: 'Cone',
     cell: ({ row }) => (
-      <div className="max-w-64 whitespace-normal">
+      <div className="min-w-24 max-w-64 sm:whitespace-normal">
         {row.original.cone.map(c => c.name).join(', ')}
       </div>
     ),

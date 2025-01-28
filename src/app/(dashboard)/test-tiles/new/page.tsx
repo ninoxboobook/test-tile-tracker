@@ -51,7 +51,7 @@ export default async function NewTestTilePage() {
     }),
     prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { publicTestTiles: true }
+      select: { publicTestTiles: true, publicClayBodies: true, publicDecorations: true }
     })
   ])
 
@@ -76,7 +76,11 @@ export default async function NewTestTilePage() {
           atmosphereId: '',
           decorationLayers: [],
           collectionIds: [],
-          isPublic: user?.publicTestTiles ?? false
+          isPublic: user?.publicTestTiles ?? false,
+        }}
+        userPreferences={{
+          publicClayBodies: user?.publicClayBodies ?? false,
+          publicDecorations: user?.publicDecorations ?? false
         }}
       />
     </FormLayout>

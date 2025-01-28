@@ -42,6 +42,10 @@ interface TestTileFormProps {
   atmospheres: Array<Atmosphere>
   clayBodyTypes: Array<ClayBodyType>
   decorationTypes: Array<DecorationType>
+  userPreferences?: {
+    publicClayBodies: boolean
+    publicDecorations: boolean
+  }
 }
 
 export function TestTileForm({
@@ -54,7 +58,8 @@ export function TestTileForm({
   cones,
   atmospheres,
   clayBodyTypes,
-  decorationTypes
+  decorationTypes,
+  userPreferences
 }: TestTileFormProps) {
   const router = useRouter()
   const [isClayBodyModalOpen, setIsClayBodyModalOpen] = useState(false)
@@ -424,6 +429,7 @@ export function TestTileForm({
           cones={cones}
           isInModal={true}
           onCancel={() => setIsClayBodyModalOpen(false)}
+          initialData={{ isPublic: userPreferences?.publicClayBodies ?? false }}
         />
       </Modal>
 
@@ -439,6 +445,31 @@ export function TestTileForm({
           atmospheres={atmospheres}
           isInModal={true}
           onCancel={() => setIsDecorationModalOpen(false)}
+          initialData={{
+            id: '',
+            name: '',
+            typeId: '',
+            type: {
+              id: '',
+              name: ''
+            },
+            source: null,
+            manufacturer: null,
+            cone: [],
+            atmosphere: [],
+            colour: null,
+            surface: null,
+            transparency: null,
+            glazyUrl: null,
+            imageUrl: null,
+            recipe: null,
+            notes: null,
+            userId: '',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            decorationLayers: [],
+            isPublic: userPreferences?.publicDecorations ?? false
+          }}
         />
       </Modal>
     </>

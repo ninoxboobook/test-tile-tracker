@@ -57,7 +57,7 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
     header: 'Cone',
     accessorFn: (row) => row.cone.map(c => c.name).join(', '),
     cell: ({ row }) => (
-      <div className="max-w-64 whitespace-normal">
+      <div className="min-w-24 max-w-64 sm:whitespace-normal">
         {row.original.cone.map(c => c.name).join(', ')}
       </div>
     ),
