@@ -59,7 +59,11 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
   {
     accessorKey: 'cone',
     header: 'Cone',
-    cell: ({ row }) => row.original.cone.map(c => c.name).join(', '),
+    cell: ({ row }) => (
+      <div className="max-w-64 whitespace-normal">
+        {row.original.cone.map(c => c.name).join(', ')}
+      </div>
+    ),
   },
   {
     accessorKey: 'manufacturer',

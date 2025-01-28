@@ -55,7 +55,11 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
   {
     id: 'cone',
     header: 'Cone',
-    accessorFn: (row) => row.cone.map(c => c.name).join(', '),
+    cell: ({ row }) => (
+      <div className="max-w-64 whitespace-normal">
+        {row.original.cone.map(c => c.name).join(', ')}
+      </div>
+    ),
   },
   {
     accessorKey: 'source',
