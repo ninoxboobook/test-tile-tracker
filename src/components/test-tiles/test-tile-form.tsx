@@ -228,7 +228,7 @@ export function TestTileForm({
                   error={errors.stamp}
                 />
 
-                <div className="space-x-3 flex">
+                <div className="sm:space-x-3 space-y-3 sm:space-y-0 flex flex-col sm:flex-row">
                   <div className="grow">
                     <FormSelect
                       name="clayBodyId"
@@ -239,7 +239,7 @@ export function TestTileForm({
                       required
                     />
                   </div>
-                  <div className="self-end">
+                  <div className="sm:self-end">
                     <ActionButton
                       type="button"
                       variant="secondary"
@@ -269,7 +269,7 @@ export function TestTileForm({
                 />
               </div>
               <div className="space-y-4 border-y border-clay-200 pt-5 pb-10">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <h3 className="text-lg font-medium text-clay-800 mt-2">Decorations</h3>
                     <p className="text-clay-900 mb-2">Add layers of decorations to your test tile</p>
@@ -278,7 +278,7 @@ export function TestTileForm({
                       type="button"
                       variant="secondary"
                       onClick={() => setIsDecorationModalOpen(true)}
-                      className="mt-1"
+                      className="mt-1 self-start sm:self-auto"
                   >
                       Add new decoration
                   </ActionButton>
