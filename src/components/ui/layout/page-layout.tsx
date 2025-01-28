@@ -18,7 +18,7 @@ export function PageLayout({ title, action, children, description, variant = 'de
           <Breadcrumbs title={title} />
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-display font-semibold text-clay-800">{title}</h1>
-            {!isPublic && <LockClosedIcon className="h-5 w-5 text-clay-500 translate-y-[3px]" />}
+            {!isPublic && <LockClosedIcon className="h-5 w-5 text-clay-500 translate-y-[3px]" aria-hidden="false" aria-label="Private content"/>}
           </div>
           {description && (
             <p className="mt-4 text-lg text-clay-900">{description}</p>

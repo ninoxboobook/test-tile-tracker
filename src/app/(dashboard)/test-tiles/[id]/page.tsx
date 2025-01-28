@@ -111,6 +111,8 @@ export default async function TestTilePage({ params }: PageProps) {
   return (
     <PageLayout
       title={testTile.name}
+      variant="detail"
+      isPublic={testTile.isPublic}
       action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/test-tiles/${testTile.id}/edit`}>
@@ -125,10 +127,9 @@ export default async function TestTilePage({ params }: PageProps) {
           />
         </div>
       ) : null}
-      variant="detail"
     >
       <DetailLayout
-        title={testTile.name}
+        title="Test tile details"
         items={detailItems}
         images={testTile.imageUrl}
         isOwner={testTile.user.id === session?.user?.id}

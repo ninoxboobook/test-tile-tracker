@@ -120,9 +120,10 @@ export default async function ClayBodyPage({ params }: PageProps) {
         </div>
       ) : null}
       variant="detail"
+      isPublic={clayBody.isPublic}
     >
       <DetailLayout
-        title={clayBody.name}
+        title="Clay body details"
         items={detailItems}
         images={clayBody.imageUrl}
         isOwner={clayBody.userId === session?.user?.id}

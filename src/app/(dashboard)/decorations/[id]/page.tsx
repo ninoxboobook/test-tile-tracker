@@ -104,6 +104,8 @@ export default async function DecorationPage(
   return (
     <PageLayout
       title={decorationWithRelations.name}
+      variant="detail"
+      isPublic={decorationWithRelations.isPublic}
       action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/decorations/${decorationWithRelations.id}/edit`}>
@@ -118,10 +120,9 @@ export default async function DecorationPage(
           />
         </div>
       ) : null}
-      variant="detail"
     >
       <DetailLayout
-        title="Decoration Details"
+        title="Decoration details"
         items={detailItems}
         images={decorationWithRelations.imageUrl || undefined}
         isOwner={decorationWithRelations.userId === session?.user?.id}
