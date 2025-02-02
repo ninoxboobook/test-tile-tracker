@@ -112,6 +112,11 @@ export const columns: ColumnDef<TestTileWithRelations>[] = [
     ),
   },
   {
+    accessorKey: 'isPublic',
+    header: 'Visibility',
+    cell: ({ row }) => row.getValue('isPublic') ? 'Public' : 'Private',
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Created',
     cell: ({ row }) => {

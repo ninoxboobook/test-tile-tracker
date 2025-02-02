@@ -41,6 +41,11 @@ export const columns: ColumnDef<CollectionWithTestTiles>[] = [
     cell: ({ row }) => row.original.testTiles.length,
   },
   {
+    accessorKey: 'isPublic',
+    header: 'Visibility',
+    cell: ({ row }) => row.getValue('isPublic') ? 'Public' : 'Private',
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Created',
     cell: ({ row }) => {

@@ -109,6 +109,11 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
     }
   },
   {
+    accessorKey: 'isPublic',
+    header: 'Visibility',
+    cell: ({ row }) => row.getValue('isPublic') ? 'Public' : 'Private',
+  },
+  {
     accessorKey: 'createdAt',
     header: 'Created',
     cell: ({ row }) => {
