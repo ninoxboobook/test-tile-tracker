@@ -14,6 +14,29 @@ import {
   Table,
 } from '@tanstack/react-table'
 import { useState } from 'react'
+import { 
+  ChevronUpDownIcon, 
+  ChevronUpIcon, 
+  ChevronDownIcon 
+} from '@heroicons/react/16/solid'
+
+function SortIcon({ isSorted, isSortedDesc }: { isSorted: boolean; isSortedDesc: boolean | undefined }) {
+  if (!isSorted) {
+    return (
+      <ChevronUpDownIcon className="w-4 h-4 ml-[3px] text-clay-500" aria-hidden="true" />
+    )
+  }
+
+  if (isSortedDesc) {
+    return (
+      <ChevronDownIcon className="w-4 h-4 ml-[3px] text-clay-700" aria-hidden="true" />
+    )
+  }
+
+  return (
+    <ChevronUpIcon className="w-4 h-4 ml-[3px] text-clay-700" aria-hidden="true" />
+  )
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -69,14 +92,30 @@ export function DataTable<TData, TValue>({
                       <div
                         {...{
                           className: header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
+                            ? 'cursor-pointer select-none flex items-center'
                             : '',
                           onClick: header.column.getToggleSortingHandler(),
+                          role: header.column.getCanSort() ? 'button' : undefined,
+                          'aria-label': header.column.getCanSort()
+                            ? `Sort by ${header.column.columnDef.header as string}${
+                                header.column.getIsSorted()
+                                  ? header.column.getIsSorted() === 'desc'
+                                    ? ' (sorted descending)'
+                                    : ' (sorted ascending)'
+                                  : ' (not sorted)'
+                              }`
+                            : undefined,
                         }}
                       >
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
+                        )}
+                        {header.column.getCanSort() && (
+                          <SortIcon
+                            isSorted={!!header.column.getIsSorted()}
+                            isSortedDesc={header.column.getIsSorted() === 'desc'}
+                          />
                         )}
                       </div>
                     )}
