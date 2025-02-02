@@ -28,6 +28,11 @@ interface ProfilePageProps {
   }>
 }
 
+const pluralise = (word: string): string => {
+  if (word === 'clay-body') return 'clay-bodies';
+  return word + 's';
+};
+
 export default async function ProfilePage(props: ProfilePageProps) {
   const params = await props.params;
   const session = await getServerSession(authOptions)
@@ -322,7 +327,7 @@ export default async function ProfilePage(props: ProfilePageProps) {
                       )}
                       <div className="min-w-0 flex-auto">
                         <p className="font-semibold text-brand">
-                          <Link href={`/${activity.type}s/${activity.id}`} className="hover:underline">
+                          <Link href={`/${pluralise(activity.type)}/${activity.id}`} className="hover:underline">
                             {activity.name}
                           </Link>
                         </p>

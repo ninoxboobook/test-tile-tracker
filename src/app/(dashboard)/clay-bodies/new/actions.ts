@@ -86,7 +86,7 @@ export async function createClayBody(formData: FormData, redirectOnSuccess = tru
   if (redirectOnSuccess) {
     redirect(`/clay-bodies/${clayBody.id}`)
   }
-  
+  console.log("DA CLAYBODY IS", clayBody)
   return clayBody
 }
 
