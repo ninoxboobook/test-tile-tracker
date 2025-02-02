@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 interface DetailItem {
   label: string
-  value: string | null | undefined | { href: string; text: string }[] | {
+  value: string | null | undefined | { href: string; text: string; isPublic?: boolean }[] | {
     type: 'color'
     hex: string
     category: string
@@ -64,9 +64,13 @@ export function DetailLayout({ title, items, images, isOwner = false }: DetailLa
             currentLinks = []
           } else {
             currentLinks.push(
-              <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
-                {item.text}
-              </Link>
+              item.isPublic !== false ? (
+                <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
+                  {item.text}
+                </Link>
+              ) : (
+                <span key={i} className="text-clay-900">{item.text}</span>
+              )
             )
           }
         })
@@ -87,9 +91,13 @@ export function DetailLayout({ title, items, images, isOwner = false }: DetailLa
       } else {
         // Handle regular links (clay body, collections)
         return value.map((item, i) => (
-          <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
-            {item.text}
-          </Link>
+          item.isPublic !== false ? (
+            <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
+              {item.text}
+            </Link>
+          ) : (
+            <span key={i} className="text-clay-900">{item.text}</span>
+          )
         ))
       }
     }

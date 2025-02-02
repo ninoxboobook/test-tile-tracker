@@ -29,10 +29,24 @@ export default async function TestTilePage({ params }: PageProps) {
       ]
     },
     include: {
-      clayBody: true,
+      clayBody: {
+        select: {
+          id: true,
+          name: true,
+          isPublic: true,
+          userId: true
+        }
+      },
       decorationLayers: {
         include: {
-          decorations: true
+          decorations: {
+            select: {
+              id: true,
+              name: true,
+              isPublic: true,
+              userId: true
+            }
+          }
         },
         orderBy: {
           order: 'asc'
@@ -87,7 +101,8 @@ export default async function TestTilePage({ params }: PageProps) {
       label: 'Clay Body', 
       value: [{ 
         href: `/clay-bodies/${testTile.clayBody.id}`,
-        text: testTile.clayBody.name
+        text: testTile.clayBody.name,
+        isPublic: testTile.clayBody.isPublic || testTile.clayBody.userId === session?.user?.id
       }]
     },
     { label: 'Stamp', value: testTile.stamp },
@@ -100,7 +115,8 @@ export default async function TestTilePage({ params }: PageProps) {
           { href: '#', text: `Layer ${index + 1}:` },
           ...layer.decorations.map(d => ({
             href: `/decorations/${d.id}`,
-            text: d.name
+            text: d.name,
+            isPublic: d.isPublic || d.userId === session?.user?.id
           }))
         ]
       )

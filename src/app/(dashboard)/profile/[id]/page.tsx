@@ -310,39 +310,43 @@ export default async function ProfilePage(props: ProfilePageProps) {
               <p className="mt-2 text-clay-800">{user?.username}'s latest public test tiles, collections, clay bodies and decorations</p>
             </div>
             <div className="border-t border-clay-200">
-              <ul role="list" className="divide-y divide-clay-200">
-                {recentActivities.map((activity) => (
-                  <li key={activity.id} className="flex items-center justify-between gap-x-6 py-5 px-8">
-                    <div className="flex items-center min-w-0 gap-x-4">
-                      {activity.imageUrl ? (
-                        <Image
-                          src={activity.imageUrl}
-                          alt=""
-                          width={56}
-                          height={56}
-                          className="h-14 w-14 flex-none rounded-md bg-clay-50 object-cover"
-                        />
-                      ) : (
-                        <div className="h-14 w-14 flex-none rounded-md bg-sand border border-clay-200" />
-                      )}
-                      <div className="min-w-0 flex-auto">
-                        <p className="font-semibold text-brand">
-                          <Link href={`/${pluralise(activity.type)}/${activity.id}`} className="hover:underline">
-                            {activity.name}
-                          </Link>
-                        </p>
-                        <div className="flex items-center gap-x-2 text-sm text-clay-600 pb-1">
-                          <p className="truncate capitalize">{activity.type.replace('-', ' ')}</p>
-                          <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
-                            <circle cx={1} cy={1} r={1} />
-                          </svg>
-                          <time dateTime={activity.createdAt.toISOString()}>{formatDate(activity.createdAt)}</time>
+              {recentActivities.length === 0 ? (
+                <p className="text-clay-600 py-5 px-8">No recent public activity</p>
+              ) : (
+                <ul role="list" className="divide-y divide-clay-200">
+                  {recentActivities.map((activity) => (
+                    <li key={activity.id} className="flex items-center justify-between gap-x-6 py-5 px-8">
+                      <div className="flex items-center min-w-0 gap-x-4">
+                        {activity.imageUrl ? (
+                          <Image
+                            src={activity.imageUrl}
+                            alt=""
+                            width={56}
+                            height={56}
+                            className="h-14 w-14 flex-none rounded-md bg-clay-50 object-cover"
+                          />
+                        ) : (
+                          <div className="h-14 w-14 flex-none rounded-md bg-sand border border-clay-200" />
+                        )}
+                        <div className="min-w-0 flex-auto">
+                          <p className="font-semibold text-brand">
+                            <Link href={`/${pluralise(activity.type)}/${activity.id}`} className="hover:underline">
+                              {activity.name}
+                            </Link>
+                          </p>
+                          <div className="flex items-center gap-x-2 text-sm text-clay-600 pb-1">
+                            <p className="truncate capitalize">{activity.type.replace('-', ' ')}</p>
+                            <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                              <circle cx={1} cy={1} r={1} />
+                            </svg>
+                            <time dateTime={activity.createdAt.toISOString()}>{formatDate(activity.createdAt)}</time>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
         </div>
