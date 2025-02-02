@@ -16,6 +16,7 @@ import { EmptyState } from '@/components/ui/data/data-empty-state'
 interface CollectionTestTilesProps {
   testTiles: TestTileWithRelations[]
   collectionId: string
+  isOwner?: boolean
 }
 
 // Define filterable columns configuration
@@ -39,7 +40,7 @@ const filterConfig: FilterableColumnConfig<'clayBody' | 'decorations' | 'cone' |
 
 type FilterableColumn = typeof filterConfig.columns[number]
 
-export function CollectionTestTiles({ testTiles, collectionId }: CollectionTestTilesProps) {
+export function CollectionTestTiles({ testTiles, collectionId, isOwner = false }: CollectionTestTilesProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('collection-test-tiles')
   const [search, setSearch] = useState('')
   const [activeFilters, setActiveFilters] = useState<Record<string, (string | number)[]>>({})
@@ -155,12 +156,14 @@ export function CollectionTestTiles({ testTiles, collectionId }: CollectionTestT
     return (
       <EmptyState
         title="No test tiles"
-        description="Add test tiles to this collection to start organizing your experiments"
-        action={
+        description={isOwner 
+          ? "Add test tiles to this collection to start organising your experiments"
+          : "This collection doesn't have any test tiles yet."}
+        action={isOwner ? (
           <Link href={`/test-tiles/new?collectionId=${collectionId}`}>
             <ActionButton>Create test tile</ActionButton>
           </Link>
-        }
+        ) : undefined}
       />
     )
   }

@@ -8,27 +8,33 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { deleteCollection } from './actions'
 import { CollectionTestTiles } from '@/components/collections/collection-test-tiles'
-import { getSessionWithAuth } from '@/lib/auth/admin'
+import { isAdmin } from '@/lib/auth/admin'
 
-export default async function CollectionPage(
-  props: {
-    params: Promise<{ id: string }>
-  }
-) {
-  const params = await props.params;
-  const { session, isAdmin } = await getSessionWithAuth()
+interface PageProps {
+  params: Promise<{ id: string }>
+}
 
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
+export default async function CollectionPage({ params }: PageProps) {
+  const { id } = await params
+  const session = await getServerSession(authOptions)
+  const userIsAdmin = session?.user?.id ? await isAdmin() : false
 
-  const collection = await prisma.collection.findUnique({
+  const collection = await prisma.collection.findFirst({
     where: {
-      id: params.id,
-      ...(isAdmin ? {} : { userId: session.user.id })
+      id,
+      OR: userIsAdmin ? undefined : [
+        { userId: session?.user?.id },
+        { isPublic: true }
+      ]
     },
     include: {
       testTiles: {
+        where: userIsAdmin ? undefined : {
+          OR: [
+            { userId: session?.user?.id },
+            { isPublic: true }
+          ]
+        },
         include: {
           clayBody: true,
           decorationLayers: {
@@ -44,12 +50,15 @@ export default async function CollectionPage(
           atmosphere: true
         }
       },
-      user: isAdmin ? {
+      user: {
         select: {
-          username: true,
-          email: true
+          id: true,
+          ...(userIsAdmin ? {
+            username: true,
+            email: true
+          } : {})
         }
-      } : false
+      }
     }
   })
 
@@ -57,11 +66,14 @@ export default async function CollectionPage(
     return notFound()
   }
 
+  const isOwner = collection.user.id === session?.user?.id || userIsAdmin
+
   return (
     <PageLayout
       title={collection.name}
       description={collection.description ?? undefined}
-      action={
+      isPublic={collection.isPublic}
+      action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/collections/${collection.id}/edit`}>
             <ActionButton>Edit collection</ActionButton>
@@ -74,10 +86,14 @@ export default async function CollectionPage(
             itemName="Collection"
           />
         </div>
-      }
+      ) : null}
     >
       <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles in this collection</h2>
-      <CollectionTestTiles testTiles={collection.testTiles} collectionId={collection.id} />
+      <CollectionTestTiles 
+        testTiles={collection.testTiles} 
+        collectionId={collection.id}
+        isOwner={collection.userId === session?.user?.id}
+      />
     </PageLayout>
   )
 }

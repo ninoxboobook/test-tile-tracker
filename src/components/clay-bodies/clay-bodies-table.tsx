@@ -59,7 +59,11 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
   {
     accessorKey: 'cone',
     header: 'Cone',
-    cell: ({ row }) => row.original.cone.map(c => c.name).join(', '),
+    cell: ({ row }) => (
+      <div className="min-w-24 max-w-64 sm:whitespace-normal">
+        {row.original.cone.map(c => c.name).join(', ')}
+      </div>
+    ),
   },
   {
     accessorKey: 'manufacturer',
@@ -72,6 +76,11 @@ export const columns: ColumnDef<ClayBodyWithRelations>[] = [
       const temp = row.getValue('firingRange')
       return temp ? `${temp}°C` : ''
     },
+  },
+  {
+    accessorKey: 'isPublic',
+    header: 'Visibility',
+    cell: ({ row }) => row.getValue('isPublic') ? 'Public' : 'Private',
   },
   {
     accessorKey: 'createdAt',

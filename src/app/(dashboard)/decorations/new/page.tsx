@@ -25,6 +25,11 @@ export default async function NewDecorationPage() {
     })
   ])
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { publicClayBodies: true }
+  })
+
   return (
     <FormLayout 
       title="Add new decoration"
@@ -35,6 +40,22 @@ export default async function NewDecorationPage() {
         decorationTypes={decorationTypes}
         cones={cones}
         atmospheres={atmospheres}
+        initialData={{
+          id: '',
+          name: '',
+          typeId: '',
+          type: {
+            id: '',
+            name: ''
+          },
+          cone: [],
+          atmosphere: [],
+          userId: session.user.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          decorationLayers: [],
+          isPublic: user?.publicClayBodies ?? false
+        }}
       />
     </FormLayout>
   )

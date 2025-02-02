@@ -20,6 +20,7 @@ export const clayBodySchema = z.object({
   meshSize: z.number().int().optional().nullable(),
   imageUrl: z.array(z.string().url('Invalid URL format')).optional().nullable(),
   notes: z.string().optional().nullable(),
+  isPublic: z.boolean().optional().default(false)
 })
 
 export type ClayBodyFormData = z.infer<typeof clayBodySchema>

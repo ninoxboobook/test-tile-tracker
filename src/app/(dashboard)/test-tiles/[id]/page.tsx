@@ -8,37 +8,57 @@ import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { deleteTestTile } from './actions'
-import { getSessionWithAuth } from '@/lib/auth/admin'
 import { TestTileCollections } from '@/components/test-tiles/test-tile-collections'
+import { isAdmin } from '@/lib/auth/admin'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
 export default async function TestTilePage({ params }: PageProps) {
-  const { session, isAdmin } = await getSessionWithAuth()
   const { id } = await params
+  const session = await getServerSession(authOptions)
+  const userIsAdmin = session?.user?.id ? await isAdmin() : false
 
-  if (!session?.user?.id) {
-    redirect('/login')
-  }
-
-  const testTile = await prisma.testTile.findUnique({
+  const testTile = await prisma.testTile.findFirst({
     where: {
       id,
-      ...(isAdmin ? {} : { userId: session.user.id })
+      OR: userIsAdmin ? undefined : [
+        { userId: session?.user?.id },
+        { isPublic: true }
+      ]
     },
     include: {
-      clayBody: true,
+      clayBody: {
+        select: {
+          id: true,
+          name: true,
+          isPublic: true,
+          userId: true
+        }
+      },
       decorationLayers: {
         include: {
-          decorations: true
+          decorations: {
+            select: {
+              id: true,
+              name: true,
+              isPublic: true,
+              userId: true
+            }
+          }
         },
         orderBy: {
           order: 'asc'
         }
       },
       collections: {
+        where: {
+          OR: [
+            { userId: session?.user?.id }, // Show all collections if user is owner
+            { isPublic: true } // Show only public collections for other users
+          ]
+        },
         include: {
           testTiles: {
             select: {
@@ -50,12 +70,15 @@ export default async function TestTilePage({ params }: PageProps) {
       },
       cone: true,
       atmosphere: true,
-      user: isAdmin ? {
+      user: {
         select: {
-          username: true,
-          email: true
+          id: true,
+          ...(userIsAdmin ? {
+            username: true,
+            email: true
+          } : {})
         }
-      } : false
+      }
     }
   })
 
@@ -63,12 +86,23 @@ export default async function TestTilePage({ params }: PageProps) {
     return notFound()
   }
 
+  // Handle private test tiles - redirect unauthenticated users to login, others to dashboard
+  if (!testTile.isPublic && !userIsAdmin && testTile.user.id !== session?.user?.id) {
+    if (!session?.user?.id) {
+      redirect('/login')
+    }
+    redirect('/dashboard')
+  }
+
+  const isOwner = testTile.user.id === session?.user?.id || userIsAdmin
+
   const detailItems = [
     { 
       label: 'Clay Body', 
       value: [{ 
         href: `/clay-bodies/${testTile.clayBody.id}`,
-        text: testTile.clayBody.name
+        text: testTile.clayBody.name,
+        isPublic: testTile.clayBody.isPublic || testTile.clayBody.userId === session?.user?.id
       }]
     },
     { label: 'Stamp', value: testTile.stamp },
@@ -81,7 +115,8 @@ export default async function TestTilePage({ params }: PageProps) {
           { href: '#', text: `Layer ${index + 1}:` },
           ...layer.decorations.map(d => ({
             href: `/decorations/${d.id}`,
-            text: d.name
+            text: d.name,
+            isPublic: d.isPublic || d.userId === session?.user?.id
           }))
         ]
       )
@@ -92,7 +127,9 @@ export default async function TestTilePage({ params }: PageProps) {
   return (
     <PageLayout
       title={testTile.name}
-      action={
+      variant="detail"
+      isPublic={testTile.isPublic}
+      action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/test-tiles/${testTile.id}/edit`}>
             <ActionButton>Edit test tile</ActionButton>
@@ -105,18 +142,22 @@ export default async function TestTilePage({ params }: PageProps) {
             itemName="Test Tile"
           />
         </div>
-      }
-      variant="detail"
+      ) : null}
     >
       <DetailLayout
-        title="Test Tile Details"
+        title="Test tile details"
         items={detailItems}
-        images={testTile.imageUrl || undefined}
+        images={testTile.imageUrl}
+        isOwner={testTile.user.id === session?.user?.id}
       />
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Collections this tile appears in</h2>
         <div className="mt-4">
-          <TestTileCollections collections={testTile.collections} testTileId={testTile.id} />
+          <TestTileCollections 
+            collections={testTile.collections} 
+            testTileId={testTile.id}
+            isOwner={testTile.userId === session?.user?.id}
+          />
         </div>
       </div>
     </PageLayout>

@@ -36,7 +36,8 @@ export async function createClayBody(formData: FormData, redirectOnSuccess = tru
     shrinkageWetToFired: rawData.shrinkageWetToFired ? parseFloat(rawData.shrinkageWetToFired as string) : null,
     absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
     meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
-    imageUrl: rawData.imageUrl?.filter((url: any) => typeof url === 'string') || []
+    imageUrl: rawData.imageUrl?.filter((url: any) => typeof url === 'string') || [],
+    isPublic: formData.get('isPublic') === 'true'
   }
 
   const validatedData = clayBodySchema.parse(processedData)
@@ -64,6 +65,7 @@ export async function createClayBody(formData: FormData, redirectOnSuccess = tru
     meshSize: validatedData.meshSize,
     imageUrl: validatedData.imageUrl || [],
     notes: validatedData.notes,
+    isPublic: validatedData.isPublic,
     user: {
       connect: {
         id: session.user.id
@@ -84,7 +86,7 @@ export async function createClayBody(formData: FormData, redirectOnSuccess = tru
   if (redirectOnSuccess) {
     redirect(`/clay-bodies/${clayBody.id}`)
   }
-  
+  console.log("DA CLAYBODY IS", clayBody)
   return clayBody
 }
 

@@ -1,4 +1,5 @@
 import { Lozenge, LozengeVariant } from "../lozenge"
+import Image from 'next/image'
 
 interface DataGridTileProps {
   variant?: 'single' | 'quad'
@@ -41,8 +42,10 @@ export function DataGridTile({
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <div className="h-full w-full" />
+            <div className="flex h-full w-full items-center justify-center border-b-[1px] border-clay-200">
+              <div className="h-full w-full bg-brand/10 flex items-center justify-center">
+              <Image src="/images/ttt-logo-white.svg" alt="" width={72} height={50} priority/>
+              </div>
             </div>
           )}
         </div>
@@ -57,7 +60,11 @@ export function DataGridTile({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="h-full w-full" />
+                <div className="flex h-full w-full items-center justify-center">
+              <div className="h-full w-full bg-brand/10 flex items-center justify-center">
+              <Image src="/images/ttt-logo-white.svg" alt="" width={56} height={39} priority/>
+              </div>
+            </div>
               )}
             </div>
           ))}

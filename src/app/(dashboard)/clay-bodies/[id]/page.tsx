@@ -1,15 +1,19 @@
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { DeleteButton } from '@/components/ui/buttons/delete-button'
 import { deleteClayBody } from './actions'
+import { isAdmin } from '@/lib/auth/admin'
 import { PageLayout } from '@/components/ui/layout/page-layout'
 import { DetailLayout } from '@/components/ui/layout/detail-layout'
 import { ClayBodyTestTiles } from '@/components/clay-bodies/clay-body-test-tiles'
-import { getSessionWithAuth } from '@/lib/auth/admin'
+
+interface PageProps {
+  params: Promise<{ id: string }>
+}
 
 function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
   if (!imageUrl?.length) return null
@@ -29,22 +33,18 @@ function ClayBodyImages({ imageUrl }: { imageUrl: string[] | null }) {
   )
 }
 
-export default async function ClayBodyPage(
-  props: {
-    params: Promise<{ id: string }>
-  }
-) {
-  const params = await props.params;
-  const { session, isAdmin } = await getSessionWithAuth()
+export default async function ClayBodyPage({ params }: PageProps) {
+  const { id } = await params
+  const session = await getServerSession(authOptions)
+  const userIsAdmin = session?.user?.id ? await isAdmin() : false
 
-  if (!session?.user?.id) {
-    return notFound()
-  }
-
-  const clayBody = await prisma.clayBody.findUnique({
+  const clayBody = await prisma.clayBody.findFirst({
     where: {
-      id: params.id,
-      ...(isAdmin ? {} : { userId: session.user.id })
+      id,
+      OR: userIsAdmin ? undefined : [
+        { userId: session?.user?.id },
+        { isPublic: true }
+      ]
     },
     include: {
       testTiles: {
@@ -65,18 +65,23 @@ export default async function ClayBodyPage(
       },
       type: true,
       cone: true,
-      user: isAdmin ? {
+      user: {
         select: {
-          username: true,
-          email: true
+          id: true,
+          ...(userIsAdmin ? {
+            username: true,
+            email: true
+          } : {})
         }
-      } : false
+      }
     }
   })
 
   if (!clayBody) {
     return notFound()
   }
+
+  const isOwner = clayBody.user.id === session?.user?.id || userIsAdmin
 
   const detailItems = [
     { label: 'Type', value: clayBody.type?.name },
@@ -100,7 +105,7 @@ export default async function ClayBodyPage(
   return (
     <PageLayout
       title={clayBody.name}
-      action={
+      action={isOwner ? (
         <div className="flex space-x-3">
           <Link href={`/clay-bodies/${clayBody.id}/edit`}>
             <ActionButton>Edit clay body</ActionButton>
@@ -113,18 +118,24 @@ export default async function ClayBodyPage(
             itemName="Clay Body"
           />
         </div>
-      }
+      ) : null}
       variant="detail"
+      isPublic={clayBody.isPublic}
     >
       <DetailLayout
-        title="Clay Body Details"
+        title="Clay body details"
         items={detailItems}
         images={clayBody.imageUrl}
+        isOwner={clayBody.userId === session?.user?.id}
       />
       <div className="mt-6 bg-sand-light rounded-2xl p-8">
         <h2 className="text-2xl font-display font-semibold text-clay-800 mb-6">Test tiles featuring this clay body</h2>
         <div className="mt-4">
-          <ClayBodyTestTiles testTiles={clayBody.testTiles} clayBodyId={clayBody.id} />
+          <ClayBodyTestTiles 
+            testTiles={clayBody.testTiles} 
+            clayBodyId={clayBody.id}
+            isOwner={clayBody.userId === session?.user?.id}
+          />
         </div>
       </div>
     </PageLayout>

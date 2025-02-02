@@ -3,10 +3,9 @@
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 export async function getUserProfileById(id: string) {
-  const session = await getServerSession(authOptions)
   const user = await prisma.user.findUnique({
     where: { id },
     select: {
@@ -48,21 +47,8 @@ export async function getUserProfileById(id: string) {
   })
 
   if (!user) {
-    redirect('/404')
+    return notFound()
   }
 
-  if (user?.isPublic) {
-    console.log('Public user:', user)
-    return user
-  } else {
-    if (!session?.user?.id) {
-      redirect('/login')
-    } else if (session?.user.id === user.id) {
-      return user
-    } else if (session?.user.role === 'ADMIN') {
-      return user
-    } else {
-      redirect('/dashboard')
-    }
-  }
+  return user
 }

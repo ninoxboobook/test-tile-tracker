@@ -92,7 +92,8 @@ export async function updateTestTile(formData: FormData) {
     ...Object.fromEntries(formData.entries()),
     decorationLayers: decorationLayers.filter(layer => layer.decorationIds.length > 0),
     collectionIds: formData.getAll('collectionIds'),
-    imageUrl: formData.getAll('imageUrl').filter(url => typeof url === 'string')
+    imageUrl: formData.getAll('imageUrl').filter(url => typeof url === 'string'),
+    isPublic: formData.get('isPublic') === 'true'
   }
 
   const validatedData = testTileSchema.parse(processedData)
@@ -102,6 +103,7 @@ export async function updateTestTile(formData: FormData) {
     stamp: validatedData.stamp || null,
     notes: validatedData.notes || null,
     imageUrl: validatedData.imageUrl || [],
+    isPublic: validatedData.isPublic,
     clayBody: {
       connect: { id: validatedData.clayBodyId }
     },

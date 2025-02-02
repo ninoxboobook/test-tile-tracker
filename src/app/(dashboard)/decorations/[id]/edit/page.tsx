@@ -62,7 +62,8 @@ export default async function EditDecorationPage(
         id: layer.testTile.id,
         name: layer.testTile.name
       } : null
-    }))
+    })),
+    isPublic: decoration.isPublic
   }
 
   return (

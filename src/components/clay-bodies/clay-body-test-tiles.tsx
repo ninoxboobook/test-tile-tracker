@@ -16,6 +16,7 @@ import { EmptyState } from '@/components/ui/data/data-empty-state'
 interface ClayBodyTestTilesProps {
   testTiles: TestTileWithRelations[]
   clayBodyId: string
+  isOwner?: boolean
 }
 
 // Define filterable columns configuration
@@ -39,7 +40,7 @@ const filterConfig: FilterableColumnConfig<'decorations' | 'collections' | 'cone
 
 type FilterableColumn = typeof filterConfig.columns[number]
 
-export function ClayBodyTestTiles({ testTiles, clayBodyId }: ClayBodyTestTilesProps) {
+export function ClayBodyTestTiles({ testTiles, clayBodyId, isOwner = false }: ClayBodyTestTilesProps) {
   const [view, setView, columnVisibility, setColumnVisibility] = useViewPreference('clay-body-test-tiles')
   const [search, setSearch] = useState('')
   const [activeFilters, setActiveFilters] = useState<Record<string, (string | number)[]>>({})
@@ -153,12 +154,14 @@ export function ClayBodyTestTiles({ testTiles, clayBodyId }: ClayBodyTestTilesPr
     return (
       <EmptyState
         title="No test tiles"
-        description="Create a test tile using this clay body to start exploring its properties"
-        action={
+        description={isOwner 
+          ? "Create a test tile using this clay body to start exploring its properties"
+          : "No test tiles have been created with this clay body yet."}
+        action={isOwner ? (
           <Link href={`/test-tiles/new?clayBodyId=${clayBodyId}`}>
             <ActionButton>Create Test Tile</ActionButton>
           </Link>
-        }
+        ) : undefined}
       />
     )
   }

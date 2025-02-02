@@ -33,6 +33,7 @@ const sections: Section[] = [
 			{ title: 'Navigation', id: 'navigation' },
 			{ title: 'Getting help', id: 'getting-help' },
 			{ title: 'Editing your profile', id: 'editing-your-profile' },
+			{ title: 'Privacy settings', id: 'privacy-settings' },
 		]
 	},
 	{
@@ -55,6 +56,7 @@ const sections: Section[] = [
 			{ title: 'Table and grid view', id: 'table-grid-view' },
 			{ title: 'Showing and hiding columns', id: 'showing-hiding-columns' },
 			{ title: 'Adding Test Tile Tracker to your mobile device', id: 'mobile-home-screen' },
+			{ title: 'Sharing your content', id: 'sharing-your-content' },
 		]
 	}
 ]

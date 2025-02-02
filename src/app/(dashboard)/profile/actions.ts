@@ -23,7 +23,12 @@ export async function getUserProfile() {
       firstName: true,
       lastName: true,
       imageUrl: true,
+      socials: true,
       isPublic: true,
+      publicTestTiles: true,
+      publicCollections: true,
+      publicDecorations: true,
+      publicClayBodies: true,
     },
   })
 
@@ -43,10 +48,17 @@ export async function updateProfile(formData: FormData) {
   const currentPassword = formData.get('currentPassword') as string
   const newPassword = formData.get('newPassword') as string
   const imageUrl = formData.get('imageUrl') as string
+  const socials = formData.get('socials') as string
   const isPublicRaw = formData.get('isPublic')
-  console.log('Raw isPublic value:', isPublicRaw)
   const isPublic = isPublicRaw === 'true'
-  console.log('Processed isPublic value:', isPublic)
+  const publicTestTilesRaw = formData.get('publicTestTiles')
+  const publicTestTiles = publicTestTilesRaw === 'true'
+  const publicCollectionsRaw = formData.get('publicCollections')
+  const publicCollections = publicCollectionsRaw === 'true'
+  const publicDecorationsRaw = formData.get('publicDecorations')
+  const publicDecorations = publicDecorationsRaw === 'true'
+  const publicClayBodiesRaw = formData.get('publicClayBodies')
+  const publicClayBodies = publicClayBodiesRaw === 'true'
 
   const updateData: any = {
     email,
@@ -54,7 +66,12 @@ export async function updateProfile(formData: FormData) {
     firstName: firstName || null,
     lastName: lastName || null,
     imageUrl: imageUrl || null,
+    socials: socials || null,
     isPublic,
+    publicTestTiles,
+    publicCollections,
+    publicDecorations,
+    publicClayBodies,
   }
 
   if (currentPassword && newPassword) {
@@ -113,6 +130,186 @@ async function getImageUrlsForUser(userId: string) {
   decorations.forEach(d => d.imageUrl && imageUrls.push(...d.imageUrl))
 
   return imageUrls
+}
+
+export async function getUserTestTilesCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.testTile.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.testTile.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
+export async function getUserCollectionsCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.collection.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.collection.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
+export async function getUserDecorationsCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.decoration.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.decoration.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
+export async function getUserClayBodiesCount() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  const [publicCount, privateCount] = await Promise.all([
+    prisma.clayBody.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: true
+      }
+    }),
+    prisma.clayBody.count({
+      where: { 
+        userId: session.user.id,
+        isPublic: false
+      }
+    })
+  ])
+
+  return {
+    public: publicCount,
+    private: privateCount,
+    total: publicCount + privateCount
+  }
+}
+
+export async function updateTestTilesVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.testTile.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic // Update tiles that have the opposite visibility
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
+export async function updateCollectionsVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.collection.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
+export async function updateDecorationsVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.decoration.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
+}
+
+export async function updateClayBodiesVisibility(makePublic: boolean) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) {
+    throw new Error('Not authenticated')
+  }
+
+  await prisma.clayBody.updateMany({
+    where: { 
+      userId: session.user.id,
+      isPublic: !makePublic
+    },
+    data: { 
+      isPublic: makePublic
+    }
+  })
 }
 
 export async function deleteAccount() {

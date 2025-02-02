@@ -39,6 +39,7 @@ export async function createDecoration(formData: FormData, redirectOnSuccess = t
   
   const validatedData = decorationSchema.parse({
     ...rawData,
+    isPublic: formData.get('isPublic') === 'true'
   })
 
   const createData: Prisma.DecorationCreateInput = {
@@ -61,6 +62,7 @@ export async function createDecoration(formData: FormData, redirectOnSuccess = t
     imageUrl: validatedData.imageUrl || [],
     recipe: validatedData.recipe || null,
     notes: validatedData.notes || null,
+    isPublic: validatedData.isPublic,
     user: {
       connect: {
         id: session.user.id

@@ -16,6 +16,7 @@ export const testTileSchema = z.object({
   atmosphereId: z.string().uuid('Atmosphere is required'),
   decorationLayers: z.array(decorationLayerSchema).optional().default([]),
   collectionIds: z.array(z.string().uuid()).optional().default([]),
+  isPublic: z.boolean().optional().default(false)
 })
 
 export type TestTileFormData = z.infer<typeof testTileSchema> 

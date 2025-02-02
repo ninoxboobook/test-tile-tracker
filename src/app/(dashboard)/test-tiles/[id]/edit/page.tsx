@@ -27,6 +27,11 @@ export default async function EditTestTilePage({ params }: PageProps) {
       ...(isAdmin ? {} : { userId: session.user.id })
     },
     include: {
+      user: {
+        select: {
+          id: true
+        }
+      },
       clayBody: true,
       decorationLayers: {
         include: {
@@ -85,6 +90,7 @@ export default async function EditTestTilePage({ params }: PageProps) {
       decorationIds: layer.decorations.map(d => d.id)
     })),
     collectionIds: testTile.collections.map(collection => collection.id),
+    isPublic: testTile.isPublic
   }
 
   return (

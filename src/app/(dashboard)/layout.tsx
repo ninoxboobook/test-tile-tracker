@@ -16,7 +16,13 @@ export default async function DashboardLayout({
   const headerList = await headers();
   const pathname = headerList.get("x-current-path");
 
-  if (!session?.user?.id && !pathname?.startsWith('/profile/')) {
+  // Allow public access to profiles and individual test tile pages
+  if (!session?.user?.id && 
+      !pathname?.startsWith('/profile/') && 
+      !pathname?.match(/^\/test-tiles\/[^/]+$/) &&
+      !pathname?.match(/^\/collections\/[^/]+$/) &&
+      !pathname?.match(/^\/clay-bodies\/[^/]+$/) &&
+      !pathname?.match(/^\/decorations\/[^/]+$/)) {
     redirect('/login')
   }
 

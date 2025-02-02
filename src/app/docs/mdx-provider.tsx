@@ -13,6 +13,11 @@ const components = {
   h4: (props: PropsWithChildren) => (
     <h4 {...props} className="text-xl font-display font-semibold text-clay-800 mt-6 mb-2" />
   ),
+
+  h5: (props: PropsWithChildren) => (
+    <h5 {...props} className="text-lg font-medium underline text-clay-800 mt-6 mb-1" />
+  ),
+
   p: (props: PropsWithChildren) => (
     <p {...props} className="text-lg mb-4 leading-relaxed max-w-prose" />
   ),
@@ -23,7 +28,7 @@ const components = {
     <ol {...props} className="list-decimal mt-5 mb-6 ml-4 pl-6" />
   ),
   li: (props: PropsWithChildren) => (
-    <li {...props} className="text-lg mb-2 max-w-prose leading-snug" />
+    <li {...props} className="text-lg mb-2 max-w-prose leading-normal" />
   ),
   a: (props: PropsWithChildren) => (
     <a {...props} className="text-brand underline hover:text-clay-700" />

@@ -43,7 +43,8 @@ export async function updateClayBody(formData: FormData) {
     shrinkageWetToFired: rawData.shrinkageWetToFired ? parseFloat(rawData.shrinkageWetToFired as string) : null,
     absorption: rawData.absorption ? parseFloat(rawData.absorption as string) : null,
     meshSize: rawData.meshSize ? parseInt(rawData.meshSize as string) : null,
-    imageUrl: rawData.imageUrl || []
+    imageUrl: rawData.imageUrl || [],
+    isPublic: formData.get('isPublic') === 'true'
   }
 
   const validatedData = clayBodySchema.parse(processedData)
@@ -72,6 +73,7 @@ export async function updateClayBody(formData: FormData) {
     meshSize: validatedData.meshSize,
     imageUrl: validatedData.imageUrl || [],
     notes: validatedData.notes,
+    isPublic: validatedData.isPublic,
   }
 
   await prisma.clayBody.update({

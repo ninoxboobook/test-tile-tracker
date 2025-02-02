@@ -13,6 +13,7 @@ import { FormMultiSelect } from '@/components/ui/forms/form-multi-select'
 import { ActionButton } from '@/components/ui/buttons/action-button'
 import { CancelButton } from '@/components/ui/buttons/cancel-button'
 import { Modal } from '@/components/ui/modal'
+import { Switch } from '@headlessui/react'
 import { ClayBodyForm } from '@/components/clay-bodies/clay-body-form'
 import { DecorationForm } from '@/components/decorations/decoration-form'
 import { ClayBody, Collection, Decoration, DecorationType } from '@prisma/client'
@@ -41,6 +42,10 @@ interface TestTileFormProps {
   atmospheres: Array<Atmosphere>
   clayBodyTypes: Array<ClayBodyType>
   decorationTypes: Array<DecorationType>
+  userPreferences?: {
+    publicClayBodies: boolean
+    publicDecorations: boolean
+  }
 }
 
 export function TestTileForm({
@@ -53,7 +58,8 @@ export function TestTileForm({
   cones,
   atmospheres,
   clayBodyTypes,
-  decorationTypes
+  decorationTypes,
+  userPreferences
 }: TestTileFormProps) {
   const router = useRouter()
   const [isClayBodyModalOpen, setIsClayBodyModalOpen] = useState(false)
@@ -186,6 +192,9 @@ export function TestTileForm({
         })
       }
 
+      // Add isPublic value from form state
+      formData.append('isPublic', String(watch('isPublic')))
+
       console.log('Form data before submission:', Object.fromEntries(formData.entries()))
       await action(formData)
     } catch (error) {
@@ -224,7 +233,7 @@ export function TestTileForm({
                   error={errors.stamp}
                 />
 
-                <div className="space-x-3 flex">
+                <div className="sm:space-x-3 space-y-3 sm:space-y-0 flex flex-col sm:flex-row">
                   <div className="grow">
                     <FormSelect
                       name="clayBodyId"
@@ -235,7 +244,7 @@ export function TestTileForm({
                       required
                     />
                   </div>
-                  <div className="self-end">
+                  <div className="sm:self-end">
                     <ActionButton
                       type="button"
                       variant="secondary"
@@ -265,7 +274,7 @@ export function TestTileForm({
                 />
               </div>
               <div className="space-y-4 border-y border-clay-200 pt-5 pb-10">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <h3 className="text-lg font-medium text-clay-800 mt-2">Decorations</h3>
                     <p className="text-clay-900 mb-2">Add layers of decorations to your test tile</p>
@@ -274,7 +283,7 @@ export function TestTileForm({
                       type="button"
                       variant="secondary"
                       onClick={() => setIsDecorationModalOpen(true)}
-                      className="mt-1"
+                      className="mt-1 self-start sm:self-auto"
                   >
                       Add new decoration
                   </ActionButton>
@@ -337,6 +346,30 @@ export function TestTileForm({
                 error={errors.notes}
                 placeholder="Add any additional notes about this test tile..."
               />
+
+              <div className="flex items-center justify-between p-4 border border-solid border-clay-300 rounded-md">
+                <div>
+                  <h4 className="font-medium text-clay-800">Make test tile public</h4>
+                  <p className="text-sm text-clay-600 mb-[2px]">Public test tiles are visible to all Test Tile Tracker visitors.</p>
+                </div>
+                <input
+                  type="hidden"
+                  {...register('isPublic')}
+                />
+                <Switch
+                  checked={watch('isPublic') ?? false}
+                  onChange={(checked) => setValue('isPublic', checked)}
+                  className={`${
+                    watch('isPublic') ? 'bg-brand' : 'bg-clay-300'
+                  } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
+                >
+                  <span
+                    className={`${
+                      watch('isPublic') ? 'translate-x-6' : 'translate-x-1'
+                    } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                  />
+                </Switch>
+              </div>
               </div>
             </div>
           </div>
@@ -396,6 +429,7 @@ export function TestTileForm({
           cones={cones}
           isInModal={true}
           onCancel={() => setIsClayBodyModalOpen(false)}
+          initialData={{ isPublic: userPreferences?.publicClayBodies ?? false }}
         />
       </Modal>
 
@@ -411,6 +445,31 @@ export function TestTileForm({
           atmospheres={atmospheres}
           isInModal={true}
           onCancel={() => setIsDecorationModalOpen(false)}
+          initialData={{
+            id: '',
+            name: '',
+            typeId: '',
+            type: {
+              id: '',
+              name: ''
+            },
+            source: null,
+            manufacturer: null,
+            cone: [],
+            atmosphere: [],
+            colour: null,
+            surface: null,
+            transparency: null,
+            glazyUrl: null,
+            imageUrl: null,
+            recipe: null,
+            notes: null,
+            userId: '',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            decorationLayers: [],
+            isPublic: userPreferences?.publicDecorations ?? false
+          }}
         />
       </Modal>
     </>

@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 interface DetailItem {
   label: string
-  value: string | null | undefined | { href: string; text: string }[] | {
+  value: string | null | undefined | { href: string; text: string; isPublic?: boolean }[] | {
     type: 'color'
     hex: string
     category: string
@@ -15,9 +15,10 @@ interface DetailLayoutProps {
   title: string
   items: DetailItem[]
   images?: string[]
+  isOwner?: boolean
 }
 
-export function DetailLayout({ title, items, images }: DetailLayoutProps) {
+export function DetailLayout({ title, items, images, isOwner = false }: DetailLayoutProps) {
   const renderValue = (value: DetailItem['value']) => {
     if (!value) return null
     
@@ -63,9 +64,13 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
             currentLinks = []
           } else {
             currentLinks.push(
-              <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
-                {item.text}
-              </Link>
+              item.isPublic !== false ? (
+                <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
+                  {item.text}
+                </Link>
+              ) : (
+                <span key={i} className="text-clay-900">{item.text}</span>
+              )
             )
           }
         })
@@ -86,9 +91,13 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
       } else {
         // Handle regular links (clay body, collections)
         return value.map((item, i) => (
-          <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
-            {item.text}
-          </Link>
+          item.isPublic !== false ? (
+            <Link key={i} href={item.href} className="text-brand underline hover:text-clay-700">
+              {item.text}
+            </Link>
+          ) : (
+            <span key={i} className="text-clay-900">{item.text}</span>
+          )
         ))
       }
     }
@@ -135,7 +144,7 @@ export function DetailLayout({ title, items, images }: DetailLayoutProps) {
         </div>
       </div>
       <div className="col-span-12 md:col-span-5 order-1 md:order-2">
-        <DetailImage images={images} />
+        <DetailImage images={images} isOwner={isOwner} />
       </div>
     </div>
   )

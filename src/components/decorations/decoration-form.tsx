@@ -18,6 +18,7 @@ import { sortAtmospheres } from '@/lib/utils/sort-atmospheres'
 import { sortDecorationTypes } from '@/lib/utils/sort-decoration-types'
 import { FormColorPicker } from '../ui/forms/form-color-picker'
 import { useRouter } from 'next/navigation'
+import { Switch } from '@headlessui/react'
 
 interface DecorationFormProps {
   initialData?: DecorationWithRelations
@@ -136,7 +137,7 @@ export function DecorationForm({
     <Form onSubmit={handleSubmit}>
       <div className="grid grid-cols-12 gap-8">
         <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-7 p-8'} bg-sand-light space-y-6 rounded-2xl`}>
-        <h2 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Decoration details</h2>
+          <h2 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold'} text-clay-800`}>Decoration details</h2>
           {error && (
             <div className="mb-4 rounded-md border border-red-500 bg-red-50 p-4 text-sm text-red-500">
               {error}
@@ -269,11 +270,33 @@ export function DecorationForm({
             placeholder="Add any additional notes about this decoration..."
           />
 
+          <div className="flex items-center justify-between p-4 border border-solid border-clay-300 rounded-md">
+            <div>
+              <h4 className="font-medium text-clay-800">Make decoration public</h4>
+              <p className="text-sm text-clay-600 mb-[2px]">Public decorations are visible to all Test Tile Tracker visitors.</p>
+            </div>
+            <input
+              type="hidden"
+              {...register('isPublic')}
+            />
+            <Switch
+              checked={watch('isPublic') ?? false}
+              onChange={(checked) => setValue('isPublic', checked)}
+              className={`${watch('isPublic') ? 'bg-brand' : 'bg-clay-300'
+                } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-clay-600 focus:ring-offset-2`}
+            >
+              <span
+                className={`${watch('isPublic') ? 'translate-x-6' : 'translate-x-1'
+                  } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+              />
+            </Switch>
+          </div>
+
 
         </div>
         <div className={`${isInModal ? 'col-span-12' : 'col-span-12 md:col-span-5 p-8'} bg-sand-light rounded-2xl`}>
           <div>
-          <h3 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold' } text-clay-800`}>Decoration images</h3>
+            <h3 className={`${isInModal ? 'mb-2 text-xl font-medium' : 'mb-10 text-2xl font-semibold'} text-clay-800`}>Decoration images</h3>
             <ImageDropzone
               currentImageUrl={initialData?.imageUrl}
               onImagesSelected={(urls) => {
@@ -299,7 +322,13 @@ export function DecorationForm({
                 (values.coneIds?.length ?? 0) > 0 ||
                 (values.atmosphereIds?.length ?? 0) > 0 ||
                 !!values.notes ||
-                !!values.imageUrl
+                !!values.imageUrl ||
+                !!values.glazyUrl ||
+                !!values.recipe ||
+                !!values.colour ||
+                !!values.surface ||
+                !!values.transparency ||
+                !!values.isPublic
               );
             }}
             type="button"

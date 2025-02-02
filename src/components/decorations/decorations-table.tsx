@@ -56,6 +56,11 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
     id: 'cone',
     header: 'Cone',
     accessorFn: (row) => row.cone.map(c => c.name).join(', '),
+    cell: ({ row }) => (
+      <div className="min-w-24 max-w-64 sm:whitespace-normal">
+        {row.original.cone.map(c => c.name).join(', ')}
+      </div>
+    ),
   },
   {
     accessorKey: 'source',
@@ -102,6 +107,11 @@ export const columns: ColumnDef<DecorationWithRelations>[] = [
         return false
       }
     }
+  },
+  {
+    accessorKey: 'isPublic',
+    header: 'Visibility',
+    cell: ({ row }) => row.getValue('isPublic') ? 'Public' : 'Private',
   },
   {
     accessorKey: 'createdAt',
