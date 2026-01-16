@@ -3,14 +3,17 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { registerSchema, type RegisterFormData } from '@/lib/schemas/auth'
 import { FormField } from '../ui/forms/form-field'
 import { ActionButton } from '../ui/buttons/action-button'
+import { Turnstile, type TurnstileRef } from '../ui/forms/turnstile'
 
 export function RegisterForm() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const turnstileRef = useRef<TurnstileRef>(null)
   
   const {
     register,
@@ -30,11 +33,16 @@ export function RegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setError(null)
-      
+
+      if (!captchaToken) {
+        setError('Please complete the captcha verification')
+        return
+      }
+
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, captchaToken }),
       })
 
       const result = await response.json()
@@ -55,6 +63,8 @@ export function RegisterForm() {
       router.push('/login?registered=true')
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred')
+      turnstileRef.current?.reset()
+      setCaptchaToken(null)
     }
   }
 
@@ -109,6 +119,20 @@ export function RegisterForm() {
         autoComplete="new-password"
         required
       />
+
+      <div className="flex justify-center">
+        <Turnstile
+          ref={turnstileRef}
+          onSuccess={setCaptchaToken}
+          onError={() => {
+            setError('Captcha verification failed. Please try again.')
+            setCaptchaToken(null)
+          }}
+          onExpire={() => {
+            setCaptchaToken(null)
+          }}
+        />
+      </div>
 
       <ActionButton
         type="submit"
